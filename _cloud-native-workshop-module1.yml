@@ -1,0 +1,36 @@
+id: "cloudnative"
+name: "Cloud-Native Workshop 2019 - Module 1"
+
+content:
+  url: https://raw.githubusercontent.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2-guides.git/master
+
+vars:
+  OPENSHIFT_DOCS_BASE: "https://docs.openshift.com/container-platform/3.11"
+  COOLSTORE_PROJECT: "coolstore"
+  DOWNLOAD_CLIENT_WINDOWS: https://mirror.openshift.com/pub/openshift-v3/clients/3.11.16/windows/oc.zip
+  DOWNLOAD_CLIENT_MAC: https://mirror.openshift.com/pub/openshift-v3/clients/3.11.16/macosx/oc.tar.gz
+  DOWNLOAD_CLIENT_LIN64: https://mirror.openshift.com/pub/openshift-v3/clients/3.11.16/linux/oc.tar.gz
+  LABS_GIT_REPO: https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2-labs.git#master
+  LABS_DOWNLOAD_URL: https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2-labs/archive/master.zip
+  WEB_NODEJS_GIT_REPO: https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2-labs/tree/master/web-nodejs
+  REMOTE_DEBUGGER_JDB: true
+  REMOTE_DEBUGGER_JBDS: true
+  REMOTE_DEBUGGER_IDEA: true
+  MINISHIFT: false             # if labs are intended to run on minishift or CDK
+  OPENSHIFT_CONSOLE_URL: OPENSHIFT-CONSOLE-URL
+  INVENTORY_ROUTE_HOST: INVENTORY-ROUTE-HOST
+  CATALOG_ROUTE_HOST: CATALOG-ROUTE-HOST
+  API_GATEWAY_ROUTE_HOST: API-GATEWAY-ROUTE-HOST
+  ECLIPSE_CHE_URL: "http://che-lab-infra.192.168.99.100.nip.io"
+  GIT_URL: "http://gogs-lab-infra.192.168.99.100.nip.io"
+  NEXUS_URL: "http://nexus.lab-infra.svc:8081/repository/maven-all-public"
+  OPENSHIFT_USER: userX
+  OPENSHIFT_PASWORD: PASSWORD
+  
+modules:
+  activate:
+  - getting-started-cloud-native
+  - decide-which-appserver
+  - migrate-to-jboss-eap
+  - break-monolith-apart1
+  - break-monolith-apart2
