@@ -52,6 +52,10 @@ the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-app
 * [Developer Homepage](https://developers.redhat.com/products/rhamt/overview/)
 
 
+You might have a question in terms of how I develop a new apps in the `cloud-native way` once I complete to migreate existing apps via RHAMT.
+No worries!! **Red Hat Application Runtimes** allows you to generate the cloud-native apps quickly on multiple rumtimes via `Launcher`.
+
+
 #### What is Red Hat Application Runtimes Launcher?
 
 LAUNCHER enables **developers** to create and/or import **modern applications**, built and deployed on OpenShift Container Platform.
