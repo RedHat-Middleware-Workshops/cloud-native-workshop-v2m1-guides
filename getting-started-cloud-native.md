@@ -53,6 +53,7 @@ the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-app
 
 ---
 You might have a question in terms of how I get started to develop a new apps in the `cloud-native way` once I complete to migreate existing apps via RHAMT.
+
 No worries!! **Red Hat Application Runtimes** allows you to generate the cloud-native apps quickly on multiple rumtimes via `Launcher`.
 
 #### What is Red Hat Application Runtimes Launcher?

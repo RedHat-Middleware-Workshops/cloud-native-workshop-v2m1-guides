@@ -23,7 +23,7 @@ Here is an example Ansible playbook to deploy the lab instruction to your OpenSh
   - import_role:
       name: siamaksade.openshift_workshopper
     vars:
-      project_name: "guide-v2-m1"
+      project_name: "guide-m1"
       workshopper_name: "Cloud-Native Workshop V2 Module-1"
       project_suffix: "-XX"
       workshopper_content_url_prefix: https://raw.githubusercontent.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-guides/master
