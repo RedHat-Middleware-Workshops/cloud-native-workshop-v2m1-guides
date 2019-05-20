@@ -1,4 +1,4 @@
-Cloud-Native Workshop Moduel 1[![Build Status](https://travis-ci.org/openshift-labs/cloud-native-guides.svg?branch=ocp-3.11)](https://travis-ci.org/openshift-labs/cloud-native-guides)
+Cloud-Native Workshop Module 1[![Build Status](https://travis-ci.org/openshift-labs/cloud-native-guides.svg?branch=ocp-3.11)](https://travis-ci.org/openshift-labs/cloud-native-guides)
 ===
 This half day hands-on cloud-native workshops(`module 1`) provides developers and introduction to cloud-natives applications and gives them an experience of building cloud-native applications using Red Hat Application Rumties(i.e. Throntail, Spring Boot) with OpenShift and more.
 
