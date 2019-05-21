@@ -971,7 +971,7 @@ This sample project includes a simple UI that allows you to access the Inventory
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
 route URL at 
 
-`http://catalog-catalog.$ROUTE_SUFFIX`
+`http://catalog-catalog.{{ ROUTE_SUFFIX }}`
 to access the sample UI.
 
 > You can also access the application through the link on the OpenShift Web Console Overview page.
@@ -1017,7 +1017,7 @@ www      www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com            cool
 
 > **NOTE**: My hostname is `www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com` but **yours will be different**.
 
-Open the openshift console for Catalog - Applications - Routes at `https://$OPENSHIFT_MASTER/console/project/catalog/browse/routes`
+Open the openshift console for Catalog - Applications - Routes at `https://{{ OPENSHIFT_CONSOLE_URL }}/console/project/catalog/browse/routes`
 
 **20. Click on Create Route, and set**
 
@@ -1040,7 +1040,7 @@ You should get a complete set of products, along with their inventory.
 
 Open the monolith UI at 
 
-`http://www-coolstore-dev.$ROUTE_SUFFIX`
+`http://www-coolstore-dev.{{ ROUTE_SUFFIX }}`
 and observe that the new catalog is being used along with the monolith:
 
 ![Greeting]({% image_path coolstore-web.png %})
