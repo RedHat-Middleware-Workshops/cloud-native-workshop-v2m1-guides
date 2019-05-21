@@ -45,7 +45,7 @@ Now you can import the project skeletons into your workspace.
 In the project explorer pane, click on the **Import Projects...** and enter the following:
 
   * Version Control System: `GIT`
-  * URL: `{{LABS_DOWNLOAD_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`
+  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`
   * Check **Import recursively (for multi-module projects)**
   * Name: `cloud-native-workshop-module1`
 
