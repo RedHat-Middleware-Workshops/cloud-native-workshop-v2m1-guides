@@ -460,9 +460,8 @@ And finally deploy template:
 
 This will deploy both a PostgreSQL database and JBoss EAP, but it will not start a build for our application.
 
-Then open up the Monolith Overview page at 
+Then open up the Monolith Overview page at `OpenShift Web Console`
 
-`https://{{ OPENSHIFT_CONSOLE_URL }}/console/project/coolstore-dev/`
 and verify the monolith template items are created:
 
 ![no_deployments]({% image_path no_deployments.png %}){:width="800px"}
@@ -517,6 +516,9 @@ database and the monolith:
 ![build_done]({% image_path build_done.png %}){:width="800px"}
 
 Test the application by clicking on the Route link at 
+
+{{ ROUTE_SUFFIX }}
+{{ ROUTE_URL }}
 
 `http://www-coolstore-dev.'{{ ROUTE_SUFFIX }},
 {{ ROUTE_SUFFIX }}

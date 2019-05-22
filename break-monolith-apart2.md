@@ -1018,7 +1018,7 @@ www      www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com            cool
 
 > **NOTE**: My hostname is `www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com` but **yours will be different**.
 
-Open the openshift console for Catalog - Applications - Routes at `https://{{ OPENSHIFT_CONSOLE_URL }}/console/project/catalog/browse/routes`
+Open the openshift console for Catalog - Applications - Routes at `OpenShift Web Console`
 
 **20. Click on Create Route, and set**
 
@@ -1033,7 +1033,7 @@ Leave other values set to their defaults, and click **Create**.
 
 **21. Test the route**
 
-Test the route by running `curl http://www-coolstore-dev.[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com/services/products`
+Test the route by running `curl http://www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com/services/products`
 
 You should get a complete set of products, along with their inventory.
 
