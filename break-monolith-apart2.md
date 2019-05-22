@@ -970,10 +970,7 @@ You can also check if the deployment is complete via Eclipse Che **Terminal**:
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
-route URL at 
-
-`http://catalog-catalog.{{ ROUTE_SUFFIX }}`
-to access the sample UI.
+route URL at `OpenShift Web Console` to access the sample UI.
 
 > You can also access the application through the link on the OpenShift Web Console Overview page.
 
@@ -1039,9 +1036,8 @@ You should get a complete set of products, along with their inventory.
 
 **22. Test the UI**
 
-Open the monolith UI at 
+Open the monolith UI at `OpenShift Web Console`
 
-`http://www-coolstore-dev.{{ ROUTE_SUFFIX }}`
 and observe that the new catalog is being used along with the monolith:
 
 ![Greeting]({% image_path coolstore-web.png %})

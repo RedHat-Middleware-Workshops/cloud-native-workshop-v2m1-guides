@@ -515,14 +515,7 @@ database and the monolith:
 
 ![build_done]({% image_path build_done.png %}){:width="800px"}
 
-Test the application by clicking on the Route link at 
-
-{{ ROUTE_SUFFIX }}
-{{ ROUTE_URL }}
-
-`http://www-coolstore-dev.'{{ ROUTE_SUFFIX }},
-{{ ROUTE_SUFFIX }}
-which will open the same monolith Coolstore in your browser, this time running on OpenShift:
+Test the application by clicking on the Route link at `OpenShift Web Console`:
 
 ![route_link]({% image_path route_link.png %}){:width="800px"}
 

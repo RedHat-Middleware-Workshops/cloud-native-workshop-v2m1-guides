@@ -442,10 +442,7 @@ that is that we currently don't have any liveness check configured, but we will 
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
-route URL at 
-
-`http://inventory-inventory.{{ ROUTE_SUFFIX }}`
-to access the sample UI.
+route URL at `OpenShift Web Console` to access the sample UI.
 
 > You can also access the application through the link on the OpenShift Web Console Overview page.
 
@@ -598,7 +595,7 @@ You should see `/health` endpoint in Readiness Path Probe and Liveness Probe:
 ![inventory-healthcheck-webconsole]({% image_path inventory-healthcheck-webconsole.png %})
 
 You should also be able to access the health check logic
-at the `http://inventory-inventory.{{ ROUTE_SUFFIX }}/health` endpoint via a web browser:
+at the `inventory` endpoint via a web browser:
 
 You should see a JSON response like:
 
