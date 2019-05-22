@@ -16,6 +16,7 @@ The goal is to produce something like:
 
 ![Greeting]({% image_path catalog-goal.png %}){:width="700px"}
 
+---
 #### What is Spring Framework?
 
 Spring is one of the most popular Java Frameworks and offers an alternative to the Java EE programming model. Spring

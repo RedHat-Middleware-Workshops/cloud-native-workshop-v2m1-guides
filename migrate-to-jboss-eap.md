@@ -410,7 +410,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 
 **15. Create the OpenShift project**
 
-First, open a new brower with the [OpenShift Console URL]({{ OPENSHIFT_CONSOLE_URL }})
+First, open a new brower with the `OpenShift Web Console`
 
 ![openshift_login]({% image_path openshift_login.png %})
 
@@ -518,14 +518,12 @@ database and the monolith:
 
 Test the application by clicking on the Route link at 
 
-`http://www-coolstore-dev.{{ ROUTE_SUFFIX }}`,
+`http://www-coolstore-dev.'{{ ROUTE_SUFFIX }},
 which will open the same monolith Coolstore in your browser, this time running on OpenShift:
 
 ![route_link]({% image_path route_link.png %}){:width="800px"}
 
-#### Congratulations!
-
-Now you are using the same application that we built locally on OpenShift. That wasn't too hard right?
+**Congratulations!** Now you are using the same application that we built locally on OpenShift. That wasn't too hard right?
 
 ![coolstore_web]({% image_path coolstore_web.png %})
 

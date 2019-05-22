@@ -21,6 +21,7 @@ During the first planing sprint you have investigated the possibility to deploy 
 
 After the investigation the team agrees that JBoss EAP seems to be the much better choice with better support for running your application in OpenShift, but the last question mark on “Migration cost” is worrying. You decide to contact Red Hat to try to find out what the migration cost might actually be. Red Hat recommends that you use a tool called Red Hat Application Migration Toolkit (RHAMT) which will help you analyze your application give you a report on the estimated effort to migrate and also gives you instructions on how to actually migrate the report.
 
+---
 #### What is Red Hat Application Migration Toolkit?
 
 ![RHAMT Logo]({% image_path rhamt_logo.png %})
@@ -46,10 +47,11 @@ Red Hat Application Migration Toolkit looks for common resources and highlights 
 migration is a simple affair and takes an hour or less! To learn more about Red Hat's philosophy and proven methodology, check out
 the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit) and contact your local Red Hat representative when embarking on a real world migration and modernization strategy.
 
-#### More RHAMT Resources
+##### More RHAMT Resources
 
 * [Documentation](https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit)
 * [Developer Homepage](https://developers.redhat.com/products/rhamt/overview/)
+
 
 ---
 You might have a question in terms of how I get started to develop a new apps in the `cloud-native way` once I complete to migreate existing apps via RHAMT.

@@ -24,6 +24,7 @@ But after this lab, you should end up with something like:
 
 ![lab3_goal]({% image_path goal.png %}){:width="700px"}
 
+---
 #### What is Thorntail? 
 
 ![thorntail_logo]({% image_path thorntail-logo.png %})
@@ -839,9 +840,6 @@ $ exit
 You have now created a config map that holds the configuration content for Inventory and can be updated 
 at anytime for example when promoting the container image between environments without needing to 
 modify the Inventory container image itself. 
-
-**19. Sensitive Configuration Data**
-
 
 #### Summary
 
