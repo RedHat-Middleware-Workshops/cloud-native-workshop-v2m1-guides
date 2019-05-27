@@ -8,10 +8,14 @@ microservices using different technologies, with the eventual goal of re-archite
 distributed microservices. Later on we'll explore how you can better manage and monitor the application after
 it is re-architected.
 
-In this lab you will learn more about [Thorntail](https://thorntail.io/), one of the runtimes
-included in [Red Hat OpenShift Application Runtimes](https://developers.redhat.com/products/rhoar). WildFly
-Swarm is a great place to start since our application is a Java EE application, and your skills as a Java EE
-developer will naturally translate to the world of Thorntail.
+In this lab you will learn more about **Supersonic Subatomic Java** [Qurakus](https://Quarkus.io/), has been designed with `Container first & Cloud Native World` 
+in mind, and provides first-class support for these different paradigms. Quarkus development model morphs to adapt itself to the type of application you are developing.
+
+Quarkus is a `Kubernetes Native Java` stack tailored for `GraalVM & OpenJDK HotSpot`, crafted from the best of breed Java libraries and standards. 
+Amazingly fast boot time, incredibly low RSS memory (not just heap size!) offering near instant scale up and high density memory utilization 
+in container orchestration platforms like Kubernetes. Quarkus uses a technique called compile time boot. [Learn more](https://quarkus.io/vision/container-first).
+
+This will be one of the runtimes included in [Red Hat OpenShift Application Runtimes](https://developers.redhat.com/products/rhoar) in 2020. 
 
 You will implement one component of the monolith as a Thorntail microservice and modify it to address
 microservice concerns, understand its structure, deploy it to OpenShift and exercise the interfaces between
@@ -25,29 +29,25 @@ But after this lab, you should end up with something like:
 ![lab3_goal]({% image_path goal.png %}){:width="700px"}
 
 ---
-#### What is Thorntail? 
+#### What is Quarkus? 
 
-![thorntail_logo]({% image_path thorntail-logo.png %})
+![quarkus-logo]({% image_path quarkus-logo.png %})
 
-Java EE applications are traditionally created as an **ear** or **war** archive including all 
-dependencies and deployed in an application server. Multiple Java EE applications can and 
-were typically deployed in the same application server. This model is well understood in 
-the development teams and has been used over the past several years.
+For years, the client-server architecture has been the de-facto standard to build applications. 
+But a major shift happened. The one model rules them all age is over. A new range of applications 
+and architecture styles has emerged and impacts how code is written and how applications are deployed and executed. 
+HTTP microservices, reactive applications, message-driven microservices and serverless are now central players in modern systems.
 
-[Thorntail](http://thorntail.io) offers an innovative approach to packaging and 
-running Java EE applications by 
-packaging them with just enough of the Java EE server runtime to be able to run them directly 
-on the JVM using **java -jar** For more details on various approaches to packaging Java 
-applications,
-read [this blog post](https://developers.redhat.com/blog/2017/08/24/the-skinny-on-fat-thin-hollow-and-uber).
+[Qurakus](https://Quarkus.io/) offers 4 major benefits to build cloud-native, microservices, and serverless Java applicaitons:
 
-Thorntail is based on WildFly and it's compatible with 
-[Eclipse MicroProfile](https://microprofile.io), which is a community effort to standardized the subset of Java EE standards 
-such as JAX-RS, CDI and JSON-P that are useful for building microservices applications.
+* Developer Joy - Cohesive platform for optimized developer joy through unified configuration, Zero config with live reload in the blink of an eye,
+   streamlined code for the 80% common usages with flexible for the 20%, and no hassle native executable generation.
+* Unifies Imperative and Reactive - Inject the EventBus or the Vertx context for both Reactive and imperative development in the same application.
+* Functions as a Service and Serverless - Superfast startup and low memory utilization. With Quarkus, you can embrace this new world without having 
+  to change your programming language.
+* Best of Breed Frameworks & Standards - Eclipse Vert.x, Hibernate, RESTEasy, Apache Camel, Eclipse MicroProfile, Netty, Kubernetes, OpenShift,
+  Jaeger, Prometheus, Apacke Kafka, Infinispan, and more.
 
-Since Thorntail is based on Java EE standards, it significantly simplifies refactoring 
-existing Java EE application to microservices and allows much of existing code-base to be 
-reused in the new services.
 
 **1. Setup an Inventory proejct**
 
@@ -58,22 +58,23 @@ In the project explorer, right-click on **inventory** and then change a director
 ![inventory_setup]({% image_path bootstrap-che-inventory-project.png %}){:width="500px"}
 
 **2. Examine the Maven project structure**
-
-The sample project shows the components of a basic Thorntail project laid out in different
-subdirectories according to Maven best practices.
+The sample Quarkus project shows a minimal CRUD service exposing a couple of endpoints over REST, 
+with a front-end based on Angular so you can play with it from your browser.
 
 > Click on the `inventory` folder in the project explorer and navigate below folders and files.
 
-This is a minimal Java EE project with support for JAX-RS for building
-RESTful services and JPA for connecting
-to a database. [JAX-RS](https://docs.oracle.com/javaee/7/tutorial/jaxrs.htm)
-is one of Java EE standards that uses Java annotations
-to simplify the development of RESTful web services. [Java Persistence API (JPA)](https://docs.oracle.com/javaee/7/tutorial/partpersist.htm) is
-another Java EE standard that provides Java developers with an
-object/relational mapping facility for managing relational data in Java applications.
+While the code is surprisingly simple, under the hood this is using:
 
-This project currently contains no code other than the main class for exposing a single
-RESTful application defined in `src/main/java/com/redhat/coolstore/rest/RestApplication.java`.
+ * RESTEasy to expose the REST endpoints
+ * Hibernate ORM with Panache to perform the CRUD operations on the database
+ * A PostgreSQL database; see below to run one via Linux Container
+
+`Hibernate ORM` is the de facto JPA implementation and offers you the full breadth of an Object Relational Mapper. 
+It makes complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with 
+Panache focuses on making your entities trivial and fun to write in Quarkus.
+
+This project currently contains no code other than eb resources such as index.html and Unit test codes 
+if the inventory service works as expection in `src/test/java/com/redhat/coolstore/InventoryEndPointTest.java`.
 
 Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
 
@@ -86,11 +87,11 @@ verify you made all the changes correctly and try the build again.
 
 Once built, the resulting *jar* is located in the **target** directory via Eclipse Che **Terminal** window:
 
-`ll target/*.jar`
+`ll target/*-runner.jar`
 
 ![inventory_build_success]({% image_path inventory-build-success.png %})
 
-The listed jar archive, **inventory-1.0.0-SNAPSHOT-swarm.jar** , is an uber-jar with
+The listed jar archive, **inventory-1.0.0-SNAPSHOT-runner.jar** , is an uber-jar with
 all the dependencies required packaged in the *jar* to enable running the
 application with **java -jar**. Thorntail also creates a *war* packaging as a standard Java EE web app
 that could be deployed to any Java EE app server (for example, JBoss EAP, or its upstream WildFly project).
