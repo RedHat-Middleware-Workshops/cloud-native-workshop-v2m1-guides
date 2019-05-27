@@ -75,8 +75,7 @@ While the code is surprisingly simple, under the hood this is using:
 It makes complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with 
 Panache focuses on making your entities trivial and fun to write in Quarkus.
 
-This project currently contains no code other than eb resources such as index.html and Unit test codes 
-if the inventory service works as expection in `src/test/java/com/redhat/coolstore/InventoryEndPointTest.java`.
+This project currently contains no code other than web resources such as index.html in `src/test/resources`.
 
 Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
 
@@ -102,7 +101,26 @@ Now let's write some code and create a domain model, service interface and a RES
 
 ![Inventory RESTful Service]({% image_path inventory-arch.png %})
 
-**3. Create Inventory Domain**
+**3. Add Qurkus Extensions**
+
+We will add Qurakus extensions to the Inventory application for using `Panache` and `Postgres` and We'll use the Quarkus Maven Plugin.
+Copy the following commands to add the Hibernate ORM with Panache extension via **Terminal**:
+
+~~~shell
+mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-hibernate-orm-panache"
+~~~
+
+And then for Postgres:
+
+~~~shell
+mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-postgresql"
+~~~
+
+>**NOTE:** There are many [more extensions](https://quarkus.io/extensions/) for Quarkus for popular frameworks 
+like [Eclipse Vert.x](https://vertx.io/), [Apache Camel](http://camel.apache.org/), [Infinispan](http://infinispan.org/), 
+Spring DI compatibility (e.g. @Autowired), and more.
+
+**4. Create Inventory Entity**
 
 With our skeleton project in place, let's get to work defining the business logic.
 
@@ -110,7 +128,7 @@ The first step is to define the model (entity) of an Inventory object. Since Qua
 we can re-use the same model definition from our monolithic application - no need to re-write or re-architect!
 
 Create a new Java class named `Inventory.java` in
-`com.redhat.coolstore` package with the following code, identical to the monolith code:
+`com.redhat.coolstore` package with the following code, identical logics to the monolith code:
 
 ~~~java
 ackage com.redhat.coolstore;
@@ -126,13 +144,13 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 public class Inventory extends PanacheEntity {
 
 	@Column
-    private String location;
+    public String location;
 
 	@Column
-    private int quantity;
+    public int quantity;
 
 	@Column
-    private String link;
+    public String link;
 
     public Inventory() {
 
@@ -145,46 +163,18 @@ public class Inventory extends PanacheEntity {
         this.link = link;
     }
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	public String getLink() {
-		return link;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
-	}
-
 }
 ~~~
 
-Review the **Inventory** domain model and note the JPA annotations on this class. **@Entity** marks
-the class as a JPA entity, **@Table** customizes the table creation process by defining a table
-name and database constraint and **@Id** marks the primary key for the table.
+By extending **PanacheEntity** in your entities, you will get an ID field that is auto-generated. If you require a custom ID strategy, 
+you can extend **PanacheEntityBase** instead and handle the ID yourself.
 
-Thorntail configuration is done to a large extent through detecting the intent of the
-developer and automatically adding the required dependencies configurations to make sure it can
-get out of the way and developers can be productive with their code rather than Googling for
-configuration snippets. As an example, configuration database access with JPA is done
-by adding the JPA _fraction_ and a database driver to the `pom.xml`, and then configuring
-the database connection details in `src/main/resources/project-stages.yml`.
+By using Use public fields, there is no need for functionless getters and setters (those that simply get or set the field). You simply refer to fields like Inventory.location without the need to write a Inventory.geLocation() implementation. Panache will auto-generate any getters and setters you do not write, or you can develop your own getters/setters that do more than get/set, which will be called when the field is accessed directly.
 
-Examine `src/main/resources/META-INF/persistence.xml` to see the JPA datasource configuration
-for this project. Also note that the configurations uses `src/main/resources/META-INF/load.sql` to import
+The `PanacheEntity` superclass comes with lots of super useful static methods and you can add your own in your derived entity class, and much like traditional object-oriented programming it's natural and recommended to place custom queries as close to the entity as possible, ideally within the entity definition itself. 
+Users can just start using your entity Inventory by typing Inventory, and getting completion for all the operations in a single place.
+
+Also note that the configurations uses `src/main/resources/META-INF/load.sql` to import
 initial data into the database.
 
 Examine `src/main/resources/project-stages.yml` to see the database connection details.
@@ -199,7 +189,7 @@ Build and package the app using Maven to make sure the changed code still compil
 
 If builds successfully (you will see `BUILD SUCCESS`), continue to the next step to create a new service.
 
-**4. Create Inventory Service**
+**5. Define the RESTful endpoint of Inventory**
 
 In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into
 various places (like a RESTful resource endpoint) in the future. This is the same approach that our monolith
