@@ -98,8 +98,8 @@ When you configure a Frontend for your application then you will be able to boot
 
 > **NOTE**: You can skip to configure a Frontend application via choosing `None`.
 
-Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Throntail` 
-because we will develop and deploy Throntail application for the next labs.
+Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` 
+because we will develop and deploy Quarkus application for the next labs.
 
 ![launch-create-app-backend-choose]({% image_path launch-create-app-backend-choose.png %})
 
@@ -125,3 +125,11 @@ As soon as deployment is done, go checkout your new application capabilities.
 We prepared a set of examples to let you directly start playing with your new application.
 
 Those examples are there to get you started, soon it will be time for you to remove them and start developing your awesome application.
+
+More importantly, **Fabric8 Launcher Operator** helps enabling the Launcher on an Openshift cluster for enterprise developers who
+want to build the cloud-native application development tool on local machine or on-premise infrastructure. You can deploy the launcher in 5 mins
+along with [INSTALL AND CONFIGURE THE FABRIC8 LAUNCHER TOOL](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). You can also go through [Operator repository](https://github.com/fabric8-launcher/launcher-operator) how it works.
+
+When you deploy the launcher by `Operator', you will see a similar overview in OpenShift dashboard:
+
+![launch-operator]({% image_path launch-operator.png %})

@@ -23,7 +23,7 @@ stack is a template of workspace configuration. For example, it includes the pro
 in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration
 on-demand. 
 
-For this lab, click on the **Java Cloud-Native** stack and then on the **Create** button. 
+For this lab, click on the **Cloud Native Workshop** stack and then on the **Create** button. 
 
 ![bootstrap-che-create-workspace]({% image_path bootstrap-che-create-workspace.png %})
 
@@ -47,7 +47,7 @@ In the project explorer pane, click on the **Import Projects...** and enter the 
   * Version Control System: `GIT`
   * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`
   * Check **Import recursively (for multi-module projects)**
-  * Name: `cloud-native-workshop-module1`
+  * Name: `cloud-native-workshop-v2m1-labs`
 
 ![bootstrap-che-import]({% image_path bootstrap-che-import.png %}){:width="700px"}
 

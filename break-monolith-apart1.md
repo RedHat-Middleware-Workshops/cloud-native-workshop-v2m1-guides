@@ -29,6 +29,7 @@ But after this lab, you should end up with something like:
 ![lab3_goal]({% image_path goal.png %}){:width="700px"}
 
 ---
+
 #### What is Quarkus? 
 
 ![quarkus-logo]({% image_path quarkus-logo.png %})
@@ -40,12 +41,12 @@ HTTP microservices, reactive applications, message-driven microservices and serv
 
 [Qurakus](https://Quarkus.io/) offers 4 major benefits to build cloud-native, microservices, and serverless Java applicaitons:
 
-* Developer Joy - Cohesive platform for optimized developer joy through unified configuration, Zero config with live reload in the blink of an eye,
+* `Developer Joy` - Cohesive platform for optimized developer joy through unified configuration, Zero config with live reload in the blink of an eye,
    streamlined code for the 80% common usages with flexible for the 20%, and no hassle native executable generation.
-* Unifies Imperative and Reactive - Inject the EventBus or the Vertx context for both Reactive and imperative development in the same application.
-* Functions as a Service and Serverless - Superfast startup and low memory utilization. With Quarkus, you can embrace this new world without having 
+* `Unifies Imperative and Reactive` - Inject the EventBus or the Vertx context for both Reactive and imperative development in the same application.
+* `Functions as a Service and Serverless` - Superfast startup and low memory utilization. With Quarkus, you can embrace this new world without having 
   to change your programming language.
-* Best of Breed Frameworks & Standards - Eclipse Vert.x, Hibernate, RESTEasy, Apache Camel, Eclipse MicroProfile, Netty, Kubernetes, OpenShift,
+* `Best of Breed Frameworks & Standards` - Eclipse Vert.x, Hibernate, RESTEasy, Apache Camel, Eclipse MicroProfile, Netty, Kubernetes, OpenShift,
   Jaeger, Prometheus, Apacke Kafka, Infinispan, and more.
 
 
@@ -58,6 +59,7 @@ In the project explorer, right-click on **inventory** and then change a director
 ![inventory_setup]({% image_path bootstrap-che-inventory-project.png %}){:width="500px"}
 
 **2. Examine the Maven project structure**
+
 The sample Quarkus project shows a minimal CRUD service exposing a couple of endpoints over REST, 
 with a front-end based on Angular so you can play with it from your browser.
 
@@ -93,8 +95,8 @@ Once built, the resulting *jar* is located in the **target** directory via Eclip
 
 The listed jar archive, **inventory-1.0.0-SNAPSHOT-runner.jar** , is an uber-jar with
 all the dependencies required packaged in the *jar* to enable running the
-application with **java -jar**. Thorntail also creates a *war* packaging as a standard Java EE web app
-that could be deployed to any Java EE app server (for example, JBoss EAP, or its upstream WildFly project).
+application with **java -jar**. Quarkus also creates a native executable image which improves the startup time of 
+the application, and produces a minimal disk footprint. The native image will be running on [GraalVM](https://www.graalvm.org/).
 
 Now let's write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
 
@@ -104,58 +106,44 @@ Now let's write some code and create a domain model, service interface and a RES
 
 With our skeleton project in place, let's get to work defining the business logic.
 
-The first step is to define the model (definition) of an Inventory object. Since Thorntail uses JPA,
+The first step is to define the model (entity) of an Inventory object. Since Quarkus uses Hibernate ORM Panache,
 we can re-use the same model definition from our monolithic application - no need to re-write or re-architect!
 
 Create a new Java class named `Inventory.java` in
-`com.redhat.coolstore.model` package with the following code, identical to the monolith code:
+`com.redhat.coolstore` package with the following code, identical to the monolith code:
 
 ~~~java
-package com.redhat.coolstore.model;
+ackage com.redhat.coolstore;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import java.io.Serializable;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
-@Table(name = "INVENTORY", uniqueConstraints = @UniqueConstraint(columnNames = "itemId"))
-public class Inventory implements Serializable {
+@Cacheable
+public class Inventory extends PanacheEntity {
 
-    private static final long serialVersionUID = -7304814269819778382L;
-
-    @Id
-    private String itemId;
-
-
+	@Column
     private String location;
 
-
+	@Column
     private int quantity;
 
-
+	@Column
     private String link;
 
     public Inventory() {
 
     }
 
-    public Inventory(String itemId, int quantity, String location, String link) {
+    public Inventory(Long itemId, int quantity, String location, String link) {
         super();
-        this.itemId = itemId;
         this.quantity = quantity;
         this.location = location;
         this.link = link;
     }
-
-    public String getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
-	}
 
 	public String getLocation() {
 		return location;
@@ -181,10 +169,6 @@ public class Inventory implements Serializable {
 		this.link = link;
 	}
 
-	@Override
-    public String toString() {
-        return "Inventory [itemId=" + itemId + ", availability=" + quantity + "/" + location + " link=" + link + "]";
-    }
 }
 ~~~
 
