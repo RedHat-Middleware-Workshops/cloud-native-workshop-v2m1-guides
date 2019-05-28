@@ -75,27 +75,62 @@ While the code is surprisingly simple, under the hood this is using:
 It makes complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with 
 Panache focuses on making your entities trivial and fun to write in Quarkus.
 
-This project currently contains no code other than web resources such as index.html in `src/main/resources`.
+This project currently contains no code other than web resources in `src/main/resources` and Dockerfile to build a container that 
+runs the Quarkus application in JVM mode as well as native (no JVM) mode in `src/main/docker`:
 
-Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
+* Dockerfile in JVM mode
 
-![inventory_build]({% image_path bootstrap-che-build-inventory.png %})
+~~~java
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+#
+# Before building the docker image run:
+#
+# mvn package
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/hibernate-orm-panache-resteasy-jvm .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy-jvm
+#
+###
+FROM fabric8/java-alpine-openjdk8-jre
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV AB_ENABLED=jmx_exporter
+COPY target/lib/* /deployments/lib/
+COPY target/*-runner.jar /deployments/app.jar
+ENTRYPOINT [ "/deployments/run-java.sh" ]
+~~~
 
-> **NOTE**: Make sure to build this mvn command at working directory(i.e inventory).
+* Dockerfile in Native mode
 
-If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
-verify you made all the changes correctly and try the build again.
-
-Once built, the resulting *jar* is located in the **target** directory via Eclipse Che **Terminal** window:
-
-`ll target/*-runner.jar`
-
-![inventory_build_success]({% image_path inventory-build-success.png %})
-
-The listed jar archive, **inventory-1.0.0-SNAPSHOT-runner.jar** , is an uber-jar with
-all the dependencies required packaged in the *jar* to enable running the
-application with **java -jar**. Quarkus also creates a native executable image which improves the startup time of 
-the application, and produces a minimal disk footprint. The native image will be running on [GraalVM](https://www.graalvm.org/).
+~~~java
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode
+#
+# Before building the docker image run:
+#
+# mvn package -Pnative -Dnative-image.docker-build=true
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/hibernate-orm-panache-resteasy .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy
+#
+###
+FROM registry.fedoraproject.org/fedora-minimal
+WORKDIR /work/
+COPY target/*-runner /work/application
+RUN chmod 775 /work
+EXPOSE 8080
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+~~~
 
 Now let's write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
 
@@ -104,7 +139,7 @@ Now let's write some code and create a domain model, service interface and a RES
 **3. Add Qurkus Extensions**
 
 We will add Qurakus extensions to the Inventory application for using `Panache` and `Postgres` and We'll use the Quarkus Maven Plugin.
-Copy the following commands to add the Hibernate ORM with Panache extension via **Terminal**:
+Copy the following commands to add the Hibernate ORM with Panache extension via Eclipse **Terminal**:
 
 ~~~shell
 mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-hibernate-orm-panache"
@@ -131,7 +166,7 @@ Create a new Java class named `Inventory.java` in
 `com.redhat.coolstore` package with the following code, identical logics to the monolith code:
 
 ~~~java
-ackage com.redhat.coolstore;
+package com.redhat.coolstore;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -174,20 +209,8 @@ By using Use public fields, there is no need for functionless getters and setter
 The `PanacheEntity` superclass comes with lots of super useful static methods and you can add your own in your derived entity class, and much like traditional object-oriented programming it's natural and recommended to place custom queries as close to the entity as possible, ideally within the entity definition itself. 
 Users can just start using your entity Inventory by typing Inventory, and getting completion for all the operations in a single place.
 
-Also note that the configurations uses `src/main/resources/META-INF/load.sql` to import
-initial data into the database.
-
-Examine `src/main/resources/project-stages.yml` to see the database connection details.
-An in-memory H2 database is used in this lab for local development and in the following
-steps will be replaced with a PostgreSQL database with credentials coming from an OpenShift _secret_. Be patient! More on that later.
-
-Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
-
-![inventory_build]({% image_path bootstrap-che-build-inventory.png %})
-
-> **NOTE**: Make sure to build this mvn command at working directory(i.e inventory).
-
-If builds successfully (you will see `BUILD SUCCESS`), continue to the next step to create a new service.
+When an entity is annotated with `@Cacheable`, all its field values are cached except for collections and relations to other entities.
+This means the entity can be loaded without querying the database, but be careful as it implies the loaded entity might not reflect recent changes in the database.
 
 **5. Define the RESTful endpoint of Inventory**
 
@@ -196,134 +219,109 @@ various places (like a RESTful resource endpoint) in the future. This is the sam
 uses, so we can re-use this idea again. Create an **InventoryService** class in the `com.redhat.coolstore.service` package:
 
 ~~~java
-package com.redhat.coolstore.service;
+package com.redhat.coolstore;
 
-
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import com.redhat.coolstore.model.Inventory;
-
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Stateless
-public class InventoryService {
-
-    @PersistenceContext
-    private EntityManager em;
-
-    public InventoryService() {
-
-    }
-
-    public boolean isAlive() {
-        return em.createQuery("select 1 from Inventory i")
-                .setMaxResults(1)
-                .getResultList().size() == 1;
-    }
-    public Inventory getInventory(String itemId) {
-        return em.find(Inventory.class, itemId);
-    }
-
-    public List<Inventory> getAllInventory() {
-        Query query = em.createQuery("SELECT i FROM Inventory i");
-        return query.getResultList();
-    }
-}
-~~~
-
-Review the **InventoryService** class and note the EJB and JPA annotations on this class:
-
-* **@Stateless** marks
-the class as a _Stateless EJB_, and its name suggests, means that instances of the class do not maintain state,
-which means they can be created and destroyed at will by the management system, and be re-used by multiple clients
-without instantiating multiple copies of the bean. Because they can support multiple
-clients, stateless EJBs can offer better scalability for applications that require large numbers of
-clients.
-
-* **@PersistenceContext** objects are created by the Java EE server based on the JPA definition in `persistence.xml` that
-we examined earlier, so to use it at runtime it is injected by this annotation and can be used to issue queries against
-the underlying database backing the **Inventory** entities.
-
-This service class exposes a few APIs that we'll use later:
-
-* **isAlive()** - A simple health check to determine if this service class is ready to accept requests. We will use
-this later on when defining OpenShift health checks.
-
-* **getInventory()** and **getAllInventory()** are APIs used to query for one or all of the stored **Inventory* entities. We'll use this
-later on when implementing a RESTful endpoint.
-
-Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
-
-![inventory_build]({% image_path bootstrap-che-build-inventory.png %})
-
-> **NOTE**: Make sure to build this mvn command at working directory(i.e inventory).
-
-If builds successfully (you will see `BUILD SUCCESS`), continue to the next step to
-create a new RESTful endpoint that uses this service.
-
-**5. Create RESTful Endpoints**
-
-Thorntail uses JAX-RS standard for building REST services. Create a new Java class named
-`InventoryEndpoint.java` in `com.redhat.coolstore.rest` package with the following
-content by clicking on *Copy to Editor*:
-
-~~~java
-package com.redhat.coolstore.rest;
-
-import java.io.Serializable;
-import java.util.List;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import javax.enterprise.context.ApplicationScoped;
+import javax.json.Json;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import com.redhat.coolstore.model.Inventory;
-import com.redhat.coolstore.service.InventoryService;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
-@RequestScoped
-@Path("/inventory")
-public class InventoryEndpoint implements Serializable {
-
-    private static final long serialVersionUID = -7227732980791688773L;
-
-    @Inject
-    private InventoryService inventoryService;
+@Path("inventory")
+@ApplicationScoped
+@Produces("application/json")
+@Consumes("application/json")
+public class InventoryResource {
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public List<Inventory> getAll() {
-        return inventoryService.getAllInventory();
+        return Inventory.listAll();
     }
 
     @GET
-    @Path("{itemId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Inventory getAvailability(@PathParam("itemId") String itemId) {
-        return inventoryService.getInventory(itemId);
+    @Path("{location}")
+    public List<Inventory> getAvailability(@PathParam String location) {
+        return Inventory.<Inventory>streamAll()
+        .filter(p -> p.location.equals(location))
+        .collect(Collectors.toList());
     }
 
+    @Provider
+    public static class ErrorMapper implements ExceptionMapper<Exception> {
+
+        @Override
+        public Response toResponse(Exception exception) {
+            int code = 500;
+            if (exception instanceof WebApplicationException) {
+                code = ((WebApplicationException) exception).getResponse().getStatus();
+            }
+            return Response.status(code)
+                    .entity(Json.createObjectBuilder().add("error", exception.getMessage()).add("code", code).build())
+                    .build();
+        }
+
+    }
 }
 ~~~
+
 
 The above REST services defines two endpoints:
 
-* `/services/inventory` that is accessible via **HTTP GET** which will return all known product Inventory entities as JSON
-* `/services/inventory/<id>` that is accessible via **HTTP GET** at
-for example **/services/inventory/329299** with
-the last path parameter being the product id which we want to check its inventory status.
+* `/inventory` that is accessible via **HTTP GET** which will return all known product Inventory entities as JSON
+* `/inventory/<location>` that is accessible via **HTTP GET** at
+for example **/inventory/Boston** with
+the last path parameter being the location which we want to check its inventory status.
 
-The code also injects our new **InventoryService** using the [CDI @Inject](https://docs.oracle.com/javaee/7/tutorial/partcdi.htm) annotation, which gives
-us a runtime handle to the service we defined in the previous steps that we can use to query
-the database when the RESTful APIs are invoked.
+**6. Add inventory data**
 
+Let's add inventory data to the database so we can test things out. Open up the `src/main/resources/import.sql` file and 
+copy the following SQL statements to `import.sql`:
+
+~~~java
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Boston', 'Boston', 512);
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=London', 'London', 87);
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Paris', 'Paris', 600);
+INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
+~~~
+
+In Development, we will configure to use local in-memory H2 database for local testing, as defined in src/main/resources/application.properties:
+
+~~~java
+quarkus.datasource.url=jdbc:h2:file://projects/database.db
+quarkus.datasource.driver=org.h2.Driver
+quarkus.datasource.username=quarkus_test
+quarkus.datasource.password=quarkus_test
+quarkus.datasource.max-size=8
+quarkus.datasource.min-size=2
+quarkus.hibernate-orm.database.generation=drop-and-create
+quarkus.hibernate-orm.log.sql=false
+~~~
+
+**6. Run Quarkus Inventory application**
+Now we are ready to run the inventory application. Run Quarkus development mode via Eclipse Che **Terminal**:
+
+~~~shell
+mvn compile quarkus:dev
+~~~
+
+You should see a bunch of log output that ends with:
+
+12:56:43,106 INFO  [io.quarkus] Quarkus 0.12.0 started in 2.138s. Listening on: http://[::]:8080
+12:56:43,106 INFO  [io.quarkus] Installed features: [agroal, cdi, hibernate-orm, jdbc-postgresql, narayana-jta, resteasy, resteasy-jsonb]
 Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
 
 ![inventory_build]({% image_path bootstrap-che-build-inventory.png %})
