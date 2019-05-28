@@ -129,12 +129,14 @@ public class StartupListener {
 
 **4. Test the build**
 
-Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
+Go to `Commands Palette` and click on `build` in Eclipse Che:
 
 ![rhamt_project_issues]({% image_path bootstrap-che-build.png %})
 
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
+
+![rhamt_project_issues]({% image_path bootstrap-che-build-result.png %})
 
 In the next step, we will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
 
@@ -149,7 +151,7 @@ The WebLogic `NonCatalogLogger` is not supported on JBoss EAP (or any other Java
 We will use the standard Java Logging framework, a much more portable framework. The framework also
 [supports internationalization](https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html#a1.17) if needed.
 
-**4. Open the file**
+**5. Open the file**
 
 Open the offending file `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java`
 

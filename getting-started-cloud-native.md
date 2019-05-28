@@ -128,7 +128,7 @@ Those examples are there to get you started, soon it will be time for you to rem
 
 More importantly, **Fabric8 Launcher Operator** helps enabling the Launcher on an Openshift cluster for enterprise developers who
 want to build the cloud-native application development tool on local machine or on-premise infrastructure. You can deploy the launcher in 5 mins
-along with [INSTALL AND CONFIGURE THE FABRIC8 LAUNCHER TOOL](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). You can also go through [Operator repository](https://github.com/fabric8-launcher/launcher-operator) how it works.
+along with [Install and Configure THtheE Fabric8 Launcher Tool](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). You can also go through [Operator GIT Repository](https://github.com/fabric8-launcher/launcher-operator) how it works.
 
 When you deploy the launcher by `Operator', you will see a similar overview in OpenShift dashboard:
 

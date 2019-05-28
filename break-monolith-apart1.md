@@ -75,7 +75,7 @@ While the code is surprisingly simple, under the hood this is using:
 It makes complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with 
 Panache focuses on making your entities trivial and fun to write in Quarkus.
 
-This project currently contains no code other than web resources such as index.html in `src/test/resources`.
+This project currently contains no code other than web resources such as index.html in `src/main/resources`.
 
 Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
 
