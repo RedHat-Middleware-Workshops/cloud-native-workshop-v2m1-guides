@@ -56,7 +56,7 @@ Run the following commands to set up your environment for this lab and start in 
 
 In the project explorer, right-click on **inventory** and then change a directory to inventory path on **Terminal**.
 
-![inventory_setup]({% image_path bootstrap-che-inventory-project.png %}){:width="500px"}
+![inventory_setup]({% image_path codeready-workspace-inventory-project.png %}){:width="500px"}
 
 **2. Examine the Maven project structure**
 
@@ -141,15 +141,15 @@ Now let's write some code and create a domain model, service interface and a RES
 We will add Qurakus extensions to the Inventory application for using `Panache` and `Postgres` and We'll use the Quarkus Maven Plugin.
 Copy the following commands to add the Hibernate ORM with Panache extension via Eclipse **Terminal**:
 
-~~~shell
-mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-hibernate-orm-panache"
-~~~
+Go to `inventory' directory:
 
-And then for Postgres:
+`cd cloud-native-workshop-v2m1-labs/inventory/`
 
-~~~shell
-mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-postgresql"
-~~~
+`mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-hibernate-orm-panache"`
+
+And then for local H2 database:
+
+`mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-h2"`
 
 >**NOTE:** There are many [more extensions](https://quarkus.io/extensions/) for Quarkus for popular frameworks 
 like [Eclipse Vert.x](https://vertx.io/), [Apache Camel](http://camel.apache.org/), [Infinispan](http://infinispan.org/), 
@@ -274,7 +274,6 @@ public class InventoryResource {
 }
 ~~~
 
-
 The above REST services defines two endpoints:
 
 * `/inventory` that is accessible via **HTTP GET** which will return all known product Inventory entities as JSON
@@ -298,54 +297,173 @@ INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_
 INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
 ~~~
 
-In Development, we will configure to use local in-memory H2 database for local testing, as defined in src/main/resources/application.properties:
+In Development, we will configure to use local in-memory H2 database for local testing, as defined in `src/main/resources/application.properties`:
 
 ~~~java
 quarkus.datasource.url=jdbc:h2:file://projects/database.db
 quarkus.datasource.driver=org.h2.Driver
-quarkus.datasource.username=quarkus_test
-quarkus.datasource.password=quarkus_test
+quarkus.datasource.username=inventory
+quarkus.datasource.password=mysecretpassword
 quarkus.datasource.max-size=8
 quarkus.datasource.min-size=2
 quarkus.hibernate-orm.database.generation=drop-and-create
 quarkus.hibernate-orm.log.sql=false
 ~~~
 
-**6. Run Quarkus Inventory application**
-Now we are ready to run the inventory application. Run Quarkus development mode via Eclipse Che **Terminal**:
+**7. Run Quarkus Inventory application**
 
-~~~shell
-mvn compile quarkus:dev
-~~~
+Now we are ready to run the inventory application. Click on **Commands Palette** then select `Build and Run Locally` in Run menu:
+
+![codeready-workspace-maven]({% image_path quarkus-dev-run-paletter.png %})
+
+You can also use a `maven plugin command` to run the Quarkus application locally via CodeReady Workspaces **Terminal**:
+
+`mvn compile quarkus:dev`
 
 You should see a bunch of log output that ends with:
 
-12:56:43,106 INFO  [io.quarkus] Quarkus 0.12.0 started in 2.138s. Listening on: http://[::]:8080
-12:56:43,106 INFO  [io.quarkus] Installed features: [agroal, cdi, hibernate-orm, jdbc-postgresql, narayana-jta, resteasy, resteasy-jsonb]
-Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
+12:56:43,106 INFO  [io.quarkus] Quarkus 0.15.0 started in 9.429s. Listening on: http://[::]:8080
+12:56:43,106 INFO  [io.quarkus] Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 
-![inventory_build]({% image_path bootstrap-che-build-inventory.png %})
+Open a new CodeReady Workspaces **Terminal** and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
 
-> **NOTE**: Make sure to build this mvn command at working directory(i.e inventory).
+~~~shell
+curl http://localhost:8080/inventory
+[{"id":1,"link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512},{"id":3,"link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"link":"http://maps.google.com/?q=London","location":"London","quantity":87},{"id":6,"link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"link":"http://maps.google.com/?q=Tokyo","location":"Tokyo","quantity":230}]
+~~~
+
+[codeready-workspace-maven]({% image_path quarkus-dev-result.png %}){:width="700px"}
+
+~~~shell
+curl http://localhost:8080/inventory/Boston
+[{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
+~~~
+
+> **NOTE**: Make sure to stop Quarkus development mode via `Close` the `Build and Run Locally` terminal.
+
+**8. Add Test Codes and Make a package**
+
+In this step, we will add Quarkus test codes so that we can inject Unit test during `mvn pacakge`. 
+Open up the `src/test/java/com/redhat/coolstore/InventoryEndpointTest.java` file and copy the following codes:
+
+~~~java
+package com.redhat.coolstore;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.containsString;
+
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
+
+@QuarkusTest
+public class InventoryEndpointTest {
+
+    @Test
+    public void testListAllInventory() {
+        //List all, should have all 8 cities inventory the database has initially:
+        given()
+              .when().get("/inventory")
+              .then()
+              .statusCode(200)
+              .body(
+                    containsString("Raleigh"),
+                    containsString("Boston"),
+                    containsString("Seoul"),
+                    containsString("Singapore"),
+                    containsString("London"),
+                    containsString("NewYork"),
+                    containsString("Paris"),
+                    containsString("Tokyo")
+                    );
+
+        //List a certain city(Seoul), 256 should be returned:
+        given()
+              .when().get("/inventory/Seoul")
+              .then()
+              .statusCode(200)
+              .body(                   
+                    containsString("256")
+              );
+    }
+
+}
+~~~
+
+Make a package to create a uber.jar then we will deploy it to `OpenShift cluster` soon. Use the following mav plugin command via CodeReady Workspaces **Terminal**:
+
+`mvn clean pacakge`
+
+> **NOTE**: Make sure to build this mvn command at working directory(i.e /projects/cloud-native-workshop-v2m1-labs/inventory/).
 
 If builds successfully (you will see `BUILD SUCCESS`), continue to the next step to deploy the application to OpenShift.
 
-You have now successfully created your first microservice using Thorntail and implemented a basic RESTful
-API on top of the Inventory database. Most of the code is the same as was found in the monolith, demonstrating how
-easy it is to migrate existing monolithic Java EE applications to microservices using Thorntail.
+You can also run the Uber.jar to make sure if the inventory works. Use the following `Java command` then you see a similar output:
+
+~~~shell
+java -jar target/inventory-1.0-SNAPSHOT-runner.jar
+2019-05-29 06:54:16,123 INFO  [io.quarkus] (main) Quarkus 0.15.0 started in 7.826s. Listening on: http://[::]:8080
+2019-05-29 06:54:16,201 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+~~~
+
+Open a new CodeReady Workspaces **Terminal** and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
+
+~~~shell
+curl http://localhost:8080/inventory
+[{"id":1,"link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512},{"id":3,"link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"link":"http://maps.google.com/?q=London","location":"London","quantity":87},{"id":6,"link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"link":"http://maps.google.com/?q=Tokyo","location":"Tokyo","quantity":230}]
+~~~
+
+[codeready-workspace-maven]({% image_path quarkus-dev-result.png %}){:width="700px"}
+
+~~~shell
+curl http://localhost:8080/inventory/Boston
+[{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
+~~~
+
+> **NOTE**: Make sure to stop Quarkus runtimes via `Close` the terminal.
+
+You have now successfully created your first microservice using `Quarkus` and implemented a basic RESTful
+API on top of the Inventory database. Most of the code look simpler than the monolith, demonstrating how
+easy it is to migrate existing monolithic Java EE applications to microservices using `Quarkus`.
 
 In next steps of this lab we will deploy our application to OpenShift Container Platform and then start
 adding additional features to take care of various aspects of cloud native microservice development.
 
 
-**6. Create OpenShift Project**
+**9. Create OpenShift Project**
 
 We have already deployed our coolstore monolith to OpenShift, but now we are working on re-architecting it to be
 microservices-based.
 
-In this step we will deploy our new Inventory microservice for our CoolStore application,
+In this step, we will deploy our new Inventory microservice for our CoolStore application,
 so let's create a separate project to house it and keep it separate from our monolith and our other microservices we will
 create later on.
+
+Before going to OpenShift console, we will repackage the Quarkus application for adding a PostgreSQL extension 
+because Inventory service will connect to PostgeSQL database in production on OpenShift cluster.
+
+Add a `quarkus-jdbc-postgresql` extendsion via CodeReady Workspaces **Terminal**:
+
+`cd cloud-native-workshop-v2m1-labs/inventory/`
+
+`mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-postgresql"`
+
+Comment the **quarkus.datasource.url, quarkus.datasource.drive** configuration and add the following variables in `src/main/resources/application.properties`:
+
+~~~java
+quarkus.datasource.url=jdbc:postgresql:inventory
+quarkus.datasource.driver=org.postgresql.Driver
+~~~
+
+Repackage the inventory application via clicking on `Package for OpenShift` in `Commands Palette`:
+
+![codeready-workspace-maven]({% image_path quarkus-dev-run-packageforOcp.png %})
+
+
+Or you can run a maven plugin command directly in **Terminal**:
+
+`mvn clean pacakge -DskipTests`
+
+> **NOTE**: You should **SKIP** the Unit test because you don't have PostgreSQL database in local environment.
 
 Create a new project for the _inventory_ service:
 
@@ -363,12 +481,12 @@ Click on the name of the newly-created project:
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
-**7. Deploy to OpenShift**
+**10. Deploy to OpenShift**
 
 Let's deploy our new inventory microservice to OpenShift!
 
 Our production inventory microservice will use an external database (PostgreSQL) to house inventory data.
-First, deploy a new instance of PostgreSQL by executing the following commands via Eclipse Che **Terminal**:
+First, deploy a new instance of PostgreSQL by executing the following commands via CodeReady Workspaces **Terminal**:
 
 `oc project inventory`
 
@@ -385,33 +503,61 @@ This will deploy the database to our new project.
 
 ![inventory_db_deployments]({% image_path inventory-database-deployment.png %})
 
-**8. Build and Deploy**
+**11. Build and Deploy**
 
 Red Hat OpenShift Application Runtimes includes a powerful maven plugin that can take an
-existing Thorntail application and generate the necessary Kubernetes configuration.
-You can also add additional config, like ``src/main/fabric8/inventory-deployment.yml`` which defines
-the deployment characteristics of the app (in this case we declare a few environment variables which map our credentials
-stored in the secrets file to the application), but OpenShift supports a wide range of [Deployment configuration options](https://docs.openshift.org/latest/architecture/core_concepts/deployments.html) for apps).
+existing Quarkus application and generate the necessary Kubernetes configuration.
 
-Build and deploy the project using the following command, which will use the maven plugin to deploy via Eclipse Che **Terminal**:
+Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces **Terminal**:
 
-`mvn clean fabric8:deploy -Popenshift`
+`oc project inventory`
 
-The build and deploy may take a minute or two. Wait for it to complete. You should see a **BUILD SUCCESS** at the
-end of the build output.
+`oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=inventory-quarkus -l app=inventory-quarkus`
 
-> **NOTE**: If you see messages like `Current reconnect backoff is 2000 milliseconds (T1)` you can safely
-ignore them, it is a known issue and is harmless.
+This build uses the new [Red Hat OpenJDK Container Image](https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index), providing foundational software needed to run Java applications, while staying at a reasonable size.
 
-After the maven build finishes it will take less than a minute for the application to become available.
-To verify that everything is started, run the following command and wait for it complete successfully:
+> **NOTE**: Make sure if you log in OpenShift via `oc login command` at Terminal.
 
-`oc rollout status -w dc/inventory`
+Next, create a temp directory to store only previously-built application with necessary lib directory via CodeReady Workspaces **Terminal**:
+
+`rm -rf target/binary && mkdir -p target/binary && cp -r target/*runner.jar target/lib target/binary`
+
+> **NOTE**: You can also use a true source-based S2I build, but we're using binaries here to save time.
+
+And then start and watch the build, which will take about a minute to complete:
+
+`oc start-build inventory-quarkus --from-dir=target/binary --follow`
+
+Once the build is done, we'll deploy it as an OpenShift application and override the Postgres URL to specify our production Postgres credentials:
+
+`oc new-app inventory-quarkus \
+   -e QUARKUS_DATASOURCE_URL=jdbc:postgresql://inventory-database:5432/inventory`
+
+and expose your service to the world:
+
+`oc expose service inventory-quarkus`
+
+Finally, make sure it's actually done rolling out:
+
+`oc rollout status -w dc/inventory-quarkus`
+
+Wait for that command to report replication controller "inventory-quarkus-1" successfully rolled out before continuing.
 
 >**NOTE:** Even if the rollout command reports success the application may not be ready yet and the reason for
 that is that we currently don't have any liveness check configured, but we will add that in the next steps.
 
-**9. Access the application running on OpenShift**
+And now we can access using curl once again to find all inventories:
+
+`oc get routes`
+
+Replace your own route URL in the above command output: 
+
+`curl http://inventory-quarkus-inventory.apps.seoul-df03.openshiftworkshop.com/inventory | jq`
+
+So now `Inventory` service is deployed to OpenShift. You can also see it in the Overview in the OpenShift Console 
+with its single replica running in 1 pod (the blue circle), along with the Postgres database pod:
+
+**12. Access the application running on OpenShift**
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
@@ -426,7 +572,7 @@ is due to a lack of health check which you are about to fix!
 
 The UI will refresh the inventory table every 2 seconds, as before.
 
-Back on the OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory` and then click on
+Back on the OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` and then click on
 the top-most `(latest)` deployment in the listing (most likely `#1` or `#2`):
 
 ![Overview link]({% image_path deployment-list.png %})
@@ -441,7 +587,7 @@ to be ready to accept service requests even before the application is truly read
 or otherwise unable to service requests. OpenShift must be _taught_ how to recognize that our app is alive and ready
 to accept requests. 
 
-**10. Add Health Check Fraction**
+**13. Add Health Check Fraction**
 
 #### What is a Fraction?
 
@@ -475,7 +621,7 @@ OpenShift will destroy the pod and replace it with a new one.
 In our case we will implement the health check logic in a REST endpoint and let Thorntail publish
 that logic on the `/health` endpoint for use with OpenShift.
 
-**11. Add `monitor` fraction**
+**14. Add `monitor` fraction**
 
 First, open the `pom.xml` file.
 
@@ -494,7 +640,7 @@ By adding the `monitor` fraction, Fabric8 will automatically add a _readinessPro
 _DeploymentConfig_, published at `/health`, once deployed to OpenShift. But you still need to implement the logic behind
 the health check, which you'll do next.
 
-**12. Define Health Check Endpoint**
+**15. Define Health Check Endpoint**
 
 We are now ready to define the logic of our health check endpoint.
 
@@ -503,7 +649,7 @@ Create empty Java class: `src/main/java/com/redhat/coolstore/rest/HealthChecks.j
 Methods in this new class will be annotated with both the JAX-RS annotations as well as
 [Thorntail's `@Health` annotation](https://wildfly-swarm.gitbooks.io/wildfly-swarm-users-guide/content/advanced/monitoring.html), indicating it should be used as a health check endpoint.
 
-**13. Add health check logics**
+**16. Add health check logics**
 
 Next, let's fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services.
 
@@ -545,15 +691,15 @@ this endpoint as a health check at `/health`.
 
 With our new health check in place, we'll need to build and deploy the updated application in the next step.
 
-**14. Re-Deploy to OpenShift**
+**17. Re-Deploy to OpenShift**
 
-With our health check in place, lets rebuild and redeploy using the same command as before via Eclipse Che **Terminal**:
+With our health check in place, lets rebuild and redeploy using the same command as before via CodeReady Workspaces **Terminal**:
 
 `mvn fabric8:undeploy clean fabric8:deploy -Popenshift`
 
 You should see a **BUILD SUCCESS** at the end of the build output.
 
-To verify that everything is started, run the following command via Eclipse Che **Terminal** and wait for it report
+To verify that everything is started, run the following command via CodeReady Workspaces **Terminal** and wait for it report
 `replication controller "inventory-xxxx" successfully rolled out`
 
 `oc rollout status -w dc/inventory`
@@ -579,7 +725,7 @@ You should see a JSON response like:
 }
 ~~~
 
-You can see the definition of the health check from the perspective of OpenShift via Eclipse Che **Terminal**:
+You can see the definition of the health check from the perspective of OpenShift via CodeReady Workspaces **Terminal**:
 
 `oc describe dc/inventory | egrep 'Readiness|Liveness'`
 
@@ -590,7 +736,7 @@ You should see:
     Readiness:	http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
 ~~~
 
-**15. Adjust probe timeout**
+**18. Adjust probe timeout**
 
 The various timeout values for the probes can be configured in many ways. Let's tune the _liveness probe_ initial delay so that
 we don't have to wait 3 minutes for it to be activated. Use OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory` 
@@ -603,7 +749,7 @@ probe to wait 30 seconds before starting to poll the probe:
 
 `oc set probe dc/inventory --liveness --initial-delay-seconds=30`
 
-And verify it's been changed (look at the `delay=` value for the Liveness probe) via Eclipse Che **Terminal**:
+And verify it's been changed (look at the `delay=` value for the Liveness probe) via CodeReady Workspaces **Terminal**:
 
 `oc describe dc/inventory | egrep 'Readiness|Liveness'`
 
@@ -614,7 +760,7 @@ And verify it's been changed (look at the `delay=` value for the Liveness probe)
 
 In the next step we'll exercise the probe and watch as it fails and OpenShift recovers the application.
 
-**16. Exercise Health Check**
+**19. Exercise Health Check**
 
 From the OpenShift Web Console overview page, click on the route link to open the sample application UI:
 
@@ -629,7 +775,7 @@ The app will begin polling the inventory as before and report success:
 ![Greeting]({% image_path inventory.png %})
 
 Now you will corrupt the service and cause its health check to start failing.
-To simulate the app crasing, let's kill the underlying service so it stops responding. Execute via Eclipse Che **Terminal**:
+To simulate the app crasing, let's kill the underlying service so it stops responding. Execute via CodeReady Workspaces **Terminal**:
 
 `oc  rsh dc/inventory pkill java`
 
@@ -655,7 +801,7 @@ re-connected to the new service and successfully accessed the inventory once aga
 
 ![Greeting]({% image_path inventory.png %})
 
-**17. Managing Application Configuration**
+**20. Managing Application Configuration**
 
 In this step, you will learn how to manage application configuration and how to provide environment 
 specific configuration to the services.
@@ -687,7 +833,7 @@ different configurations that are provided to the application at runtime.
 
 So far Catalog and Inventory services have been using each PostgreSQL database. 
 
-**18. Externalize Thorntail (Inventory) Configuration**
+**21. Externalize Thorntail (Inventory) Configuration**
 
 Thorntail supports multiple mechanisms for externalizing configurations such as environment variables, 
 Maven properties, command-line arguments and more. The recommend approach for the long-term for externalizing 

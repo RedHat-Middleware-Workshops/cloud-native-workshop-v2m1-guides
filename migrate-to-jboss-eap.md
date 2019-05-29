@@ -2,43 +2,44 @@
 
 In this step we will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
 
-**1. Open the file using Eclipse Che**
+**1. Open the file using CodeReady Workspaces**
 
-Follow these instructions to setup the development environment on Eclipse Che. 
+Follow these instructions to setup the development environment on CodeReady Workspaces. 
 
-You might be familiar with the Eclipse IDE which is one of the most popular IDEs for Java and other
-programming languages. [Eclipse Che](https://www.eclipse.org/che/) is the next-generation Eclipse IDE which is web-based
-and gives you a full-featured IDE running in the cloud. You have an Eclipse Che instance deployed on your OpenShift cluster
+You might be familiar with the CodeReady Workspaces which is one of the most popular IDEs for Java and other
+programming languages. [CodeReady Workspaces](https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces) is the next-generation CodeReady Workspaces 
+which is web-based and gives you a full-featured IDE running in the cloud. You have an CodeReady Workspaces instance deployed on your OpenShift cluster
 which you will use during these labs.
 
-Go to the [Eclipse Che URL]({{ ECLIPSE_CHE_URL }}) in order to configure your development workspace.
+Go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configure your development workspace.
 
 First, you need to register as a user. Register and choose the same username and password as 
 your OpenShift credentials.
 
-![bootstrap-che-register]({% image_path bootstrap-che-register.png %}){:width="700px"}
+![codeready-workspace-register]({% image_path codeready-workspace-landing.png %})
+![codeready-workspace-register]({% image_path codeready-workspace-register.png %})
 
-Log into Eclipse Che with your user. You can now create your workspace based on a stack. A 
+Log into CodeReady Workspaces with your user. You can now create your workspace based on a stack. A 
 stack is a template of workspace configuration. For example, it includes the programming language and tools needed
 in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration
 on-demand. 
 
-For this lab, click on the **Cloud Native Workshop** stack and then on the **Create** button. 
+For this lab, click on the **Cloud Native Workshop v2** stack and then on the **Create** button. 
 
-![bootstrap-che-create-workspace]({% image_path bootstrap-che-create-workspace.png %})
+![codeready-workspace-create-workspace]({% image_path codeready-workspace-create-workspace.png %})
 
 Click on **Open** to open the workspace and then on the **Start** button to start the workspace for use, if it hasn't started automatically.
 
-![bootstrap-che-start-workspace]({% image_path bootstrap-che-start-workspace.png %})
+![codeready-workspace-start-workspace]({% image_path codeready-workspace-start-workspace.png %})
 
 You can click on the left arrow icon to switch to the wide view:
 
-![bootstrap-che-wide]({% image_path bootstrap-che-wide.png %}){:width="600px"}
+![codeready-workspace-wide]({% image_path codeready-workspace-wide.png %}){:width="600px"}
 
 It takes a little while for the workspace to be ready. When it's ready, you will see a fully functional 
-Eclipse Che IDE running in your browser.
+CodeReady Workspaces IDE running in your browser.
 
-![bootstrap-che-workspace]({% image_path bootstrap-che-workspace.png %})
+![codeready-workspace-workspace]({% image_path codeready-workspace-workspace.png %})
 
 Now you can import the project skeletons into your workspace.
 
@@ -49,25 +50,25 @@ In the project explorer pane, click on the **Import Projects...** and enter the 
   * Check **Import recursively (for multi-module projects)**
   * Name: `cloud-native-workshop-v2m1-labs`
 
-![bootstrap-che-import]({% image_path bootstrap-che-import.png %}){:width="700px"}
+![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
 The projects are imported now into your workspace and is visible in the project explorer.
 
-Eclipse Che is a full featured IDE and provides language specific capabilities for various project types. In order to 
+CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
 enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on **monolith** and then click on **Convert to Project**.
 
-![bootstrap-che-convert]({% image_path bootstrap-che-convert.png %}){:width="500px"}
+![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
 
 Choose **Maven** from the project configurations and then click on **Save**.
 
-![bootstrap-che-maven]({% image_path bootstrap-che-maven.png %}){:width="700px"}
+![codeready-workspace-maven]({% image_path codeready-workspace-maven.png %}){:width="700px"}
 
 Repeat the above for inventory and catalog projects.
 
-> **NOTE**: the **Terminal** window in Eclipse Che. For the rest of these labs, anytime you need to run 
-a command in a terminal, you can use the Eclipse Che **Terminal** window.
+> **NOTE**: the **Terminal** window in CodeReady Workspaces. For the rest of these labs, anytime you need to run 
+a command in a terminal, you can use the CodeReady Workspaces **Terminal** window.
 
-![bootstrap-che-terminal]({% image_path bootstrap-che-terminal.png %})
+![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
 
 **2. Review the issue related to `ApplicationLifecycleListener`**
 
@@ -129,14 +130,14 @@ public class StartupListener {
 
 **4. Test the build**
 
-Go to `Commands Palette` and click on `build` in Eclipse Che:
+Go to `Commands Palette` and click on `build` in CodeReady Workspaces:
 
-![rhamt_project_issues]({% image_path bootstrap-che-build.png %})
+![rhamt_project_issues]({% image_path codeready-workspace-build.png %})
 
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
 
-![rhamt_project_issues]({% image_path bootstrap-che-build-result.png %})
+![rhamt_project_issues]({% image_path codeready-workspace-build-result.png %})
 
 In the next step, we will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
 
@@ -214,9 +215,9 @@ That one was pretty easy.
 
 **7. Test the build**
 
-Build and package the app using Maven to make sure you code still compiles via Eclipse Che **BUILD** window:
+Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
 
-![rhamt_project_issues]({% image_path bootstrap-che-build.png %})
+![rhamt_project_issues]({% image_path codeready-workspace-build.png %})
 
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
@@ -271,12 +272,12 @@ JBoss EAP's internal message queue implementation provided by [Apache ActiveMQ A
 The first step is to remove the unneeded `weblogic-ejb-jar.xml` file. This file is proprietary to Weblogic and not recognized or processed by JBoss
 EAP. Delete the file on Eclipse Navigator:
 
-![bootstrap-che-convert]({% image_path bootstrap-che-delete-jar.png %}){:width="500px"}
+![codeready-workspace-convert]({% image_path codeready-workspace-delete-jar.png %}){:width="500px"}
 
 While we're at it, let's remove the stub weblogic implementation classes added as part of the scenario.
 Delete the file on Eclipse Navigator:
 
-![bootstrap-che-convert]({% image_path bootstrap-che-delete-weblogic.png %}){:width="500px"}
+![codeready-workspace-convert]({% image_path codeready-workspace-delete-weblogic.png %}){:width="500px"}
 
 **10. Fix the code**
 
@@ -346,9 +347,9 @@ Your MDB should now be properly migrated to JBoss EAP.
 
 **11. Test the build**
 
-Build and package the app using Maven to make sure you code still compiles via Eclipse Che **BUILD** window:
+Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
 
-![rhamt_project_issues]({% image_path bootstrap-che-build.png %})
+![rhamt_project_issues]({% image_path codeready-workspace-build.png %})
 
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
@@ -444,15 +445,15 @@ This will take you to the project overview. There's nothing there yet, but that'
 
 **16. Deploy the monolith**
 
-We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via Eclipse Che **Terminal** window:
+We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces **Terminal** window:
 
 Copy login command and Login OpenShift cluster:
 
-![bootstrap-che-copy-login-cmd]({% image_path bootstrap-che-oc-login-copy.png %}){:width="700px"}
+![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
 
-Paste it on Eclipse Che **Terminal** window.
+Paste it on CodeReady Workspaces **Terminal** window.
 
-Switch to the developer project you created earlier via Eclipse Che **Terminal** window:
+Switch to the developer project you created earlier via CodeReady Workspaces **Terminal** window:
 
 `oc project coolstore-dev`
 
@@ -484,7 +485,7 @@ First, build the project once more using the `openshift` Maven profile, which wi
 suitable binary for use with OpenShift (this is not a container image yet, but just the `.war`
 file). We will do this with the `oc` command line.
 
-Build the project via Eclipse Che **Terminal** window:
+Build the project via CodeReady Workspaces **Terminal** window:
 
 ``mvn clean package -Popenshift``
 
