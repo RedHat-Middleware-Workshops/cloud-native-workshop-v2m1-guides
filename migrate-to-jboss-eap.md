@@ -16,8 +16,7 @@ Go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configur
 First, you need to register as a user. Register and choose the same username and password as 
 your OpenShift credentials.
 
-![codeready-workspace-register]({% image_path codeready-workspace-landing.png %})
-![codeready-workspace-register]({% image_path codeready-workspace-register.png %})
+![codeready-workspace-register]({% image_path codeready-workspace-register.png %}){:width="800px"}
 
 Log into CodeReady Workspaces with your user. You can now create your workspace based on a stack. A 
 stack is a template of workspace configuration. For example, it includes the programming language and tools needed
@@ -34,12 +33,12 @@ Click on **Open** to open the workspace and then on the **Start** button to star
 
 You can click on the left arrow icon to switch to the wide view:
 
-![codeready-workspace-wide]({% image_path codeready-workspace-wide.png %}){:width="600px"}
+![codeready-workspace-wide]({% image_path codeready-workspace-wide.png %})
 
 It takes a little while for the workspace to be ready. When it's ready, you will see a fully functional 
 CodeReady Workspaces IDE running in your browser.
 
-![codeready-workspace-workspace]({% image_path codeready-workspace-workspace.png %})
+![codeready-workspace-workspace]({% image_path codeready-workspace.png %})
 
 Now you can import the project skeletons into your workspace.
 
@@ -152,11 +151,12 @@ The WebLogic `NonCatalogLogger` is not supported on JBoss EAP (or any other Java
 We will use the standard Java Logging framework, a much more portable framework. The framework also
 [supports internationalization](https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html#a1.17) if needed.
 
-**5. Open the file**
+**5. Make the changes** O
 
-Open the offending file `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java`
+pen the file to make these changes:
 
-**6. Make the changes** Open the file to make these changes:
+`src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java`
+
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -213,7 +213,7 @@ public class OrderServiceMDB implements MessageListener {
 
 That one was pretty easy.
 
-**7. Test the build**
+**6. Test the build**
 
 Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
 
@@ -255,7 +255,7 @@ it will rarely be as simple as changing one line at a time for a migration. Cons
 Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat can help you
 on your migration path.
 
-**8. Review the issues**
+**7. Review the issues**
 
 From the RHAMT Issues report, we will fix the remaining issues:
 
@@ -267,7 +267,7 @@ From the RHAMT Issues report, we will fix the remaining issues:
 All of the above interfaces have equivalents in JBoss, however they are greatly simplified and overkill for our application which uses
 JBoss EAP's internal message queue implementation provided by [Apache ActiveMQ Artemis](https://activemq.apache.org/artemis/).
 
-**9. Remove the weblogic EJB Descriptors**
+**8. Remove the weblogic EJB Descriptors**
 
 The first step is to remove the unneeded `weblogic-ejb-jar.xml` file. This file is proprietary to Weblogic and not recognized or processed by JBoss
 EAP. Delete the file on Eclipse Navigator:
@@ -279,7 +279,7 @@ Delete the file on Eclipse Navigator:
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-delete-weblogic.png %}){:width="500px"}
 
-**10. Fix the code**
+**9. Fix the code**
 
 Open `src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java`. Open the file to fix the code:
 
@@ -345,7 +345,7 @@ taken to consider the needs of the application.
 
 Your MDB should now be properly migrated to JBoss EAP.
 
-**11. Test the build**
+**10. Test the build**
 
 Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
 
@@ -354,7 +354,7 @@ Build and package the app using Maven to make sure you code still compiles via C
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
 
-**12. Run the RHAMT Web console against the project ( Instructor Only )** 
+**11. Run the RHAMT Web console against the project ( Instructor Only )** 
 
 > **NOTE**: Considering network bandwidth of the workshop environment, `The only Instructor` use a backed WAR file in /opt/solution) to run this step.
 
@@ -368,7 +368,7 @@ You should delete the old application(i.e. monolith.war) to avoid to analyze it 
 
 **Wait for it to complete before continuing!**. 
 
-**13. View the results**
+**12. View the results**
 
 Click on the lastet result to go to the report web page and verify that it now reports 0 Story Points:
 
@@ -380,7 +380,7 @@ this app to JBoss EAP, congratulations!
 Now that we've migrated the app, let's deploy it and test it out and start to explore some of the features that JBoss EAP
 plus Red Hat OpenShift bring to the table.
 
-**14. Add an OpenShift profile**
+**13. Add an OpenShift profile**
 
 Open the `pom.xml` file.
 
@@ -411,7 +411,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 </profile>
 ~~~
 
-**15. Create the OpenShift project**
+**14. Create the OpenShift project**
 
 First, open a new brower with the `OpenShift Web Console`
 
@@ -443,7 +443,7 @@ Click on the name of the newly-created project:
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
-**16. Deploy the monolith**
+**15. Deploy the monolith**
 
 We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces **Terminal** window:
 
@@ -473,7 +473,7 @@ You can see the components being deployed on the
 Project Overview, but notice the **No deployments for Coolstore**. You have not yet deployed
 the container image built in previous steps, but you'll do that next.
 
-**17. Deploy application using Binary build**
+**16. Deploy application using Binary build**
 
 In this development project we have selected to use a process called binary builds, which
 means that instead of pointing to a public Git Repository and have the S2I (Source-to-Image) build process
