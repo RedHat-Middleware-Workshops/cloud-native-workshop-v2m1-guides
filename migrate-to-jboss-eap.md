@@ -151,9 +151,9 @@ The WebLogic `NonCatalogLogger` is not supported on JBoss EAP (or any other Java
 We will use the standard Java Logging framework, a much more portable framework. The framework also
 [supports internationalization](https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html#a1.17) if needed.
 
-**5. Make the changes** O
+**5. Make the changes** 
 
-pen the file to make these changes:
+Open the file to make these changes:
 
 `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java`
 

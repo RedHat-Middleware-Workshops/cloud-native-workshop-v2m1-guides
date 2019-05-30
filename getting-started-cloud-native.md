@@ -22,6 +22,7 @@ During the first planing sprint you have investigated the possibility to deploy 
 After the investigation the team agrees that JBoss EAP seems to be the much better choice with better support for running your application in OpenShift, but the last question mark on “Migration cost” is worrying. You decide to contact Red Hat to try to find out what the migration cost might actually be. Red Hat recommends that you use a tool called Red Hat Application Migration Toolkit (RHAMT) which will help you analyze your application give you a report on the estimated effort to migrate and also gives you instructions on how to actually migrate the report.
 
 ---
+
 #### What is Red Hat Application Migration Toolkit?
 
 ![RHAMT Logo]({% image_path rhamt_logo.png %})
@@ -82,7 +83,7 @@ You can log in with your existing OpenShift Online, Red Hat Developer Program, o
 or register for a Red Hat account if you don't have one already.
 
 
-#### How to Create a New Application
+#### How to Create a New Application?
 
 You start your own new application by picking the capabilities you want (Http Api, Persistence, ...). We take care of setting everything's up to get you started.
 

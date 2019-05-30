@@ -80,57 +80,53 @@ runs the Quarkus application in JVM mode as well as native (no JVM) mode in `src
 
 * Dockerfile in JVM mode
 
-~~~java
-####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
-#
-# Before building the docker image run:
-#
-# mvn package
-#
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/hibernate-orm-panache-resteasy-jvm .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy-jvm
-#
-###
-FROM fabric8/java-alpine-openjdk8-jre
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV AB_ENABLED=jmx_exporter
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/app.jar
-ENTRYPOINT [ "/deployments/run-java.sh" ]
-~~~
+> ####
+> # This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+> #
+> # Before building the docker image run:
+> #
+> # mvn package
+> #
+> # Then, build the image with:
+> #
+> # docker build -f src/main/docker/Dockerfile.jvm -t quarkus/hibernate-orm-panache-resteasy-jvm .
+> #
+> # Then run the container using:
+> #
+> # docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy-jvm
+> #
+> ###
+> FROM fabric8/java-alpine-openjdk8-jre
+> ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+> ENV AB_ENABLED=jmx_exporter
+> COPY target/lib/* /deployments/lib/
+> COPY target/*-runner.jar /deployments/app.jar
+> ENTRYPOINT [ "/deployments/run-java.sh" ]
 
 * Dockerfile in Native mode
 
-~~~java
-####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode
-#
-# Before building the docker image run:
-#
-# mvn package -Pnative -Dnative-image.docker-build=true
-#
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/hibernate-orm-panache-resteasy .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy
-#
-###
-FROM registry.fedoraproject.org/fedora-minimal
-WORKDIR /work/
-COPY target/*-runner /work/application
-RUN chmod 775 /work
-EXPOSE 8080
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
-~~~
+> ####
+> # This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode
+> #
+> # Before building the docker image run:
+> #
+> # mvn package -Pnative -Dnative-image.docker-build=true
+> #
+> # Then, build the image with:
+> #
+> # docker build -f src/main/docker/Dockerfile.native -t quarkus/hibernate-orm-panache-resteasy .
+> #
+> # Then run the container using:
+> #
+> # docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy
+> #
+> ###
+> FROM registry.fedoraproject.org/fedora-minimal
+> WORKDIR /work/
+> COPY target/*-runner /work/application
+> RUN chmod 775 /work
+> EXPOSE 8080
+> CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
 
 Now let's write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
 
@@ -144,6 +140,7 @@ Copy the following commands to add the Hibernate ORM with Panache extension via 
 Go to `inventory' directory:
 
 `cd cloud-native-workshop-v2m1-labs/inventory/`
+
 `mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-hibernate-orm-panache"`
 
 And then for local H2 database:
@@ -285,29 +282,25 @@ the last path parameter being the location which we want to check its inventory 
 Let's add inventory data to the database so we can test things out. Open up the `src/main/resources/import.sql` file and 
 copy the following SQL statements to `import.sql`:
 
-~~~java
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Boston', 'Boston', 512);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=London', 'London', 87);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Paris', 'Paris', 600);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
-~~~
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Boston', 'Boston', 512);
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=London', 'London', 87);
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Paris', 'Paris', 600);
+> INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
 
 In Development, we will configure to use local in-memory H2 database for local testing, as defined in `src/main/resources/application.properties`:
 
-~~~java
-quarkus.datasource.url=jdbc:h2:file://projects/database.db
-quarkus.datasource.driver=org.h2.Driver
-quarkus.datasource.username=inventory
-quarkus.datasource.password=mysecretpassword
-quarkus.datasource.max-size=8
-quarkus.datasource.min-size=2
-quarkus.hibernate-orm.database.generation=drop-and-create
-quarkus.hibernate-orm.log.sql=false
-~~~
+> quarkus.datasource.url=jdbc:h2:file://projects/database.db
+> quarkus.datasource.driver=org.h2.Driver
+> quarkus.datasource.username=inventory
+> quarkus.datasource.password=mysecretpassword
+> quarkus.datasource.max-size=8
+> quarkus.datasource.min-size=2
+> quarkus.hibernate-orm.database.generation=drop-and-create
+> quarkus.hibernate-orm.log.sql=false
 
 **7. Run Quarkus Inventory application**
 
@@ -321,20 +314,23 @@ You can also use a `maven plugin command` to run the Quarkus application locally
 
 You should see a bunch of log output that ends with:
 
-12:56:43,106 INFO  [io.quarkus] Quarkus 0.15.0 started in 9.429s. Listening on: http://[::]:8080
-12:56:43,106 INFO  [io.quarkus] Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+> 12:56:43,106 INFO  [io.quarkus] Quarkus 0.15.0 started in 9.429s. Listening on: http://[::]:8080
+> 12:56:43,106 INFO  [io.quarkus] Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 
 Open a new CodeReady Workspaces **Terminal** and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
 
+`curl http://localhost:8080/inventory'
+
 ~~~shell
-`curl http://localhost:8080/inventory`
 [{"id":1,"link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512},{"id":3,"link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"link":"http://maps.google.com/?q=London","location":"London","quantity":87},{"id":6,"link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"link":"http://maps.google.com/?q=Tokyo","location":"Tokyo","quantity":230}]
 ~~~
 
-~~~shell
+
 `curl http://localhost:8080/inventory/Boston`
+
+~~~~shell
 [{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
-~~~
+~~~~
 
 > **NOTE**: Make sure to stop Quarkus development mode via `Close` the `Build and Run Locally` terminal.
 
@@ -404,13 +400,16 @@ java -jar target/inventory-1.0-SNAPSHOT-runner.jar
 
 Open a new CodeReady Workspaces **Terminal** and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
 
-~~~shell
 `curl http://localhost:8080/inventory`
+
+~~~shell
 [{"id":1,"link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512},{"id":3,"link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"link":"http://maps.google.com/?q=London","location":"London","quantity":87},{"id":6,"link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"link":"http://maps.google.com/?q=Tokyo","location":"Tokyo","quantity":230}]
 ~~~
 
-~~~shell
+
 `curl http://localhost:8080/inventory/Boston`
+
+~~~shell
 [{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
 ~~~
 
@@ -439,14 +438,13 @@ because Inventory service will connect to PostgeSQL database in production on Op
 Add a `quarkus-jdbc-postgresql` extendsion via CodeReady Workspaces **Terminal**:
 
 `cd cloud-native-workshop-v2m1-labs/inventory/`
+
 `mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-postgresql"`
 
 Comment the **quarkus.datasource.url, quarkus.datasource.drive** configuration and add the following variables in `src/main/resources/application.properties`:
 
-~~~java
-quarkus.datasource.url=jdbc:postgresql:inventory
-quarkus.datasource.driver=org.postgresql.Driver
-~~~
+> quarkus.datasource.url=jdbc:postgresql:inventory
+> quarkus.datasource.driver=org.postgresql.Driver
 
 Repackage the inventory application via clicking on `Package for OpenShift` in `Commands Palette`:
 
@@ -484,11 +482,7 @@ First, deploy a new instance of PostgreSQL by executing the following commands v
 
 `oc project inventory`
 
-`oc new-app -e POSTGRESQL_USER=inventory \
-             -e POSTGRESQL_PASSWORD=mysecretpassword \
-             -e POSTGRESQL_DATABASE=inventory \
-             openshift/postgresql:latest \
-             --name=inventory-database`
+`oc new-app -e POSTGRESQL_USER=inventory -e POSTGRESQL_PASSWORD=mysecretpassword -e POSTGRESQL_DATABASE=inventory openshift/postgresql:latest --name=inventory-database`
 
 > **NOTE:** If you change the username and password you also need to update `src/main/resources/application.properties` which contains
 the credentials used when deploying to OpenShift.
@@ -619,32 +613,28 @@ Go to `inventory' directory:
 **14. Run the health check**
 
 Once you imported the `smallrye-health extension`, the **/health** endpoint is exposed directly that can be used to run the health check procedures.
-
-> **NOTE**: Be sure to rollback H2 database configuration as defined in `src/main/resources/application.properties`:
+Be sure to rollback H2 database configuration as defined in `src/main/resources/application.properties`:
  
-~~~java
-quarkus.datasource.url=jdbc:h2:file://projects/database.db
-quarkus.datasource.driver=org.h2.Driver
-~~~
+> quarkus.datasource.url=jdbc:h2:file://projects/database.db
+> quarkus.datasource.driver=org.h2.Driver
 
  * Run the Inventory application via `mvn compile quarkus:dev` or click on `Build and Run Locally` in **Commands Palette**:
 
- ![codeready-workspace-maven]({% image_path quarkus-dev-run-paletter.png %})
+![codeready-workspace-maven]({% image_path quarkus-dev-run-paletter.png %})
 
  * Access the `health check` endpoint using `curl http://localhost:8080/health` and the result looks like:
 
- ~~~shell
-{
-    "outcome": "UP",
-    "checks": [
-    ]
-}
- ~~~
+> {
+>      "outcome": "UP",
+>     "checks": [
+>     ]
+> }
+
 
 The health REST enpoint returns a simple JSON object with two fields:
 
- * `outcome` — the overall result of all the health check procedures
- * `checks` — an array of individual checks
+ * `outcome` - the overall result of all the health check procedures
+ * `checks` - an array of individual checks
 
 The general `outcome` of the health check is computed as a logical AND of all the declared health check procedures. 
 The `checks` array is empty as we have not specified any health check procedure yet so let’s define some.
@@ -692,19 +682,17 @@ this endpoint as a health check at `/health`.
 Re-run the Inventory application via `mvn compile quarkus:dev` or click on `Build and Run Locally` in **Commands Palette**
 and access the `health check` endpoint using `curl http://localhost:8080/health` and the result looks like:
 
- ~~~shell
-$ curl http://localhost:8080/health
+`curl http://localhost:8080/health`
 
-{
-    "outcome": "UP",
-    "checks": [
-        {
-            "name": "Success of Inventory Health Check!!!",
-            "state": "UP"
-        }
-    ]
-}
- ~~~
+> {
+>    "outcome": "UP",
+>     "checks": [
+>         {
+>             "name": "Success of Inventory Health Check!!!",
+>             "state": "UP"
+>         }
+>     ]
+> }
 
 With our new health check in place, we'll need to build and deploy the updated application in the next step.
 
@@ -712,10 +700,8 @@ With our new health check in place, we'll need to build and deploy the updated a
 
 > **NOTE**: Be sure to rollback Postgres database configuration as defined in `src/main/resources/application.properties`:
  
-~~~java
-quarkus.datasource.url=jdbc:postgresql:inventory
-quarkus.datasource.driver=org.postgresql.Driver
-~~~
+> quarkus.datasource.url=jdbc:postgresql:inventory
+> quarkus.datasource.driver=org.postgresql.Driver
 
 Repackage the inventory application via clicking on `Package for OpenShift` in `Commands Palette`:
 
@@ -758,17 +744,15 @@ at the `inventory` endpoint via a web browser:
 
 You should see a JSON response like:
 
-~~~
-{
-    "outcome": "UP",
-    "checks": [
-        {
-            "name": "Success of Inventory Health Check!!!",
-            "state": "UP"
-        }
-    ]
-}
-~~~
+> {
+>     "outcome": "UP",
+>     "checks": [
+>         {
+>             "name": "Success of Inventory Health Check!!!",
+>             "state": "UP"
+>         }
+>     ]
+> }
 
 You can see the definition of the health check from the perspective of OpenShift via CodeReady Workspaces **Terminal**:
 
@@ -776,10 +760,9 @@ You can see the definition of the health check from the perspective of OpenShift
 
 You should see:
 
-~~~
-    Liveness:   http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
-    Readiness:  http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
-~~~
+
+>     Liveness:   http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
+>     Readiness:  http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
 
 **17. Adjust probe timeout**
 
@@ -798,10 +781,9 @@ And verify it's been changed (look at the `delay=` value for the Liveness probe)
 
 `oc describe dc/inventory-quarkus | egrep 'Readiness|Liveness'`
 
-~~~
-    Liveness:   http-get http://:8080/health delay=30s timeout=1s period=10s #success=1 #failure=3
-    Readiness:  http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
-~~~
+
+>     Liveness:   http-get http://:8080/health delay=30s timeout=1s period=10s #success=1 #failure=3
+>     Readiness:  http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
 
 In the next step, we'll exercise the probe and watch as it fails and OpenShift recovers the application.
 
@@ -892,29 +874,26 @@ The injection uses the `@ConfigProperty` annotation.
 Create a new properties file with the PostgreSQL database credentials. Note that you can give an arbitrary 
 name to this configuration (e.g. `prod`) in order to tell Quarkus which one to use:
 
-~~~shell
-$ cat <<EOF > src/main/resources/application-prod.properties
-quarkus.datasource.url=jdbc:postgresql:inventory
-quarkus.datasource.driver=org.postgresql.Driver
-quarkus.datasource.username=inventory
-quarkus.datasource.password=mysecretpassword
-quarkus.datasource.max-size=8
-quarkus.datasource.min-size=2
-quarkus.hibernate-orm.database.generation=drop-and-create
-quarkus.hibernate-orm.log.sql=false
-EOF
-~~~
+> cat <<EOF > src/main/resources/application-prod.properties
+> quarkus.datasource.url=jdbc:postgresql:inventory
+> quarkus.datasource.driver=org.postgresql.Driver
+> quarkus.datasource.username=inventory
+> quarkus.datasource.password=mysecretpassword
+> quarkus.datasource.max-size=8
+> quarkus.datasource.min-size=2
+> quarkus.hibernate-orm.database.generation=drop-and-create
+> quarkus.hibernate-orm.log.sql=false
+> EOF
 
-> The hostname defined for the PostgreSQL connection-url corresponds to the PostgreSQL 
-> service name published on OpenShift. This name will be resolved by the internal DNS server 
-> exposed by OpenShift and accessible to containers running on OpenShift.
+
+The hostname defined for the PostgreSQL connection-url corresponds to the PostgreSQL 
+service name published on OpenShift. This name will be resolved by the internal DNS server 
+exposed by OpenShift and accessible to containers running on OpenShift.
 
 And then create a config map that you will use to overlay on the default `application-prod.properties` which is 
 packaged in the Inventory JAR archive:
 
-~~~shell
-$ oc create configmap inventory-quarkus --from-file=src/main/resources/application-prod.properties
-~~~
+`oc create configmap inventory-quarkus --from-file=src/main/resources/application-prod.properties`
 
 > If you don't like bash commands, Go to the **CoolStore Inventory Microservice Project** 
 > project in OpenShift Web Console and then on the left sidebar, **Resources >> Config Maps**. Click 
@@ -935,9 +914,7 @@ name as the key, at specified path on the filesystem.
 Modify the Inventory deployment config so that it injects the `application-prod.properties` configuration you just created as 
 a config map into the Inventory container:
 
-~~~shell
-$ oc set volume dc/inventory-quarkus --add --configmap-name=inventory-quarkus --mount-path=/app/config
-~~~
+`oc set volume dc/inventory-quarkus --add --configmap-name=inventory-quarkus --mount-path=/app/config`
 
 The above command mounts the content of the `inventory-quarkus` config map as a file inside the Inventory container 
 at `/app/config/application-prod.properties`
@@ -951,23 +928,21 @@ In OpenShift Web Console, navigate the left sidebar, **Applications >>Pods >>inv
 
 Click on **Terminal** tab menu to run the following info:
 
-~~~shell
-sh-4.2$ psql -U inventory -c "select * from inventory"
+> sh-4.2$ psql -U inventory -c "select * from inventory"
 
- id |                link                 | location  | quantity
-----+-------------------------------------+-----------+----------
-  1 | http://maps.google.com/?q=Raleigh   | Raleigh   |      736
-  2 | http://maps.google.com/?q=Boston    | Boston    |      512
-  3 | http://maps.google.com/?q=Seoul     | Seoul     |      256
-  4 | http://maps.google.com/?q=Singapore | Singapore |       54
-  5 | http://maps.google.com/?q=London    | London    |       87
-  6 | http://maps.google.com/?q=NewYork   | NewYork   |      443
-  7 | http://maps.google.com/?q=Paris     | Paris     |      600
-  8 | http://maps.google.com/?q=Tokyo     | Tokyo     |      230
-(8 rows)
+> id |                link                 | location  | quantity
+> ----+-------------------------------------+-----------+----------
+>   1 | http://maps.google.com/?q=Raleigh   | Raleigh   |      736
+>   2 | http://maps.google.com/?q=Boston    | Boston    |      512
+>   3 | http://maps.google.com/?q=Seoul     | Seoul     |      256
+>   4 | http://maps.google.com/?q=Singapore | Singapore |       54
+>   5 | http://maps.google.com/?q=London    | London    |       87
+>   6 | http://maps.google.com/?q=NewYork   | NewYork   |      443
+>   7 | http://maps.google.com/?q=Paris     | Paris     |      600
+>   8 | http://maps.google.com/?q=Tokyo     | Tokyo     |      230
+> (8 rows)
 
-sh-4.2$ 
-~~~
+> sh-4.2$ 
 
 You have now created a config map that holds the configuration content for Inventory and can be updated 
 at anytime for example when promoting the container image between environments without needing to 
