@@ -16,7 +16,7 @@ Go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configur
 First, you need to register as a user. Register and choose the same username and password as 
 your OpenShift credentials.
 
-![codeready-workspace-register]({% image_path codeready-workspace-register.png %}){:width="800px"}
+![codeready-workspace-register]({% image_path codeready-workspace-register.png %})
 
 Log into CodeReady Workspaces with your user. You can now create your workspace based on a stack. A 
 stack is a template of workspace configuration. For example, it includes the programming language and tools needed

@@ -17,6 +17,7 @@ The goal is to produce something like:
 ![Greeting]({% image_path catalog-goal.png %}){:width="700px"}
 
 ---
+
 #### What is Spring Framework?
 
 Spring is one of the most popular Java Frameworks and offers an alternative to the Java EE programming model. Spring
@@ -547,7 +548,7 @@ Our problem is that the user interface requires data from two services when call
 
 **I. Client Side integration** - We could extend our UI to first call `/services/products` and then for each product item call `/services/inventory/{prodId}` to get the inventory status and then combine the result in the web browser. This would be the least intrusive method, but it also means that if we have 100 of products the client will make 101 request to the server. If we have a slow internet connection this may cause issues. 
 
-**II. Microservices Gateway** - Creating a gateway in-front of the `Catalog Service` that first calls the Catalog Service and then based on the response calls the inventory is another option. This way we can avoid lots of calls from the client to the server. Apache Camel provides nice capabilities to do this and if you are interested to learn more about this, please checkout the Coolstore Microservices example [here](http://github.com/jbossdemocentral/coolstore-microservice)
+**II. Microservices Gateway** - Creating a gateway in-front of the `Catalog Service` that first calls the Catalog Service and then based on the response calls the inventory is another option. This way we can avoid lots of calls from the client to the server. Apache Camel provides nice capabilities to do this and if you are interested to learn more about this, please checkout the Coolstore Microservices example: [Here](http://github.com/jbossdemocentral/coolstore-microservice)
 
 **III. Service-to-Service** - Depending on use-case and preferences another solution would be to do service-to-service calls instead. In our case means that the Catalog Service would call the Inventory service using REST to retrieve the inventory status and include that in the response.
 
@@ -561,23 +562,19 @@ Open ``src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java`` aga
 
 Now at the markers `//TODO: Add check for Quantity` add the following line:
 
-~~~java
-.returns(9999,Product::getQuantity)
-~~~
+> .returns(9999,Product::getQuantity)
 
 And add it to the second test as well at the remaining `//TODO: Add check for Quantity` marker:
 
-~~~java
-.returns(9999,Product::getQuantity)
-~~~
+> .returns(9999,Product::getQuantity)
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="600px"}
+![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
 The test **should fail** and you should see red color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %}){:width="600px"}
+![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
 You can also run the following command via **Eclipse Che Terminal** to verify the test cases:
 
@@ -695,11 +692,11 @@ productList.parallelStream()
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="600px"}
+![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
 The test should be successful and you should see green color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %}){:width="600px"}
+![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
 
 You can also run the following command via **Eclipse Che Terminal** to verify the test cases:
 
@@ -782,11 +779,11 @@ Notice that the Hoverfly Rule will now return serverError for all request to inv
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="600px"}
+![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
 The test **should fail** and you should see red color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %}){:width="600px"}
+![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
 If you also run ``mvn verify -Dtest=CatalogEndpointTest`` the test will fail with the following error message:
 
@@ -825,11 +822,11 @@ Open ``src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java`` and
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="600px"}
+![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
 The test **should fail** and you should see red color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %}){:width="600px"}
+![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
 If you also run ``mvn verify -Dtest=CatalogEndpointTest`` the test will fail with the following error message:
 
