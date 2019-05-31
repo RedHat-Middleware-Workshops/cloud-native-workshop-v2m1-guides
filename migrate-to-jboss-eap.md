@@ -7,7 +7,7 @@ In this step we will migrate some Weblogic-specific code in the app to use stand
 Follow these instructions to setup the development environment on CodeReady Workspaces. 
 
 You might be familiar with the CodeReady Workspaces which is one of the most popular IDEs for Java and other
-programming languages. [CodeReady Workspaces](https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces) is the next-generation CodeReady Workspaces 
+programming languages. [CodeReady Workspaces](https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces) is the next-generation Eclipse IDE 
 which is web-based and gives you a full-featured IDE running in the cloud. You have an CodeReady Workspaces instance deployed on your OpenShift cluster
 which you will use during these labs.
 
