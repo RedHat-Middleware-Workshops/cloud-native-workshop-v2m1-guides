@@ -906,11 +906,11 @@ First, deploy a new instance of PostgreSQL by executing via Eclipse Che **Termin
 `oc project catalog`
 
 ~~~shell
-`oc new-app -e POSTGRESQL_USER=catalog \
+oc new-app -e POSTGRESQL_USER=catalog \
              -e POSTGRESQL_PASSWORD=mysecretpassword \
              -e POSTGRESQL_DATABASE=catalog \
              openshift/postgresql:latest \
-             --name=catalog-database`
+             --name=catalog-database
 ~~~
 
 > **NOTE:**: If you change the username and password you also need to update `src/main/fabric8/credential-secret.yml` which contains
