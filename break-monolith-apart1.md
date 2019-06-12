@@ -178,7 +178,10 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 @Cacheable
 public class Inventory extends PanacheEntity {
 
-	@Column
+    @Column
+    public String itemId;
+
+    @Column
     public String location;
 
 	@Column
@@ -191,8 +194,9 @@ public class Inventory extends PanacheEntity {
 
     }
 
-    public Inventory(Long itemId, int quantity, String location, String link) {
+    public Inventory(String itemId, int quantity, String location, String link) {
         super();
+        this.itemId = itemId;
         this.quantity = quantity;
         this.location = location;
         this.link = link;
@@ -216,7 +220,7 @@ This means the entity can be loaded without querying the database, but be carefu
 
 In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into
 various places (like a RESTful resource endpoint) in the future. This is the same approach that our monolith
-uses, so we can re-use this idea again. Create an **InventoryService** class in the `com.redhat.coolstore.service` package:
+uses, so we can re-use this idea again. Create an **InventoryResource** class in the `com.redhat.coolstore` package:
 
 ~~~java
 package com.redhat.coolstore;
@@ -237,7 +241,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
-@Path("inventory")
+@Path("/services/inventory")
 @ApplicationScoped
 @Produces("application/json")
 @Consumes("application/json")
@@ -249,10 +253,10 @@ public class InventoryResource {
     }
 
     @GET
-    @Path("{location}")
-    public List<Inventory> getAvailability(@PathParam String location) {
+    @Path("{itemId}")
+    public List<Inventory> getAvailability(@PathParam String itemId) {
         return Inventory.<Inventory>streamAll()
-        .filter(p -> p.location.equals(location))
+        .filter(p -> p.itemId.equals(itemId))
         .collect(Collectors.toList());
     }
 
@@ -287,14 +291,14 @@ Let's add inventory data to the database so we can test things out. Open up the 
 copy the following SQL statements to `import.sql`:
 
 ~~~java
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Boston', 'Boston', 512);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=London', 'London', 87);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Paris', 'Paris', 600);
-INSERT INTO INVENTORY (id, link, location, quantity) values (nextval('hibernate_sequence'), 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '329299', 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '329199', 'http://maps.google.com/?q=Boston', 'Boston', 512);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165613', 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165614', 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165954', 'http://maps.google.com/?q=London', 'London', 87);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444434', 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444435', 'http://maps.google.com/?q=Paris', 'Paris', 600);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444437', 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
 ~~~
 
 In Development, we will configure to use local in-memory H2 database for local testing, as defined in `src/main/resources/application.properties`:
@@ -329,24 +333,29 @@ You should see a bunch of log output that ends with:
 
 Open a new CodeReady Workspaces **Terminal** and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
 
-`curl http://localhost:8080/inventory`
+`curl http://localhost:8080/services/inventory ; echo`
 
 ~~~java
-[{"id":1,"link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512},{"id":3,"link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"link":"http://maps.google.com/?q=London","location":"London","quantity":87},{"id":6,"link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"link":"http://maps.google.com/?q=Tokyo","location":"Tokyo","quantity":230}]
+[{"id":1,"itemId":"329299","link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"itemId":"329199","link":"http://maps.google.com
+/?q=Boston","location":"Boston","quantity":512},{"id":3,"itemId":"165613","link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"item
+Id":"165614","link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"itemId":"165954","link":"http://maps.google.com/?q=London"
+,"location":"London","quantity":87},{"id":6,"itemId":"444434","link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"itemId":"444
+435","link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"itemId":"444437","link":"http://maps.google.com/?q=Tokyo","location":"Tok
+yo","quantity":230}]
 ~~~
 
 
-`curl http://localhost:8080/inventory/Boston`
+`curl http://localhost:8080/services/inventory/329199 ; echo`
 
 ~~~java
-[{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
+[{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
 ~~~~
 
 > **NOTE**: Make sure to stop Quarkus development mode via `Close` the `Build and Run Locally` terminal.
 
 **8. Add Test Codes and Make a package**
 
-In this step, we will add Quarkus test codes so that we can inject Unit test during `mvn pacakge`. 
+In this step, we will add Quarkus test codes so that we can inject Unit test during `mvn package`. 
 Open up the `src/test/java/com/redhat/coolstore/InventoryEndpointTest.java` file and copy the following codes:
 
 ~~~java
@@ -365,7 +374,7 @@ public class InventoryEndpointTest {
     public void testListAllInventory() {
         //List all, should have all 8 cities inventory the database has initially:
         given()
-              .when().get("/inventory")
+              .when().get("/services/inventory")
               .then()
               .statusCode(200)
               .body(
@@ -378,15 +387,15 @@ public class InventoryEndpointTest {
                     containsString("Paris"),
                     containsString("Tokyo")
                     );
-
-        //List a certain city(Seoul), 256 should be returned:
+     
+        //List a certain item(ID:329299), Raleigh should be returned:
         given()
-              .when().get("/inventory/Seoul")
-              .then()
-              .statusCode(200)
-              .body(                   
-                    containsString("256")
-              );
+        .when().get("/services/inventory/329299")
+        .then()
+        .statusCode(200)
+        .body(                   
+              containsString("Raleigh")
+        );
     }
 
 }
@@ -394,7 +403,7 @@ public class InventoryEndpointTest {
 
 Make a package to create a uber.jar then we will deploy it to `OpenShift cluster` soon. Use the following mav plugin command via CodeReady Workspaces **Terminal**:
 
-`mvn clean pacakge`
+`mvn clean package`
 
 > **NOTE**: Make sure to build this mvn command at working directory(i.e /projects/cloud-native-workshop-v2m1-labs/inventory/).
 
@@ -411,18 +420,23 @@ You can also run the Uber.jar to make sure if the inventory works. Use the follo
 
 Open a new CodeReady Workspaces **Terminal** and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
 
-`curl http://localhost:8080/inventory`
+`curl http://localhost:8080/services/inventory ; echo`
 
 ~~~java
-[{"id":1,"link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512},{"id":3,"link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"link":"http://maps.google.com/?q=London","location":"London","quantity":87},{"id":6,"link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"link":"http://maps.google.com/?q=Tokyo","location":"Tokyo","quantity":230}]
+[{"id":1,"itemId":"329299","link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"itemId":"329199","link":"http://maps.google.com
+/?q=Boston","location":"Boston","quantity":512},{"id":3,"itemId":"165613","link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"item
+Id":"165614","link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"itemId":"165954","link":"http://maps.google.com/?q=London"
+,"location":"London","quantity":87},{"id":6,"itemId":"444434","link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"itemId":"444
+435","link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"itemId":"444437","link":"http://maps.google.com/?q=Tokyo","location":"Tok
+yo","quantity":230}]
 ~~~
 
 
-`curl http://localhost:8080/inventory/Boston`
+`curl http://localhost:8080/services/inventory/329199 ; echo`
 
-~~~shell
-[{"id":2,"link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
-~~~
+~~~java
+[{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
+~~~~
 
 > **NOTE**: Make sure to stop Quarkus runtimes via `Close` the terminal.
 
@@ -440,7 +454,7 @@ We have already deployed our coolstore monolith to OpenShift, but now we are wor
 microservices-based.
 
 In this step, we will deploy our new Inventory microservice for our CoolStore application,
-so let's create a separate project to house it and keep it separate from our monolith and our other microservices we will
+so create a separate project to house it and keep it separate from our monolith and our other microservices we will
 create later on.
 
 Before going to OpenShift console, we will repackage the Quarkus application for adding a PostgreSQL extension 
@@ -454,8 +468,10 @@ Add a `quarkus-jdbc-postgresql` extendsion via CodeReady Workspaces **Terminal**
 
 Comment the **quarkus.datasource.url, quarkus.datasource.drive** configuration and add the following variables in `src/main/resources/application.properties`:
 
+~~~shell
 quarkus.datasource.url=jdbc:postgresql:inventory
 quarkus.datasource.driver=org.postgresql.Driver
+~~~
 
 Repackage the inventory application via clicking on `Package for OpenShift` in `Commands Palette`:
 
@@ -464,7 +480,7 @@ Repackage the inventory application via clicking on `Package for OpenShift` in `
 
 Or you can run a maven plugin command directly in **Terminal**:
 
-`mvn clean pacakge -DskipTests`
+`mvn clean package -DskipTests`
 
 > **NOTE**: You should **SKIP** the Unit test because you don't have PostgreSQL database in local environment.
 
@@ -493,7 +509,12 @@ First, deploy a new instance of PostgreSQL by executing the following commands v
 
 `oc project inventory`
 
-`oc new-app -e POSTGRESQL_USER=inventory -e POSTGRESQL_PASSWORD=mysecretpassword -e POSTGRESQL_DATABASE=inventory openshift/postgresql:latest --name=inventory-database`
+~~~shll
+oc new-app -e POSTGRESQL_USER=inventory \
+  -e POSTGRESQL_PASSWORD=mysecretpassword \
+  -e POSTGRESQL_DATABASE=inventory openshift/postgresql:latest \
+  --name=inventory-database
+~~~
 
 > **NOTE:** If you change the username and password you also need to update `src/main/resources/application.properties` which contains
 the credentials used when deploying to OpenShift.
@@ -548,7 +569,7 @@ And now we can access using curl once again to find all inventories:
 
 Replace your own route URL in the above command output: 
 
-`curl http://inventory-quarkus-inventory.apps.seoul-df03.openshiftworkshop.com/inventory | jq`
+`curl http://inventory-quarkus-inventory.apps.seoul-df03.openshiftworkshop.com/services/inventory ; echo`
 
 So now `Inventory` service is deployed to OpenShift. You can also see it in the Overview in the OpenShift Console 
 with its single replica running in 1 pod (the blue circle), along with the Postgres database pod:
@@ -662,12 +683,12 @@ Open empty Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.
 ~~~java
 package com.redhat.coolstore;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.eclipse.microprofile.health.Health;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 @Health
 @ApplicationScoped
@@ -679,11 +700,10 @@ public class InventoryHealthCheck implements HealthCheck {
     @Override
     public HealthCheckResponse call() {
 
-
         if (inventoryResource.getAll() != null) {
-            HealthCheckResponse.named("Success of Inventory Health Check!!!").up().build();
+            return HealthCheckResponse.named("Success of Inventory Health Check!!!").up().build();
         } else {
-            HealthCheckResponse.named("Failure of Inventory Health Check!!!").down().build();
+            return HealthCheckResponse.named("Failure of Inventory Health Check!!!").down().build();
         }
     }
 }
@@ -693,6 +713,8 @@ The `call()` method exposes an HTTP GET endpoint which will return the status of
 this check does a simple query to the underlying database to ensure the connection to it is stable and available.
 The method is also annotated with Quarkus's `@Health` annotation, which directs Quarkus to expose
 this endpoint as a health check at `/health`.
+
+>**NOTE:** If you don't terminate Quarkus Development mode, you don't need to re-run the Inventory application because Quarkus will **reload the changes automatically**.
 
 Re-run the Inventory application via `mvn compile quarkus:dev` or click on `Build and Run Locally` in **Commands Palette**
 and access the `health check` endpoint using `curl http://localhost:8080/health` and the result looks like:
@@ -793,7 +815,7 @@ and then click on the `Edit Health Checks` in `Actions`:
 
 ![inventory-change-deplaytime]({% image_path inventory-change-deplaytime.png %})
 
-You can also Use the **oc** command to tune the
+You can also use the **oc** command to tune the
 probe to wait 30 seconds before starting to poll the probe:
 
 `oc set probe dc/inventory-quarkus --liveness --initial-delay-seconds=30`
@@ -893,10 +915,9 @@ The injection uses the `@ConfigProperty` annotation.
 > Check out `inventory/src/main/resources/application.properties` which contains the local H2 database configuration.
 
 Create a new properties file with the PostgreSQL database credentials. Note that you can give an arbitrary 
-name to this configuration (e.g. `prod`) in order to tell Quarkus which one to use:
+name to this configuration (e.g. `prod`) in order to tell Quarkus which one to use. Open `src/main/resources/application-prod.properties` file and copy the following contents:
 
 ~~~java
-cat <<EOF > src/main/resources/application-prod.properties
 quarkus.datasource.url=jdbc:postgresql:inventory
 quarkus.datasource.driver=org.postgresql.Driver
 quarkus.datasource.username=inventory
@@ -905,7 +926,6 @@ quarkus.datasource.max-size=8
 quarkus.datasource.min-size=2
 quarkus.hibernate-orm.database.generation=drop-and-create
 quarkus.hibernate-orm.log.sql=false
-> EOF
 ~~~
 
 The hostname defined for the PostgreSQL connection-url corresponds to the PostgreSQL 
@@ -923,7 +943,7 @@ on **Create Config Maps** button to create a config map with the following info:
 
  * Name: `inventory-quarkus`
  * Key: `application-prod.properties`
- * Value: *copy-paste the content of the above application-prod.properties excluding the first and last lines (the lines that contain EOF)*
+ * Value: *copy-paste the content of the above application-prod.properties*
 
 Config maps hold key-value pairs and in the above command an `inventory-quarkus` config map 
 is created with `application-prod.properties` as the key and the content of the `application-prod.properties` as the 

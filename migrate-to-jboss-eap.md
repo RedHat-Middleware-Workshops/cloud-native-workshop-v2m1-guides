@@ -274,7 +274,7 @@ EAP. Delete the file on Eclipse Navigator:
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-delete-jar.png %}){:width="500px"}
 
-While we're at it, let's remove the stub weblogic implementation classes added as part of the scenario.
+While we're at it, let's remove the `stub weblogic implementation classes` added as part of the scenario.
 Delete the file on Eclipse Navigator:
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-delete-weblogic.png %}){:width="500px"}

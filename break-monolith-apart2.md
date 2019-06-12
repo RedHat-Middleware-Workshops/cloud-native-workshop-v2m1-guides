@@ -325,21 +325,17 @@ And then Open the file to implement the new service:
 ~~~java
 package com.redhat.coolstore.service;
 
-import com.redhat.coolstore.model.Inventory;
-import com.redhat.coolstore.model.Product;
-//import com.redhat.coolstore.client.InventoryClient;
-import feign.hystrix.FallbackFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+//import com.redhat.coolstore.client.InventoryClient;
+import com.redhat.coolstore.model.Product;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CatalogService {
@@ -603,7 +599,7 @@ public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
 //                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
                 .get(startsWith("/services/inventory"))
 //                    .willReturn(serverError())
-                .willReturn(success(json(new Inventory("9999",9999))))
+                .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
 
 ));
 ~~~
@@ -623,7 +619,6 @@ Add the followng small code to the file:
 ~~~java
 package com.redhat.coolstore.client;
 
-import com.redhat.coolstore.model.Inventory;
 import feign.hystrix.FallbackFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -636,7 +631,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface InventoryClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/services/inventory/{itemId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    Inventory getInventoryStatus(@PathVariable("itemId") String itemId);
+    String getInventoryStatus(@PathVariable("itemId") String itemId);
 
 //TODO: Add Fallback factory here
 }
@@ -670,7 +665,11 @@ InventoryClient inventoryClient;
 Next, update the `read(String id)` method at the comment `//TODO: Update the quantity for the product by calling the Inventory service` add the following:
 
 ~~~java
-product.setQuantity(inventoryClient.getInventoryStatus(product.getItemId()).getQuantity());
+JSONArray jsonArray = new JSONArray(inventoryClient.getInventoryStatus(product.getItemId()));
+    List<String> quantity = IntStream.range(0, jsonArray.length())
+        .mapToObj(index -> ((JSONObject)jsonArray.get(index))
+        .optString("quantity")).collect(Collectors.toList());
+    product.setQuantity(Integer.parseInt(quantity.get(0)));
 ~~~
 
 Also, don't forget to add the import statement by un-commenting the import statement `//import com.redhat.coolstore.client.InventoryClient` near the top
@@ -682,13 +681,16 @@ import com.redhat.coolstore.client.InventoryClient;
 Also in the `readAll()` method replace the comment `//TODO: Update the quantity for the products by calling the Inventory service` with the following:
 
 ~~~java
-productList.parallelStream()
-            .forEach(p -> {
-                p.setQuantity(inventoryClient.getInventoryStatus(p.getItemId()).getQuantity());
-            });
+for ( Product p : productList ) {
+    JSONArray jsonArray = new JSONArray(inventoryClient.getInventoryStatus(p.getItemId()));
+    List<String> quantity = IntStream.range(0, jsonArray.length())
+        .mapToObj(index -> ((JSONObject)jsonArray.get(index))
+        .optString("quantity")).collect(Collectors.toList());
+    p.setQuantity(Integer.parseInt(quantity.get(0)));
+}
 ~~~
 
->**NOTE:** The lambda expression to update the product list uses a `parallelStream`, which means that it will process the inventory calls asynchronously, which will be much faster than using synchronous calls. Optionally when we run the test you can test with both `parallelStream()` and `stream()` just to see the difference in how long the test takes to run.
+>**NOTE:** Class `JSONArray` is an ordered sequence of values. Its external text form is a string wrapped in square brackets with commas separating the values. The internal form is an object having get and opt methods for accessing the values by index, and element methods for adding or replacing values.
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
@@ -728,8 +730,8 @@ static class InventoryClientFallbackFactory implements FallbackFactory<Inventory
     public InventoryClient create(Throwable cause) {
         return new InventoryClient() {
             @Override
-            public Inventory getInventoryStatus(@PathVariable("itemId") String itemId) {
-                return new Inventory(itemId,-1);
+            public String getInventoryStatus(@PathVariable("itemId") String itemId) {
+                return "-1";
             }
         };
     }
@@ -937,7 +939,7 @@ spring.datasource.username=catalog
 spring.datasource.password=mysecretpassword
 spring.datasource.driver-class-name=org.postgresql.Driver
 
-inventory.ribbon.listOfServers=inventory.inventory.svc.cluster.local:8080
+inventory.ribbon.listOfServers=inventory-quarkus.inventory.svc.cluster.local:8080
 ~~~
 
 >**NOTE:**: The `application-openshift.properties` does not have all values of `application-default.properties`, that is because on the values that need to change has to be specified here. Spring will fall back to `application-default.properties` for the other values.
@@ -1027,7 +1029,7 @@ Leave other values set to their defaults, and click **Create**.
 
 **21. Test the route**
 
-Test the route by running `curl http://www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com/services/products`
+Test the route by running `curl http://www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com/services/products ; echo`
 
 You should get a complete set of products, along with their inventory.
 
