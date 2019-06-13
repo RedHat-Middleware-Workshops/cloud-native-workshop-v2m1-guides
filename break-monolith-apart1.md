@@ -23,14 +23,16 @@ Quarkus apps, microservices, and OpenShift/Kubernetes.
 
 #### Goals of this lab
 
+---
+
 The goal is to deploy this new microservice alongside the existing monolith, and then later on we'll tie them together.
 But after this lab, you should end up with something like:
 
 ![lab3_goal]({% image_path goal.png %}){:width="700px"}
 
----
-
 #### What is Quarkus? 
+
+---
 
 ![quarkus-logo]({% image_path quarkus-logo.png %})
 
@@ -50,7 +52,9 @@ HTTP microservices, reactive applications, message-driven microservices and serv
   Jaeger, Prometheus, Apacke Kafka, Infinispan, and more.
 
 
-**1. Setup an Inventory proejct**
+####1. Setup an Inventory proejct
+
+---
 
 Run the following commands to set up your environment for this lab and start in the right directory:
 
@@ -58,7 +62,9 @@ In the project explorer, right-click on **inventory** and then change a director
 
 ![inventory_setup]({% image_path codeready-workspace-inventory-project.png %}){:width="500px"}
 
-**2. Examine the Maven project structure**
+####2. Examine the Maven project structure
+
+---
 
 The sample Quarkus project shows a minimal CRUD service exposing a couple of endpoints over REST, 
 with a front-end based on Angular so you can play with it from your browser.
@@ -136,7 +142,9 @@ Now let's write some code and create a domain model, service interface and a RES
 
 ![Inventory RESTful Service]({% image_path inventory-arch.png %}){:width="700px"}
 
-**3. Add Qurkus Extensions**
+####3. Add Qurkus Extensions
+
+---
 
 We will add Qurakus extensions to the Inventory application for using `Panache`, `Postgres` and we'll use the Quarkus Maven Plugin.
 Copy the following commands to add the Hibernate ORM with Panache extension via CodeReady Workspaces **Terminal**:
@@ -155,7 +163,9 @@ And then for local H2 database:
 like [CodeReady Workspaces Vert.x](https://vertx.io/), [Apache Camel](http://camel.apache.org/), [Infinispan](http://infinispan.org/), 
 Spring DI compatibility (e.g. @Autowired), and more.
 
-**4. Create Inventory Entity**
+####4. Create Inventory Entity
+
+---
 
 With our skeleton project in place, let's get to work defining the business logic.
 
@@ -216,7 +226,9 @@ Users can just start using your entity Inventory by typing Inventory, and gettin
 When an entity is annotated with `@Cacheable`, all its field values are cached except for collections and relations to other entities.
 This means the entity can be loaded without querying the database, but be careful as it implies the loaded entity might not reflect recent changes in the database.
 
-**5. Define the RESTful endpoint of Inventory**
+####5. Define the RESTful endpoint of Inventory
+
+---
 
 In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into
 various places (like a RESTful resource endpoint) in the future. This is the same approach that our monolith
@@ -285,7 +297,9 @@ The above REST services defines two endpoints:
 for example **/inventory/Boston** with
 the last path parameter being the location which we want to check its inventory status.
 
-**6. Add inventory data**
+####6. Add inventory data
+
+---
 
 Let's add inventory data to the database so we can test things out. Open up the `src/main/resources/import.sql` file and 
 copy the following SQL statements to `import.sql`:
@@ -314,7 +328,9 @@ quarkus.hibernate-orm.database.generation=drop-and-create
 quarkus.hibernate-orm.log.sql=false
 ~~~
 
-**7. Run Quarkus Inventory application**
+####7. Run Quarkus Inventory application
+
+---
 
 Now we are ready to run the inventory application. Click on **Commands Palette** then select `Build and Run Locally` in Run menu:
 
@@ -353,7 +369,9 @@ yo","quantity":230}]
 
 > **NOTE**: Make sure to stop Quarkus development mode via `Close` the `Build and Run Locally` terminal.
 
-**8. Add Test Codes and Make a package**
+####8. Add Test Codes and Make a package
+
+---
 
 In this step, we will add Quarkus test codes so that we can inject Unit test during `mvn package`. 
 Open up the `src/test/java/com/redhat/coolstore/InventoryEndpointTest.java` file and copy the following codes:
@@ -447,8 +465,9 @@ easy it is to migrate existing monolithic Java EE applications to microservices 
 In next steps of this lab we will deploy our application to OpenShift Container Platform and then start
 adding additional features to take care of various aspects of cloud native microservice development.
 
+####9. Create OpenShift Project
 
-**9. Create OpenShift Project**
+---
 
 We have already deployed our coolstore monolith to OpenShift, but now we are working on re-architecting it to be
 microservices-based.
@@ -500,7 +519,9 @@ Click on the name of the newly-created project:
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
-**10. Deploy to OpenShift**
+####10. Deploy to OpenShift
+
+---
 
 Let's deploy our new inventory microservice to OpenShift!
 
@@ -523,7 +544,9 @@ This will deploy the database to our new project.
 
 ![inventory_db_deployments]({% image_path inventory-database-deployment.png %})
 
-**11. Build and Deploy**
+####11. Build and Deploy
+
+---
 
 Red Hat OpenShift Application Runtimes includes a powerful maven plugin that can take an
 existing Quarkus application and generate the necessary Kubernetes configuration.
@@ -574,7 +597,9 @@ Replace your own route URL in the above command output:
 So now `Inventory` service is deployed to OpenShift. You can also see it in the Overview in the OpenShift Console 
 with its single replica running in 1 pod (the blue circle), along with the Postgres database pod:
 
-**12. Access the application running on OpenShift**
+####12. Access the application running on OpenShift
+
+---
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
@@ -631,7 +656,9 @@ OpenShift will destroy the pod and replace it with a new one.
 In our case we will implement the health check logic in a REST endpoint and let Quarkus publish
 that logic on the `/health` endpoint for use with OpenShift.
 
-**13. Add Health Check Extension**
+####13. Add Health Check Extension
+
+---
 
 We will add a Qurakus extension to the Inventory application for using `mallrye-health` and we'll use the Quarkus Maven Plugin.
 Copy the following commands to import the smallrye-health extension that implements the MicroProfile Health specification 
@@ -643,7 +670,9 @@ Go to `inventory' directory:
 
 `mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-smallrye-health"`
 
-**14. Run the health check**
+####14. Run the health check
+
+---
 
 Once you imported the `smallrye-health extension`, the **/health** endpoint is exposed directly that can be used to run the health check procedures.
 Be sure to rollback H2 database configuration as defined in `src/main/resources/application.properties`:
@@ -675,7 +704,9 @@ The health REST enpoint returns a simple JSON object with two fields:
 The general `outcome` of the health check is computed as a logical AND of all the declared health check procedures. 
 The `checks` array is empty as we have not specified any health check procedure yet so let’s define some.
 
-**15. Create your first health check**
+####15. Create your first health check
+
+---
 
 Next, let's fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services.
 Open empty Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.java` and the follwing logic will be put into a new Java class.
@@ -735,7 +766,9 @@ and access the `health check` endpoint using `curl http://localhost:8080/health`
 
 With our new health check in place, we'll need to build and deploy the updated application in the next step.
 
-**16. Re-Deploy to OpenShift**
+####16. Re-Deploy to OpenShift
+
+---
 
 > **NOTE**: Be sure to rollback Postgres database configuration as defined in `src/main/resources/application.properties`:
  
@@ -808,7 +841,9 @@ You should see:
 >     Liveness:   http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
 >     Readiness:  http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
 
-**17. Adjust probe timeout**
+####17. Adjust probe timeout
+
+---
 
 The various timeout values for the probes can be configured in many ways. Let's tune the _liveness probe_ initial delay so that
 we don't have to wait 3 minutes for it to be activated. Use OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` 
@@ -831,7 +866,9 @@ And verify it's been changed (look at the `delay=` value for the Liveness probe)
 
 In the next step, we'll exercise the probe and watch as it fails and OpenShift recovers the application.
 
-**18. Exercise Health Check**
+####18. Exercise Health Check
+
+---
 
 From the OpenShift Web Console overview page, click on the route link to open the sample application UI:
 
@@ -872,7 +909,9 @@ re-connected to the new service and successfully accessed the inventory once aga
 
 ![Greeting]({% image_path inventory.png %})
 
-**19. Managing Application Configuration**
+####19. Managing Application Configuration
+
+---
 
 In this step, you will learn how to manage application configuration and how to provide environment 
 specific configuration to the services.
@@ -904,7 +943,9 @@ different configurations that are provided to the application at runtime.
 
 So far Catalog and Inventory services have been using each PostgreSQL database. 
 
-**20. Externalize Inventory Configuration**
+####20. Externalize Inventory Configuration
+
+---
 
 Quarkus supports multiple mechanisms for externalizing configurations such as environment variables, 
 Maven properties, command-line arguments and more. The recommend approach for the long-term for externalizing 
@@ -978,6 +1019,8 @@ at anytime for example when promoting the container image between environments w
 modify the Inventory container image itself. 
 
 #### Summary
+
+---
 
 You learned a bit more about what Quarkus is, and how it can be used to create
 modern Java microservice-oriented applications.

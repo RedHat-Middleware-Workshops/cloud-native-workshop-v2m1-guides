@@ -11,7 +11,9 @@ The Red Hat Application Migration Toolkit can be installed and used in a few dif
 
 For this lab, we will use the Web Console on top of OpenShift Container Platform.
 
-**1. Login the RHAMT web console in OpenShift cluster**
+####1. Login the RHAMT web console in OpenShift cluster
+
+---
 
 ![RHAMT Login]({% image_path rhamt_login.png %})
 
@@ -21,7 +23,9 @@ When you login at the first time, you should change the password along with RH S
 
 ![RHAMT Change Pwd]({% image_path rhamt_change_pwd.png %})
 
-**2. Create a new project**
+####2. Create a new project
+
+---
 
 ![RHAMT Landing Page]({% image_path rhamt_landing_page.png %})
 
@@ -34,25 +38,33 @@ Input a name and description to create a project.
 
 > **NOTE**: Add your username as prefix(i.e. user1-eap-migration) to distinguish each attendee's project.
 
-**3. Add a monolith application to the project**
+####3. Add a monolith application to the project
+
+---
 
 ![RHAMT Add App]({% image_path rhamt_add_monolith_app.png %})
 
 > **NOTE**: Input /opt/app in 'Server Path' to analyze a monolithic application
 
-**4.Select "Migration to JBoss EAP 7" in Transformation Path and clicks the "Save & Run" button**
+####4.Select "Migration to JBoss EAP 7" in Transformation Path and clicks the "Save & Run" button
+
+---
 
 ![RHAMT Add App]({% image_path rhamt_check_monolith_app.png %})
 
 > **NOTE**: Check **com, weblogic** for Included packages.
 
-**5. Go to the Active Analysis page and clicks on the latest when it’s completed**
+####5. Go to the Active Analysis page and clicks on the latest when it’s completed
+
+---
 
 Click the # of Analysis(For example, #2 in the screenshot).
 
 ![RHAMT Complete]({% image_path rhamt_complete_analysis.png %})
 
-**6. Review the report**
+####6. Review the report
+
+---
 
 You should see the landing page for the report:
 
@@ -64,7 +76,9 @@ Click on the `monolith.war` link to access details for the project:
 
 ![RHAMT Project Overview]({% image_path rhamt_project_overview.png %})
 
-**7. Understanding the report**
+####7. Understanding the report
+
+---
 
 The Dashboard gives an overview of the entire application migration effort. It summarizes:
 

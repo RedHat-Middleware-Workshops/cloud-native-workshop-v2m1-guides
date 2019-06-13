@@ -21,9 +21,9 @@ During the first planing sprint you have investigated the possibility to deploy 
 
 After the investigation the team agrees that JBoss EAP seems to be the much better choice with better support for running your application in OpenShift, but the last question mark on “Migration cost” is worrying. You decide to contact Red Hat to try to find out what the migration cost might actually be. Red Hat recommends that you use a tool called Red Hat Application Migration Toolkit (RHAMT) which will help you analyze your application give you a report on the estimated effort to migrate and also gives you instructions on how to actually migrate the report.
 
----
-
 #### What is Red Hat Application Migration Toolkit?
+
+---
 
 ![RHAMT Logo]({% image_path rhamt_logo.png %})
 
@@ -42,6 +42,8 @@ RHAMT examines application artifacts, including project source directories and a
 
 #### How Does Red Hat Application Migration Toolkit Simplify Migration?
 
+---
+
 Red Hat Application Migration Toolkit looks for common resources and highlights technologies and known trouble spots when migrating applications. The goal is to provide a high-level view into the technologies used by the application and provide a detailed report organizations can use to estimate, document, and migrate enterprise applications to Java EE and Red Hat JBoss Enterprise Application Platform.
 
 > RHAMT is usually part of a much larger application migration and modernization program that involves well defined and repeatable phases over weeks or months and involves many people from a given business. Do not be fooled into thinking that every single
@@ -53,13 +55,13 @@ the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-app
 * [Documentation](https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit)
 * [Developer Homepage](https://developers.redhat.com/products/rhamt/overview/)
 
-
----
 You might have a question in terms of how I get started to develop a new apps in the `cloud-native way` once I complete to migreate existing apps via RHAMT.
 
 No worries!! **Red Hat Application Runtimes** allows you to generate the cloud-native apps quickly on multiple rumtimes via `Launcher`.
 
 #### What is Red Hat Application Runtimes Launcher?
+
+---
 
 LAUNCHER enables **developers** to create and/or import **modern applications**, built and deployed on OpenShift Container Platform.
 
@@ -84,6 +86,8 @@ or register for a Red Hat account if you don't have one already.
 
 
 #### How to Create a New Application?
+
+---
 
 You start your own new application by picking the capabilities you want (Http Api, Persistence, ...). We take care of setting everything's up to get you started.
 
