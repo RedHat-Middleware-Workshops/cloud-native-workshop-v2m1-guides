@@ -125,13 +125,13 @@ We will go ahead and add a bunch of other dependencies while we have the pom.xml
     </dependency>
 ~~~
 
-Build and package the app using Maven to make sure the changed code still compiles via Eclipse Che **BUILD** window:
+Build and package the app using Maven to make sure the changed code still compiles via CodeReady Workspace **BUILD** window:
 
 ![inventory_build]({% image_path catalog-build.png %})
 
 > **NOTE**: Make sure to build this mvn command at working directory(i.e catalog).
 
-> **NOTE:** The Eclipse Che terminal window is like your local terminal. Everything that you run here you should
+> **NOTE:** The CodeReady Workspace terminal window is like your local terminal. Everything that you run here you should
 be able to execute on your local computer as long as you have a `Java SDK 1.8` and `Maven`. In later steps, we
 will also use the `oc` command line tool.
 
@@ -497,13 +497,13 @@ The test should be successful and you should see green color **test_retriving_on
 
 ![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %}){:width="600px"}
 
-You can also run the following command via **Eclipse Che Terminal** to verify the test cases.
+You can also run the following command via **CodeReady Workspace Terminal** to verify the test cases.
 
 ``mvn verify -Dtest=CatalogEndpointTest``
 
 Since we now have endpoints that returns the catalog we can also start the service and load the default page again, which should now return the products.
 
-Start the application via Eclipse Che **RUN** Menu:
+Start the application via CodeReady Workspace **RUN** Menu:
 
 ![catalog-spring-run]({% image_path catalog-spring-run.png %})
 
@@ -524,7 +524,7 @@ Now you've seen how to create REST application in Spring MVC and create a simple
 
 In the next step, we will also call another service to enrich the endpoint response with inventory status.
 
-> **NOTE**: Make sure to stop the service by closing `run spring-boot` tab window in Eclipse Che.
+> **NOTE**: Make sure to stop the service by closing `run spring-boot` tab window in CodeReady Workspace.
 
 **7. Get inventory data**
 
@@ -572,7 +572,7 @@ The test **should fail** and you should see red color **test_retriving_one_proud
 
 ![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
-You can also run the following command via **Eclipse Che Terminal** to verify the test cases:
+You can also run the following command via **CodeReady Workspace Terminal** to verify the test cases:
 
 ``mvn verify``
 
@@ -700,7 +700,7 @@ The test should be successful and you should see green color **test_retriving_on
 
 ![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
 
-You can also run the following command via **Eclipse Che Terminal** to verify the test cases:
+You can also run the following command via **CodeReady Workspace Terminal** to verify the test cases:
 
 ``mvn verify``
 
@@ -848,7 +848,7 @@ In the next step we now test our service locally before we deploy it to OpenShif
 
 As you have seen in previous steps, using the Spring Boot maven plugin (predefined in `pom.xml`), you can conveniently run the application locally and test the endpoint.
 
-Start the application via Eclipse Che **RUN** Menu:
+Start the application via CodeReady Workspace **RUN** Menu:
 
 ![catalog-spring-run]({% image_path catalog-spring-run.png %})
 
@@ -866,7 +866,7 @@ You would see a JSON response like this:
 
 The REST API returned a JSON object representing the inventory count for this product. Well done!
 
-> **NOTE**: Make sure to stop the service by closing `run spring-boot` tab window in Eclipse Che.
+> **NOTE**: Make sure to stop the service by closing `run spring-boot` tab window in CodeReady Workspace.
 
 You have now successfully created your the Catalog service using Spring Boot and implemented basic REST
 API on top of the product catalog database. You have also learned how to deal with service failures. 
@@ -903,7 +903,7 @@ Next, we'll deploy your new microservice to OpenShift.
 Now that you've logged into OpenShift, let's deploy our new catalog microservice:
 
 Our production catalog microservice will use an external database (PostgreSQL) to house inventory data.
-First, deploy a new instance of PostgreSQL by executing via Eclipse Che **Terminal**:
+First, deploy a new instance of PostgreSQL by executing via CodeReady Workspace **Terminal**:
 
 `oc project catalog`
 
@@ -922,13 +922,13 @@ This will deploy the database to our new project.
 
 ![catalog_posgresql]({% image_path catalog_posgresql.png %})
 
-You can also check if the deployment is complete via Eclipse Che **Terminal**:
+You can also check if the deployment is complete via CodeReady Workspace **Terminal**:
 
 `oc rollout status -w dc/catalog-database`
 
 **16. Update configuration**
 
-Create the file `src/main/resources/application-openshift.properties` in Eclipse Che. 
+Create the file `src/main/resources/application-openshift.properties` in CodeReady Workspace. 
 
 Copy the following content to the file:
 
@@ -947,7 +947,7 @@ inventory.ribbon.listOfServers=inventory-quarkus.inventory.svc.cluster.local:808
 
 **17. Build and Deploy**
 
-Build and deploy the project using the following command, which will use the maven plugin to deploy via Eclipse Che **Terminal**:
+Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspace **Terminal**:
 
 `mvn package fabric8:deploy -Popenshift -DskipTests`
 
@@ -959,7 +959,7 @@ To verify that everything is started, run the following command and wait for it 
 
 ![catalog_deploy_success]({% image_path catalog_deploy_success.png %})
 
-You can also check if the deployment is complete via Eclipse Che **Terminal**:
+You can also check if the deployment is complete via CodeReady Workspace **Terminal**:
 
 `oc rollout status -w dc/catalog`
 
@@ -1001,7 +1001,7 @@ OpenShift we can route these calls to our newly created catalog services instead
 
 Flow the steps below to create a path based route.
 
-Obtain hostname of monolith UI from our Dev environment via Eclipse Che **BUILD** window:
+Obtain hostname of monolith UI from our Dev environment via CodeReady Workspace **BUILD** window:
 
 `oc get route/www -n coolstore-dev`
 

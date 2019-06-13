@@ -762,6 +762,7 @@ run the following command via CodeReady Workspaces **Terminal** :
 `oc rollout status -w dc/inventory-quarkus`
 
 And wait for the result as below:
+
 `replication controller "inventory-quarkus-XX" successfully rolled out`
 
 > **NOTE**: The # of deployment(i.e. `inventory-quarkus-2`) might be different in your project. Be sure if the sequence is increased(i.e. #1 -> #2).
