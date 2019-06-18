@@ -456,12 +456,12 @@ You will see the OpenShift landing page:
 
 Click **Create Project**, fill in the fields, and click **Create**:
 
-* Name: `coolstore-dev`
-* Display Name: `Coolstore Monolith - Dev`
+* Name: `userXX-coolstore-dev`
+* Display Name: `USERXX Coolstore Monolith - Dev`
 * Description: _leave this field empty_
 
-> **NOTE**: YOU **MUST** USE `coolstore-dev` AS THE PROJECT NAME, as this name is referenced later
-on and you will experience failures if you do not name it `coolstore-dev`!
+> **NOTE**: YOU **MUST** USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later
+on and you will experience failures if you do not name it `userXX-coolstore-dev`!
 
 ![create_dialog]({% image_path create_dialog.png %}){:width="500"}
 
@@ -485,7 +485,7 @@ Paste it on CodeReady Workspaces **Terminal** window.
 
 Switch to the developer project you created earlier via CodeReady Workspaces **Terminal** window:
 
-`oc project coolstore-dev`
+`oc project userXX-coolstore-dev`
 
 And finally deploy template:
 
@@ -497,7 +497,7 @@ Then open up the Monolith Overview page at `OpenShift Web Console`
 
 and verify the monolith template items are created:
 
-![no_deployments]({% image_path no_deployments.png %}){:width="800px"}
+![no_deployments]({% image_path no_deployments.png %})
 
 You can see the components being deployed on the
 Project Overview, but notice the **No deployments for Coolstore**. You have not yet deployed
@@ -533,7 +533,7 @@ thanks to the *DeploymentConfig* object created from the template:
 
 Check the OpenShift web console and you'll see the application being built:
 
-![building]({% image_path building.png %}){:width="800px"}
+![building]({% image_path building.png %})
 
 Wait for the build and deploy to complete:
 

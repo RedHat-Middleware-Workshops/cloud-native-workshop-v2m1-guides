@@ -507,8 +507,8 @@ Create a new project for the _inventory_ service:
 
 Click **Create Project**, fill in the fields, and click **Create**:
 
-* Name: `inventory`
-* Display Name: `CoolStore Inventory Microservice Application`
+* Name: `userXX-inventory`
+* Display Name: `USERXX CoolStore Inventory Microservice Application`
 * Description: _leave this field empty_
 
 ![create_dialog]({% image_path create_inventory_dialog.png %}){:width="500"}
@@ -528,9 +528,9 @@ Let's deploy our new inventory microservice to OpenShift!
 Our production inventory microservice will use an external database (PostgreSQL) to house inventory data.
 First, deploy a new instance of PostgreSQL by executing the following commands via CodeReady Workspaces **Terminal**:
 
-`oc project inventory`
+`oc project userXX-inventory`
 
-~~~shll
+~~~shell
 oc new-app -e POSTGRESQL_USER=inventory \
   -e POSTGRESQL_PASSWORD=mysecretpassword \
   -e POSTGRESQL_DATABASE=inventory openshift/postgresql:latest \

@@ -914,8 +914,8 @@ Create a new project for the _catalog_ service:
 
 Click **Create Project**, fill in the fields, and click **Create**:
 
-* Name: `catalog`
-* Display Name: `CoolStore Catalog Microservice Application`
+* Name: `userXX-catalog`
+* Display Name: `USERXX CoolStore Catalog Microservice Application`
 * Description: _leave this field empty_
 
 ![create_dialog]({% image_path create_catalog_dialog.png %}){:width="500"}
@@ -937,7 +937,7 @@ Now that you've logged into OpenShift, let's deploy our new catalog microservice
 Our production catalog microservice will use an external database (PostgreSQL) to house inventory data.
 First, deploy a new instance of PostgreSQL by executing via CodeReady Workspace **Terminal**:
 
-`oc project catalog`
+`oc project userXX-catalog`
 
 ~~~shell
 oc new-app -e POSTGRESQL_USER=catalog \
@@ -973,10 +973,10 @@ spring.datasource.username=catalog
 spring.datasource.password=mysecretpassword
 spring.datasource.driver-class-name=org.postgresql.Driver
 
-inventory.ribbon.listOfServers=inventory-quarkus.inventory.svc.cluster.local:8080
+inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080
 ~~~
 
->**NOTE:**: The `application-openshift.properties` does not have all values of `application-default.properties`, that is because on the values that need to change has to be specified here. Spring will fall back to `application-default.properties` for the other values.
+>**NOTE:**: The `application-openshift.properties` does not have all values of `application-default.properties`, that is because on the values that need to change has to be specified here. Spring will fall back to `application-default.properties` for the other values. You should replace your username with `userXX` in `inventory.ribbon.listOfServers`.
 
 
 ####17. Build and Deploy
@@ -1043,7 +1043,7 @@ Flow the steps below to create a path based route.
 
 Obtain hostname of monolith UI from our Dev environment via CodeReady Workspace **BUILD** window:
 
-`oc get route/www -n coolstore-dev`
+`oc get route/www -n userXX-coolstore-dev`
 
 The output of this command shows us the hostname:
 
@@ -1052,7 +1052,7 @@ NAME      HOST/PORT                                               PATH      SERV
 www      www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com            coolstore   <all>                   None
 ~~~
 
-> **NOTE**: My hostname is `www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com` but **yours will be different**.
+> **NOTE**: My hostname is `www-user1-coolstore-dev.apps.seoul-7b68.openshiftworkshop.com` but **yours will be different**.
 
 Open the openshift console for Catalog - Applications - Routes at `OpenShift Web Console`
 
@@ -1073,7 +1073,7 @@ Leave other values set to their defaults, and click **Create**.
 
 ---
 
-Test the route by running `curl http://www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com/services/products ; echo`
+Test the route by running `curl http://www-user1-coolstore-dev.apps.seoul-7b68.openshiftworkshop.com/services/products ; echo`
 
 You should get a complete set of products, along with their inventory.
 
