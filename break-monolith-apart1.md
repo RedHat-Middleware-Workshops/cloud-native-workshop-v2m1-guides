@@ -979,7 +979,7 @@ packaged in the Inventory JAR archive:
 
 `oc create configmap inventory-quarkus --from-file=src/main/resources/application-prod.properties`
 
-If you don't like bash commands, Go to the **CoolStore Inventory Microservice Project** 
+If you don't like bash commands, Go to the **USERXX CoolStore Inventory Microservice Application** 
 project in OpenShift Web Console and then on the left sidebar, **Resources >> Config Maps**. Click 
 on **Create Config Maps** button to create a config map with the following info:
 

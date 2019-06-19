@@ -67,7 +67,8 @@ Choose **Maven** from the project configurations and then click on **Save**.
 Repeat the above for inventory and catalog projects.
 
 > **NOTE**: the **Terminal** window in CodeReady Workspaces. For the rest of these labs, anytime you need to run 
-a command in a terminal, you can use the CodeReady Workspaces **Terminal** window.
+a command in a terminal, you can use the CodeReady Workspaces **Terminal** window. If you have **no response** from the Terminal when you're typing codes, 
+**Close** the current Terminal and **Open a new Terminal again**.
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
 
