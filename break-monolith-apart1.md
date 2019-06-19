@@ -592,7 +592,7 @@ And now we can access using curl once again to find all inventories:
 
 Replace your own route URL in the above command output: 
 
-`curl http://inventory-quarkus-inventory.apps.seoul-df03.openshiftworkshop.com/services/inventory ; echo`
+`curl http://inventory-quarkus-userxx-inventory.apps.seoul-7b68.openshiftworkshop.com/services/inventory ; echo`
 
 So now `Inventory` service is deployed to OpenShift. You can also see it in the Overview in the OpenShift Console 
 with its single replica running in 1 pod (the blue circle), along with the Postgres database pod:
