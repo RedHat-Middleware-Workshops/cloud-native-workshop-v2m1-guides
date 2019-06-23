@@ -668,7 +668,7 @@ Go to `inventory' directory:
 
 `cd cloud-native-workshop-v2m1-labs/inventory/`
 
-`mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-smallrye-health"`
+`mvn quarkus:add-extension -Dextensions="health"`
 
 ####14. Run the health check
 
