@@ -1,3 +1,9 @@
+---
+Title: Decide which Application Server to use in OpenShift
+PrevPage: getting-started-cloud-native
+NextPage: migrate-to-jboss-eap
+---
+
 ## Lab1 - Decide which Application Server to use in OpenShift
 
 In this step we will analyze an monolith application built for use with Oracle® WebLogic Server (WLS). This application is a Java EE application
@@ -15,23 +21,23 @@ For this lab, we will use the Web Console on top of OpenShift Container Platform
 
 ---
 
-![RHAMT Login]({% image_path rhamt_login.png %})
+![RHAMT Login](%image_path%rhamt_login.png)
 
 When you login at the first time, you should change the password along with RH SSO policy.
 
 > **NOTE**: You can use the current password to input a new password.
 
-![RHAMT Change Pwd]({% image_path rhamt_change_pwd.png %})
+![RHAMT Change Pwd](%image_path%rhamt_change_pwd.png)
 
 ####2. Create a new project
 
 ---
 
-![RHAMT Landing Page]({% image_path rhamt_landing_page.png %})
+![RHAMT Landing Page](%image_path%rhamt_landing_page.png)
 
 Input a name and description to create a project. 
 
-![RHAMT Create Project]({% image_path rhamt_create_project.png %})
+![RHAMT Create Project](%image_path%rhamt_create_project.png)
 
   * Name: `userXX-eap-migration`
   * Description: `USERXX EAP MIGRATION PROJECT`
@@ -42,7 +48,7 @@ Input a name and description to create a project.
 
 ---
 
-![RHAMT Add App]({% image_path rhamt_add_monolith_app.png %})
+![RHAMT Add App](%image_path%rhamt_add_monolith_app.png)
 
 > **NOTE**: Input /opt/app in 'Server Path' to analyze a monolithic application
 
@@ -50,7 +56,7 @@ Input a name and description to create a project.
 
 ---
 
-![RHAMT Add App]({% image_path rhamt_check_monolith_app.png %})
+![RHAMT Add App](%image_path%rhamt_check_monolith_app.png)
 
 > **NOTE**: Check **com, weblogic** for Included packages.
 
@@ -60,7 +66,7 @@ Input a name and description to create a project.
 
 Click the # of Analysis(For example, #2 in the screenshot).
 
-![RHAMT Complete]({% image_path rhamt_complete_analysis.png %})
+![RHAMT Complete](%image_path%rhamt_complete_analysis.png)
 
 ####6. Review the report
 
@@ -68,13 +74,13 @@ Click the # of Analysis(For example, #2 in the screenshot).
 
 You should see the landing page for the report:
 
-![RHAMT Langing Page]({% image_path rhamt_result_landing_page.png %})
+![RHAMT Langing Page](%image_path%rhamt_result_landing_page.png)
 
 The main landing page of the report lists the applications that were processed. Each row contains a high-level overview of the story points, number of incidents, and technologies encountered in that application.
 
 Click on the `monolith.war` link to access details for the project:
 
-![RHAMT Project Overview]({% image_path rhamt_project_overview.png %})
+![RHAMT Project Overview](%image_path%rhamt_project_overview.png)
 
 ####7. Understanding the report
 

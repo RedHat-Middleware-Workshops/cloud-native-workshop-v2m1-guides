@@ -11,31 +11,38 @@ Agenda
 * Breaking the monolith apart - II
 
 Lab Instructions on OpenShift
-===
 
-Note that if you have installed the lab infra via APB, the lab instructions are already deployed.
+To deploy the workshop, it is recommended you first create a fresh project into which to deploy it. The same project will then be used by the workshop as it steps you through the different ways workshops can be deployed.
 
-Here is an example Ansible playbook to deploy the lab instruction to your OpenShift cluster manually.
 ```
-- name: Create Guides Module 1
-  hosts: localhost
-  tasks:
-  - import_role:
-      name: siamaksade.openshift_workshopper
-    vars:
-      project_name: "guide-m1"
-      workshopper_name: "Cloud-Native Workshop V2 Module-1"
-      project_suffix: "-XX"
-      workshopper_content_url_prefix: https://raw.githubusercontent.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-guides/master
-      workshopper_workshop_urls: https://raw.githubusercontent.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-guides/master/_cloud-native-workshop-module1.yml
-      workshopper_env_vars:
-        PROJECT_SUFFIX: "-XX"
-        COOLSTORE_PROJECT: coolstore{{ project_suffix }}
-        OPENSHIFT_CONSOLE_URL: "https://master.seoul-2922.openshiftworkshop.com"
-        ECLIPSE_CHE_URL: "http://che-labs-infra.apps.seoul-2922.openshiftworkshop.com"
-        GIT_URL: "http://gogs-labs-infra.apps.seoul-2922.openshiftworkshop.com"
-        NEXUS_URL: "http://nexus-labs-infra.apps.seoul-2922.openshiftworkshop.com"
-        LABS_DOWNLOAD_URL: "http://gogs-labs-infra.apps.seoul-2922.openshiftworkshop.com"
-         
-      openshift_cli: "/Users/doh/cloud-native-app-dev/oc --server https://master.seoul-2922.openshiftworkshop.com"
+oc new-project labs
 ```
+
+In the active project you want to use, run:
+
+```
+oc new-app https://raw.githubusercontent.com/openshift-labs/workshop-dashboard/2.14.4/templates/production.json \
+  --param TERMINAL_IMAGE="quay.io/quaa/cloud-native-workshop-v2m1-guides:latest" \
+  --param APPLICATION_NAME=cn-workshop-v2m1 \
+  --param AUTH_USERNAME=workshop
+```
+
+Access to the workshop environment will be password protected and you will see a browser popup for entering user credentials. The username to enter is `workshop`. The password is displayed in the output from deploying the workshop environment, but can also be queried by running:
+
+```
+oc set env --list dc/cn-workshop-v2m1 | grep AUTH_PASSWORD
+```
+
+With the password in hand, the hostname for accessing the sample workshop environment in your browser can be found by running:
+
+```
+oc get route cn-workshop-v2m1
+```
+
+When you are finished you can delete the project you created, or if you used an existing project, run:
+
+```
+oc delete all,serviceaccount,rolebinding,configmap -l app=cn-workshop-v2m1
+```
+
+Note that this will not delete anything which may have been deployed when you went through the sample workshop. Ensure that you go right through the workshop and execute any steps described in it for deleting any deployments it had you make. Alternatively, if you deploy the workshop environment in a fresh project, delete the project.

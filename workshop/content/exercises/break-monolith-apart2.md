@@ -1,3 +1,9 @@
+---
+Title: Breaking the monolith apart - II
+PrevPage: break-monolith-apart2
+NextPage: ../finish
+---
+
 ## Lab4 - Breaking the monolith apart - II
 
 In the previous labs, you learned how to take an existing monolithic app and refactor a single _inventory_ service using
@@ -14,7 +20,7 @@ personal preferences, like existing knowledge, etc. At the core Spring and Java 
 
 The goal is to produce something like:
 
-![Greeting]({% image_path catalog-goal.png %}){:width="700px"}
+![Greeting](%image_path%catalog-goal.png)
 
 #### What is Spring Framework?
 
@@ -42,7 +48,7 @@ Run the following commands to set up your environment for this lab and start in 
 
 In the project explorer, right-click on **catalog** and then change a directory to catalog path on **Terminal**.
 
-![catalog-setup]({% image_path catalog-project.png %}){:width="500px"}
+![catalog-setup](%image_path%catalog-project.png)
 
 ####2. Examine the Maven project structure
 
@@ -135,7 +141,7 @@ We will go ahead and add a bunch of other dependencies while we have the pom.xml
 
 Build and package the app using Maven to make sure the changed code still compiles via CodeReady Workspace **BUILD** window:
 
-![inventory_build]({% image_path catalog-build.png %})
+![inventory_build](%image_path%catalog-build.png)
 
 > **NOTE**: Make sure to build this mvn command at working directory(i.e catalog).
 
@@ -314,11 +320,11 @@ The Spring Data framework will automatically see if there is a schema.sql in the
 
 Now we are ready to run the test to verify that everything works. Because we created the `ProductRepositoryTest.java` via `Run Junit Test`:
 
-![catalog-test-run]({% image_path catalog-test-run.png %}){:width="600px"}
+![catalog-test-run](%image_path%catalog-test-run.png)
 
 The test should be successful and you should see green color **test_realAll**, **test_realOne** in Default Suite window.
 
-![catalog-test-success]({% image_path catalog-test-success.png %}){:width="600px"}
+![catalog-test-success](%image_path%catalog-test-success.png)
 
 You have now successfully executed the second step in this lab. 
 
@@ -505,11 +511,11 @@ The Spring MVC Framework default uses Jackson to serialize or map Java objects t
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="600px"}
+![catalog-endpoint-test-run](%image_path%catalog-endpoint-test-run.png)
 
 The test should be successful and you should see green color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %}){:width="600px"}
+![catalog-endpoint-test-success](%image_path%catalog-endpoint-test-success.png)
 
 You can also run the following command via **CodeReady Workspace Terminal** to verify the test cases.
 
@@ -519,7 +525,7 @@ Since we now have endpoints that returns the catalog we can also start the servi
 
 Start the application via CodeReady Workspace **RUN** Menu:
 
-![catalog-spring-run]({% image_path catalog-spring-run.png %})
+![catalog-spring-run](%image_path%catalog-spring-run.png)
 
 Wait for the application to start. Then we can verify the endpoint by running the following command in Eclipse **Terminal**:
 
@@ -584,11 +590,11 @@ And add it to the second test as well at the remaining `//TODO: Add check for Qu
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
+![catalog-endpoint-test-run](%image_path%catalog-endpoint-test-run.png)
 
 The test **should fail** and you should see red color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
+![catalog-endpoint-test-failure](%image_path%catalog-endpoint-test-failure.png)
 
 You can also run the following command via **CodeReady Workspace Terminal** to verify the test cases:
 
@@ -714,11 +720,11 @@ for ( Product p : productList ) {
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
+![catalog-endpoint-test-run](%image_path%catalog-endpoint-test-run.png)
 
 The test should be successful and you should see green color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
+![catalog-endpoint-test-success](%image_path%catalog-endpoint-test-success.png)
 
 You can also run the following command via **CodeReady Workspace Terminal** to verify the test cases:
 
@@ -806,11 +812,11 @@ Notice that the Hoverfly Rule will now return serverError for all request to inv
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
+![catalog-endpoint-test-run](%image_path%catalog-endpoint-test-run.png)
 
 The test **should fail** and you should see red color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
+![catalog-endpoint-test-failure](%image_path%catalog-endpoint-test-failure.png)
 
 If you also run ``mvn verify -Dtest=CatalogEndpointTest`` the test will fail with the following error message:
 
@@ -852,11 +858,11 @@ Open ``src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java`` and
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
+![catalog-endpoint-test-run](%image_path%catalog-endpoint-test-run.png)
 
 The test **should fail** and you should see red color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
 
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
+![catalog-endpoint-test-failure](%image_path%catalog-endpoint-test-failure.png)
 
 If you also run ``mvn verify -Dtest=CatalogEndpointTest`` the test will fail with the following error message:
 
@@ -879,7 +885,7 @@ As you have seen in previous steps, using the Spring Boot maven plugin (predefin
 
 Start the application via CodeReady Workspace **RUN** Menu:
 
-![catalog-spring-run]({% image_path catalog-spring-run.png %})
+![catalog-spring-run](%image_path%catalog-spring-run.png)
 
 Wait for the application to start. Then we can verify the endpoint by running the following command in Eclipse **Terminal**:
 
@@ -918,11 +924,11 @@ Click **Create Project**, fill in the fields, and click **Create**:
 * Display Name: `USERXX CoolStore Catalog Microservice Application`
 * Description: _leave this field empty_
 
-![create_dialog]({% image_path create_catalog_dialog.png %}){:width="500"}
+![create_dialog](%image_path%create_catalog_dialog.png)
 
 Click on the name of the newly-created project:
 
-![create_new]({% image_path create_new_catalog.png %}){:width="500"}
+![create_new](%image_path%create_new_catalog.png)
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
@@ -952,7 +958,7 @@ the credentials used when deploying to OpenShift.
 
 This will deploy the database to our new project. 
 
-![catalog_posgresql]({% image_path catalog_posgresql.png %})
+![catalog_posgresql](%image_path%catalog_posgresql.png)
 
 You can also check if the deployment is complete via CodeReady Workspace **Terminal**:
 
@@ -993,7 +999,7 @@ end of the build output.
 After the maven build finishes it will take less than a minute for the application to become available.
 To verify that everything is started, run the following command and wait for it complete successfully:
 
-![catalog_deploy_success]({% image_path catalog_deploy_success.png %})
+![catalog_deploy_success](%image_path%catalog_deploy_success.png)
 
 You can also check if the deployment is complete via CodeReady Workspace **Terminal**:
 
@@ -1011,11 +1017,11 @@ route URL at `OpenShift Web Console` to access the sample UI.
 
 > You can also access the application through the link on the OpenShift Web Console Overview page.
 
-![catalog-route-link]({% image_path catalog-route-link.png %})
+![catalog-route-link](%image_path%catalog-route-link.png)
 
 The UI will refresh the catalog table every 2 seconds, as before.
 
-![catalog-sample-ui]({% image_path catalog-sample-ui.png %})
+![catalog-sample-ui](%image_path%catalog-sample-ui.png)
 
 >**NOTE:** Since we previously have a inventory service running you should now see the actual quantity value and not the fallback value of -1. 
 
@@ -1037,7 +1043,7 @@ calls to that URL will still hit product catalog in the monolith. By using a
 [path based route](https://docs.openshift.com/container-platform/3.7/architecture/networking/routes.html#path-based-routes) in
 OpenShift we can route these calls to our newly created catalog services instead and end up with something like:
 
-![Greeting]({% image_path catalog-goal.png %}){:width="700px"}
+![Greeting](%image_path%catalog-goal.png)
 
 Flow the steps below to create a path based route.
 
@@ -1065,7 +1071,7 @@ Open the openshift console for Catalog - Applications - Routes at `OpenShift Web
 * **Path**: `/services/products`
 * **Service**: `catalog`
 
-![Greeting]({% image_path catalog-route-vals.png %})
+![Greeting](%image_path%catalog-route-vals.png)
 
 Leave other values set to their defaults, and click **Create**.
 
@@ -1085,7 +1091,7 @@ Open the monolith UI at `OpenShift Web Console`
 
 and observe that the new catalog is being used along with the monolith:
 
-![Greeting]({% image_path coolstore-web.png %})
+![Greeting](%image_path%coolstore-web.png)
 
 The screen will look the same, but notice that the earlier product *Atari 2600 Joystick* is now gone,
 as it has been removed in our new catalog microservice.

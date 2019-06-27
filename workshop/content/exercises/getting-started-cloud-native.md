@@ -1,4 +1,8 @@
-## Getting Started with Cloud-Native Apps
+---
+Title: Getting Started with Cloud-Native Apps
+PrevPage: ../setup
+NextPage: decide-which-appserver
+---
 
 The current version of the webshop is a Java EE application build for Oracle Weblogic Applications Server and as part of Coderlands modernization strategy and to be able to automate releases and eventually apply advanced deployment scenarios (like Canary releases) there has been a decision to move this application to a container native environment from Red Hat called OpenShift.
 
@@ -25,7 +29,7 @@ After the investigation the team agrees that JBoss EAP seems to be the much bett
 
 ---
 
-![RHAMT Logo]({% image_path rhamt_logo.png %})
+![RHAMT Logo](%image_path%rhamt_logo.png)
 
 Red Hat Application Migration Toolkit (RHAMT) is an extensible and customizable rule-based tool that helps simplify migration of Java applications.
 
@@ -65,7 +69,7 @@ No worries!! **Red Hat Application Runtimes** allows you to generate the cloud-n
 
 LAUNCHER enables **developers** to create and/or import **modern applications**, built and deployed on OpenShift Container Platform.
 
-![launch-landing]({% image_path launch-landing.png %})
+![launch-landing](%image_path%launch-landing.png)
 
 Suppored backend Runtimes are here:
 
@@ -79,7 +83,7 @@ Suppored backend Runtimes are here:
 
 When you click on start, you will first have to login or register an account for free with the Red Hat Developer Program.
 
-![launch-login]({% image_path launch-login.png %})
+![launch-login](%image_path%launch-login.png)
 
 You can log in with your existing OpenShift Online, Red Hat Developer Program, or Red Hat Customer Portal account, 
 or register for a Red Hat account if you don't have one already.
@@ -91,39 +95,39 @@ or register for a Red Hat account if you don't have one already.
 
 You start your own new application by picking the capabilities you want (Http Api, Persistence, ...). We take care of setting everything's up to get you started.
 
-![launch-create-app]({% image_path launch-create-app.png %})
+![launch-create-app](%image_path%launch-create-app.png)
 
-![launch-create-app-detail]({% image_path launch-create-app-detail.png %})
+![launch-create-app-detail](%image_path%launch-create-app-detail.png)
 
 You should configure a `Frontend` and/or a `Backend` for your application.
 
 When you configure a Frontend for your application then you will be able to bootstrap the frontend of your application in a few seconds.
 
-![launch-create-app-frontend]({% image_path launch-create-app-frontend.png %})
+![launch-create-app-frontend](%image_path%launch-create-app-frontend.png)
 
 > **NOTE**: You can skip to configure a Frontend application via choosing `None`.
 
 Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` 
 because we will develop and deploy Quarkus application for the next labs.
 
-![launch-create-app-backend-choose]({% image_path launch-create-app-backend-choose.png %})
+![launch-create-app-backend-choose](%image_path%launch-create-app-backend-choose.png)
 
 Runtimes power the server-side processing of your application, and we can get you set up in one of several languages and frameworks. 
 If you're looking to expose an HTTP API or interact with services like a database, choosing one here will hook that together for you.
 
-![launch-create-app-backend-detail]({% image_path launch-create-app-backend-detail.png %})
+![launch-create-app-backend-detail](%image_path%launch-create-app-backend-detail.png)
 
 Complete to configure the Backend application's capabilities(`Relational Persistence`, `Health Checks`,`HTTP API`) then click on **Save** button.
 
 Now your application is ready to download:
 
-![launch-create-app-download]({% image_path launch-create-app-download.png %}){:width="600"}
+![launch-create-app-download](%image_path%launch-create-app-download.png)
 
 Extract the downloaded ZIP file then get started to developing your cloud-native applications.
 
 Your new application contains a tool to help you deploy your new application on OpenShift. You can find instructions in the README.md.
 
-![launch-download-app]({% image_path launch-download-app.png %}){:width="800"}
+![launch-download-app](%image_path%launch-download-app.png)
 
 As soon as deployment is done, go checkout your new application capabilities.
 
@@ -137,4 +141,4 @@ along with [Install and Configure THtheE Fabric8 Launcher Tool](https://access.r
 
 When you deploy the launcher by `Operator', you will see a similar overview in OpenShift dashboard:
 
-![launch-operator]({% image_path launch-operator.png %})
+![launch-operator](%image_path%launch-operator.png)
