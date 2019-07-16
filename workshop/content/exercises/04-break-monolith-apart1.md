@@ -494,17 +494,7 @@ Or you can run a maven plugin command directly in **Terminal**:
 
 > **NOTE**: You should **SKIP** the Unit test because you don't have PostgreSQL database in local environment.
 
-Create a new project for the _inventory_ service:
-
-Click **Create Project**, fill in the fields, and click **Create**:
-
-* Name: `userXX-inventory`
-* Display Name: `USERXX CoolStore Inventory Microservice Application`
-* Description: _leave this field empty_
-
-![create_dialog](%image_path%create_inventory_dialog.png)
-
-Click on the name of the newly-created project:
+Click on the name of the `USERXX CoolStore Inventory Microservice Application` project:
 
 ![create_new](%image_path%create_new_inventory.png)
 

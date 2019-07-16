@@ -916,17 +916,7 @@ adding additional features to take care of various aspects of cloud native micro
 We have already deployed our coolstore monolith and inventory to OpenShift. In this step we will deploy our new Catalog microservice for our CoolStore application,
 so let's create a separate project to house it and keep it separate from our monolith and our other microservices.
 
-Create a new project for the _catalog_ service:
-
-Click **Create Project**, fill in the fields, and click **Create**:
-
-* Name: `userXX-catalog`
-* Display Name: `USERXX CoolStore Catalog Microservice Application`
-* Description: _leave this field empty_
-
-![create_dialog](%image_path%create_catalog_dialog.png)
-
-Click on the name of the newly-created project:
+Click on the name of the `USERXX CoolStore Catalog Microservice Application` project:
 
 ![create_new](%image_path%create_new_catalog.png)
 
