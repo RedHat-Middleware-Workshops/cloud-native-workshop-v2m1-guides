@@ -1,9 +1,3 @@
----
-Title: Getting Started with Cloud-Native Apps
-PrevPage: ../setup
-NextPage: decide-which-appserver
----
-
 The current version of the webshop is a Java EE application build for Oracle Weblogic Applications Server and as part of Coderlands modernization strategy and to be able to automate releases and eventually apply advanced deployment scenarios (like Canary releases) there has been a decision to move this application to a container native environment from Red Hat called OpenShift.
 
 During the first planing sprint you have investigated the possibility to deploy Oracle Weblogic to Red Hat OpenShift, but since Oracle Weblogic is not supported and also not recommended to use in an orchestrated container native platform like OpenShift you have two options. Either you migrate to WebSphere Liberty Profile or you migrate to JBoss EAP. You have tested both and since both are supported on OpenShift you compare them side-by-side in this matrix.
@@ -29,7 +23,7 @@ After the investigation the team agrees that JBoss EAP seems to be the much bett
 
 ---
 
-![RHAMT Logo](%image_path%rhamt_logo.png)
+![RHAMT Logo](images/rhamt_logo.png)
 
 Red Hat Application Migration Toolkit (RHAMT) is an extensible and customizable rule-based tool that helps simplify migration of Java applications.
 

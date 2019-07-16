@@ -1,0 +1,12 @@
+name: Workshop Content
+
+modules:
+    activate:
+    - workshop-overview
+    - setup-environment
+    - exercises/01-getting-started-cloud-native
+    - exercises/02-decide-which-appserver
+    - exercises/03-migrate-to-jboss-eap
+    - exercises/04-break-monolith-apart1
+    - exercises/05-break-monolith-apart2
+    - workshop-summary

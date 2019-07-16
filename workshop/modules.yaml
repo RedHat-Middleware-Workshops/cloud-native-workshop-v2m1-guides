@@ -1,0 +1,27 @@
+config:
+    vars:
+    - name: OC_VERSION
+      value: undefined
+    - name: KUBECTL_VERSION
+      value: undefined
+
+modules:
+    workshop-overview:
+        name: Workshop Overview
+        exit_sign: Setup Environment
+    setup-environment:
+        name: Workshop Setup
+        exit_sign: Start Workshop
+    exercises/01-getting-started-cloud-native:
+        name: Getting Started with Cloud-Native Apps
+    exercises/02-decide-which-appserver:
+        name: Decide which Application Server to use in OpenShift
+    exercises/03-migrate-to-jboss-eap:
+        name: Migrate your application to JBoss EAP
+    exercises/04-break-monolith-apart1:
+        name: Breaking the monolith apart - I
+    exercises/05-break-monolith-apart2:
+        name: Breaking the monolith apart - II
+    workshop-summary:
+        name: Workshop Summary
+        exit_sign: Finish Workshop
