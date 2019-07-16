@@ -34,13 +34,13 @@ Quarkus apps, microservices, and OpenShift/Kubernetes.
 The goal is to deploy this new microservice alongside the existing monolith, and then later on we'll tie them together.
 But after this lab, you should end up with something like:
 
-![lab3_goal](%image_path%goal.png%)
+![lab3_goal](images/gcgoal.png%)
 
 #### What is Quarkus? 
 
 ---
 
-![quarkus-logo](%image_path%quarkus-logo.png)
+![quarkus-logo](images/gcquarkus-logo.png)
 
 For years, the client-server architecture has been the de-facto standard to build applications. 
 But a major shift happened. The one model rules them all age is over. A new range of applications 
@@ -66,7 +66,7 @@ Run the following commands to set up your environment for this lab and start in 
 
 In the project explorer, right-click on **inventory** and then change a directory to inventory path on **Terminal**.
 
-![inventory_setup](%image_path%codeready-workspace-inventory-project.png)
+![inventory_setup](images/gccodeready-workspace-inventory-project.png)
 
 ####2. Examine the Maven project structure
 
@@ -146,7 +146,7 @@ runs the Quarkus application in JVM mode as well as native (no JVM) mode in `src
 
 Now let's write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
 
-![Inventory RESTful Service](%image_path%inventory-arch.png)
+![Inventory RESTful Service](images/gcinventory-arch.png)
 
 ####3. Add Qurkus Extensions
 
@@ -325,7 +325,7 @@ quarkus.hibernate-orm.log.sql=false
 
 Now we are ready to run the inventory application. Click on **Commands Palette** then select `Build and Run Locally` in Run menu:
 
-![codeready-workspace-maven](%image_path%quarkus-dev-run-paletter.png)
+![codeready-workspace-maven](images/gcquarkus-dev-run-paletter.png)
 
 You can also use a `maven plugin command` to run the Quarkus application locally via CodeReady Workspaces **Terminal**:
 
@@ -485,7 +485,7 @@ quarkus.datasource.driver=org.postgresql.Driver
 
 Repackage the inventory application via clicking on `Package for OpenShift` in `Commands Palette`:
 
-![codeready-workspace-maven](%image_path%quarkus-dev-run-packageforOcp.png)
+![codeready-workspace-maven](images/gcquarkus-dev-run-packageforOcp.png)
 
 
 Or you can run a maven plugin command directly in **Terminal**:
@@ -496,7 +496,7 @@ Or you can run a maven plugin command directly in **Terminal**:
 
 Click on the name of the `USERXX CoolStore Inventory Microservice Application` project:
 
-![create_new](%image_path%create_new_inventory.png)
+![create_new](images/gccreate_new_inventory.png)
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
@@ -523,7 +523,7 @@ the credentials used when deploying to OpenShift.
 
 This will deploy the database to our new project. 
 
-![inventory_db_deployments](%image_path%inventory-database-deployment.png)
+![inventory_db_deployments](images/gcinventory-database-deployment.png)
 
 ####11. Build and Deploy
 
@@ -588,7 +588,7 @@ route URL at `OpenShift Web Console` to access the sample UI.
 
 > You can also access the application through the link on the OpenShift Web Console Overview page.
 
-![Overview link](%image_path%inventory-route-link.png)
+![Overview link](images/gcinventory-route-link.png)
 
 > **NOTE**: If you get a '404 Not Found' error, just reload the page a few times until the Inventory UI appears. This
 is due to a lack of health check which you are about to fix!
@@ -598,11 +598,11 @@ The UI will refresh the inventory table every 2 seconds, as before.
 Back on the OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` and then click on
 the top-most `(latest)` deployment in the listing (most likely `#1` or `#2`):
 
-![Overview link](%image_path%deployment-list.png)
+![Overview link](images/gcdeployment-list.png)
 
 Notice OpenShift is warning you that the inventory application has no health checks:
 
-![Health Check Warning](%image_path%inventory-healthcheck-warning.png)
+![Health Check Warning](images/gcinventory-healthcheck-warning.png)
 
 In the next steps you will enhance OpenShift's ability to manage the application lifecycle by implementing
 a _health check pattern_. By default, without health checks (or health _probes_) OpenShift considers services
@@ -665,7 +665,7 @@ quarkus.datasource.driver=org.h2.Driver
 
  * Run the Inventory application via `mvn compile quarkus:dev` or click on `Build and Run Locally` in **Commands Palette**:
 
-![codeready-workspace-maven](%image_path%quarkus-dev-run-paletter.png)
+![codeready-workspace-maven](images/gcquarkus-dev-run-paletter.png)
 
  * Access the `health check` endpoint using `curl http://localhost:8080/health` and the result looks like:
 
@@ -760,7 +760,7 @@ quarkus.datasource.driver=org.postgresql.Driver
 
 Repackage the inventory application via clicking on `Package for OpenShift` in `Commands Palette`:
 
-![codeready-workspace-maven](%image_path%quarkus-dev-run-packageforOcp.png)
+![codeready-workspace-maven](images/gcquarkus-dev-run-packageforOcp.png)
 
 Next, update a temp directory to store only previously-built application with necessary lib directory via CodeReady Workspaces **Terminal**:
 
@@ -784,7 +784,7 @@ And wait for the result as below:
 Back on the OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` and then click on
 the `Edit Health Checks` in `Actions`:
 
-![inventory-healthcheck-redeploy](%image_path%inventory-healthcheck-redeploy.png)
+![inventory-healthcheck-redeploy](images/gcinventory-healthcheck-redeploy.png)
 
 You should input the following variables in Readiness Path Probe and Liveness Probe:
 
@@ -793,7 +793,7 @@ You should input the following variables in Readiness Path Probe and Liveness Pr
  * Initial Delay: _10_
  * Timeout: _1_
 
-![inventory-healthcheck-webconsole](%image_path%inventory-healthcheck-webconsole.png)
+![inventory-healthcheck-webconsole](images/gcinventory-healthcheck-webconsole.png)
 
 You should also be able to access the health check logic
 at the `inventory` endpoint via a web browser:
@@ -830,7 +830,7 @@ The various timeout values for the probes can be configured in many ways. Let's 
 we don't have to wait 3 minutes for it to be activated. Use OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` 
 and then click on the `Edit Health Checks` in `Actions`:
 
-![inventory-change-deplaytime](%image_path%inventory-change-deplaytime.png)
+![inventory-change-deplaytime](images/gcinventory-change-deplaytime.png)
 
 You can also use the **oc** command to tune the
 probe to wait 30 seconds before starting to poll the probe:
@@ -853,15 +853,15 @@ In the next step, we'll exercise the probe and watch as it fails and OpenShift r
 
 From the OpenShift Web Console overview page, click on the route link to open the sample application UI:
 
-![Route Link](%image_path%inventory-routelink.png)
+![Route Link](images/gcinventory-routelink.png)
 
 This will open up the sample application UI in a new browser tab:
 
-![App UI](%image_path%app.png)
+![App UI](images/gcapp.png)
 
 The app will begin polling the inventory as before and report success:
 
-![Greeting](%image_path%inventory.png)
+![Greeting](images/gcinventory.png)
 
 Now you will corrupt the service and cause its health check to start failing.
 To simulate the app crasing, let's kill the underlying service so it stops responding. Execute via CodeReady Workspaces **Terminal**:
@@ -875,12 +875,12 @@ Check out the application sample UI page and notice it is now failing to access 
 been caused by an overloaded server, a bug in the code, or any other reason that could make the application
 unhealthy.
 
-![Greeting](%image_path%inventory-fail.png)
+![Greeting](images/gcinventory-fail.png)
 
 At this point, return to the OpenShift web console and click on the _Overview_ tab for the project. Notice that the
 dark blue circle has now gone light blue, indicating the application is failing its _liveness probe_:
 
-![Not Ready](%image_path%notready.png)
+![Not Ready](images/gcnotready.png)
 
 After too many liveness probe failures, OpenShift will forcibly kill the pod and container running the service, and spin up a new one to take
 its place. Once this occurs, the light blue circle should return to dark blue. This should take about 30 seconds.
@@ -888,7 +888,7 @@ its place. Once this occurs, the light blue circle should return to dark blue. T
 Return to the same sample app UI (without reloading the page) and notice that the UI has automatically
 re-connected to the new service and successfully accessed the inventory once again:
 
-![Greeting](%image_path%inventory.png)
+![Greeting](images/gcinventory.png)
 
 ####19. Managing Application Configuration
 
@@ -993,7 +993,7 @@ Click on **Terminal** tab menu to run the following info:
 
 `sh-4.2$ psql -U inventory -c "select * from inventory"`
 
-![inventory-posgresql-terminal](%image_path%inventory-posgresql-terminal.png)
+![inventory-posgresql-terminal](images/gcinventory-posgresql-terminal.png)
 
 You have now created a config map that holds the configuration content for Inventory and can be updated 
 at anytime for example when promoting the container image between environments without needing to 
