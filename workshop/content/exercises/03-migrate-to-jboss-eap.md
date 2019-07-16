@@ -22,7 +22,7 @@ Go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configur
 First, you need to register as a user. Register and choose the same username and password as 
 your OpenShift credentials.
 
-![codeready-workspace-register](images/gccodeready-workspace-register.png)
+![codeready-workspace-register](images/codeready-workspace-register.png)
 
 Log into CodeReady Workspaces with your user. You can now create your workspace based on a stack. A 
 stack is a template of workspace configuration. For example, it includes the programming language and tools needed
@@ -31,20 +31,20 @@ on-demand.
 
 For this lab, click on the **Cloud Native Workshop v2** stack and then on the **Create** button. 
 
-![codeready-workspace-create-workspace](images/gccodeready-workspace-create-workspace.png)
+![codeready-workspace-create-workspace](images/codeready-workspace-create-workspace.png)
 
 Click on **Open** to open the workspace and then on the **Start** button to start the workspace for use, if it hasn't started automatically.
 
-![codeready-workspace-start-workspace](images/gccodeready-workspace-start-workspace.png)
+![codeready-workspace-start-workspace](images/codeready-workspace-start-workspace.png)
 
 You can click on the left arrow icon to switch to the wide view:
 
-![codeready-workspace-wide](images/gccodeready-workspace-wide.png)
+![codeready-workspace-wide](images/codeready-workspace-wide.png)
 
 It takes a little while for the workspace to be ready. When it's ready, you will see a fully functional 
 CodeReady Workspaces IDE running in your browser.
 
-![codeready-workspace-workspace](images/gccodeready-workspace.png)
+![codeready-workspace-workspace](images/codeready-workspace.png)
 
 Now you can import the project skeletons into your workspace.
 
@@ -57,18 +57,18 @@ In the project explorer pane, click on the **Import Projects...** and enter the 
   * Check **Import recursively (for multi-module projects)**
   * Name: `cloud-native-workshop-v2m1-labs`
 
-![codeready-workspace-import](images/gccodeready-workspace-import.png)
+![codeready-workspace-import](images/codeready-workspace-import.png)
 
 The projects are imported now into your workspace and is visible in the project explorer.
 
 CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
 enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on **monolith** and then click on **Convert to Project**.
 
-![codeready-workspace-convert](images/gccodeready-workspace-convert.png)
+![codeready-workspace-convert](images/codeready-workspace-convert.png)
 
 Choose **Maven** from the project configurations and then click on **Save**.
 
-![codeready-workspace-maven](images/gccodeready-workspace-maven.png)
+![codeready-workspace-maven](images/codeready-workspace-maven.png)
 
 Repeat the above for inventory and catalog projects.
 
@@ -76,7 +76,7 @@ Repeat the above for inventory and catalog projects.
 a command in a terminal, you can use the CodeReady Workspaces **Terminal** window. If you have **no response** from the Terminal when you're typing codes, 
 **Close** the current Terminal and **Open a new Terminal again**.
 
-![codeready-workspace-terminal](images/gccodeready-workspace-terminal.png)
+![codeready-workspace-terminal](images/codeready-workspace-terminal.png)
 
 ####2. Review the issue related to `ApplicationLifecycleListener`
 
@@ -84,7 +84,7 @@ a command in a terminal, you can use the CodeReady Workspaces **Terminal** windo
 
 Open the Issues report at  RHAMT Web Console:
 
-![rhamt_project_issues](images/gcrhamt_project_issues.png)
+![rhamt_project_issues](images/rhamt_project_issues.png)
 
 RHAMT provides helpful links to understand the issue deeper and offer guidance for the migration.
 
@@ -146,12 +146,12 @@ public class StartupListener {
 
 Go to `Commands Palette` and click on `build` in CodeReady Workspaces:
 
-![rhamt_project_issues](images/gccodeready-workspace-build.png)
+![rhamt_project_issues](images/codeready-workspace-build.png)
 
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
 
-![rhamt_project_issues](images/gccodeready-workspace-build-result.png)
+![rhamt_project_issues](images/codeready-workspace-build-result.png)
 
 In the next step, we will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
 
@@ -236,7 +236,7 @@ That one was pretty easy.
 
 Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
 
-![rhamt_project_issues](images/gccodeready-workspace-build.png)
+![rhamt_project_issues](images/codeready-workspace-build.png)
 
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
@@ -295,12 +295,12 @@ JBoss EAP's internal message queue implementation provided by [Apache ActiveMQ A
 The first step is to remove the unneeded `weblogic-ejb-jar.xml` file. This file is proprietary to Weblogic and not recognized or processed by JBoss
 EAP. Delete the file on Eclipse Navigator:
 
-![codeready-workspace-convert](images/gccodeready-workspace-delete-jar.png)
+![codeready-workspace-convert](images/codeready-workspace-delete-jar.png)
 
 While we're at it, let's remove the `stub weblogic implementation classes` added as part of the scenario.
 Delete the file on Eclipse Navigator:
 
-![codeready-workspace-convert](images/gccodeready-workspace-delete-weblogic.png)
+![codeready-workspace-convert](images/codeready-workspace-delete-weblogic.png)
 
 ####9. Fix the code
 
@@ -376,7 +376,7 @@ Your MDB should now be properly migrated to JBoss EAP.
 
 Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
 
-![rhamt_project_issues](images/gccodeready-workspace-build.png)
+![rhamt_project_issues](images/codeready-workspace-build.png)
 
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
@@ -393,7 +393,7 @@ Navigate to `Applications` on the left menu and click on `Add` the fixed applica
 
 You should delete the old application(i.e. monolith.war) to avoid to analyze it again and `Run Analysis` to analyze the project:
 
-![rhamt_rerun_analysis_report](images/gcrhamt_rerun_analysis_report.png)
+![rhamt_rerun_analysis_report](images/rhamt_rerun_analysis_report.png)
 
 **Wait for it to complete before continuing!**. 
 
@@ -406,7 +406,7 @@ Click on the lastet result to go to the report web page and verify that it now r
 You have successfully migrated
 this app to JBoss EAP, congratulations!
 
-![rhamt_project_issues_story](images/gcrhamt_project_issues_story.png)
+![rhamt_project_issues_story](images/rhamt_project_issues_story.png)
 
 Now that we've migrated the app, let's deploy it and test it out and start to explore some of the features that JBoss EAP
 plus Red Hat OpenShift bring to the table.
@@ -450,7 +450,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 
 First, open a new brower with the `OpenShift Web Console`
 
-![openshift_login](images/gcopenshift_login.png)
+![openshift_login](images/openshift_login.png)
 
 Login using:
 
@@ -459,7 +459,7 @@ Login using:
 
 You will see the OpenShift landing page:
 
-![openshift_landing](images/gcopenshift_landing.png)
+![openshift_landing](images/openshift_landing.png)
 
 Click **Create Project**, fill in the fields, and click **Create**:
 
@@ -470,11 +470,11 @@ Click **Create Project**, fill in the fields, and click **Create**:
 > **NOTE**: YOU **MUST** USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later
 on and you will experience failures if you do not name it `userXX-coolstore-dev`!
 
-![create_dialog](images/gccreate_dialog.png)
+![create_dialog](images/create_dialog.png)
 
 Click on the name of the newly-created project:
 
-![create_new](images/gccreate_new.png)
+![create_new](images/create_new.png)
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
@@ -486,7 +486,7 @@ We'll use the CLI to deploy the components for our monolith. To deploy the monol
 
 Copy login command and Login OpenShift cluster:
 
-![codeready-workspace-copy-login-cmd](images/gccodeready-workspace-oc-login-copy.png)
+![codeready-workspace-copy-login-cmd](images/codeready-workspace-oc-login-copy.png)
 
 Paste it on CodeReady Workspaces **Terminal** window.
 
@@ -508,7 +508,7 @@ Then open up the Monolith Overview page at `OpenShift Web Console`
 
 and verify the monolith template items are created:
 
-![no_deployments](images/gcno_deployments.png)
+![no_deployments](images/no_deployments.png)
 
 You can see the components being deployed on the
 Project Overview, but notice the **No deployments for Coolstore**. You have not yet deployed
@@ -544,7 +544,7 @@ thanks to the *DeploymentConfig* object created from the template:
 
 Check the OpenShift web console and you'll see the application being built:
 
-![building](images/gcbuilding.png)
+![building](images/building.png)
 
 Wait for the build and deploy to complete:
 
@@ -559,16 +559,16 @@ You should eventually see `replication controller "coolstore-1" successfully rol
 When it's done you should see the application deployed successfully with blue circles for the
 database and the monolith:
 
-![build_done](images/gcbuild_done.png)
+![build_done](images/build_done.png)
 
 Test the application by clicking on the Route link at `OpenShift Web Console`:
 
-![route_link](images/gcroute_link.png)
+![route_link](images/route_link.png)
 
 #####Congratulations!
 Now you are using the same application that we built locally on OpenShift. That wasn't too hard right?
 
-![coolstore_web](images/gccoolstore_web.png)
+![coolstore_web](images/coolstore_web.png)
 
 In the next step you'll explore more of the developer features of OpenShift in preparation for moving the
 monolith to a microservices architecture later on. Let's go!
