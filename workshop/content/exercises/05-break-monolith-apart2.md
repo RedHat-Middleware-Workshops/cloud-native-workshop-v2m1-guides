@@ -1,11 +1,3 @@
----
-Title: Breaking the monolith apart - II
-PrevPage: break-monolith-apart2
-NextPage: ../finish
----
-
-## Lab4 - Breaking the monolith apart - II
-
 In the previous labs, you learned how to take an existing monolithic app and refactor a single _inventory_ service using
 Thorntail. Since Thorntail is using Java EE much of the technology from the monolith can be reused directly,
 like JPA and JAX-RS. The previous lab resulted in you creating an inventory service, but so far we haven't started

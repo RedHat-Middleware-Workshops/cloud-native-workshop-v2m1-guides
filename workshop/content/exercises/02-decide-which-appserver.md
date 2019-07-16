@@ -1,11 +1,3 @@
----
-Title: Decide which Application Server to use in OpenShift
-PrevPage: getting-started-cloud-native
-NextPage: migrate-to-jboss-eap
----
-
-## Lab1 - Decide which Application Server to use in OpenShift
-
 In this step we will analyze an monolith application built for use with Oracle® WebLogic Server (WLS). This application is a Java EE application
 using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and best practices.
 

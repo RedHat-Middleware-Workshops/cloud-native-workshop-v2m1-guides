@@ -1,9 +1,3 @@
----
-Title: Migrate your application to JBoss EAP
-PrevPage: decide-which-appserver
-NextPage: break-monolith-apart1
----
-
 In this step we will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
 
 ####1. Open the file using CodeReady Workspaces

@@ -1,11 +1,3 @@
----
-Title: Breaking the monolith apart - I
-PrevPage: migrate-to-jboss-eap
-NextPage: break-monolith-apart2
----
-
-## Lab3 - Breaking the monolith apart - I
-
 In the previous labs you learned how to take an existing monolithic Java EE application to the cloud
 with JBoss EAP and OpenShift, and you got a glimpse into the power of OpenShift for existing applications.
 
