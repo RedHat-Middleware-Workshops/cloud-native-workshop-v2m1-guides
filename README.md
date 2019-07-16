@@ -10,7 +10,7 @@ Agenda
 * Breaking the monolith apart - I
 * Breaking the monolith apart - II
 
-Lab Instructions on OpenShift
+## Lab Instructions on OpenShift
 
 To deploy the workshop, it is recommended you first create a fresh project into which to deploy it. The same project will then be used by the workshop as it steps you through the different ways workshops can be deployed.
 
