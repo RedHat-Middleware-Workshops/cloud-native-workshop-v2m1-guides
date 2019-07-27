@@ -964,7 +964,7 @@ Copy the following content to the file:
 
 ~~~java
 server.port=8080
-spring.datasource.url=jdbc:postgresql://${project.artifactId}-database:5432/catalog
+spring.datasource.url=jdbc:postgresql://catalog-database:5432/catalog
 spring.datasource.username=catalog
 spring.datasource.password=mysecretpassword
 spring.datasource.driver-class-name=org.postgresql.Driver
