@@ -111,6 +111,10 @@ We will also make use of Java Persistance API (JPA) so we need to add the follow
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+    </dependency>
 ~~~
 
 We will go ahead and add a bunch of other dependencies while we have the pom.xml open. These will be explained later. Add these at the
@@ -125,11 +129,13 @@ We will go ahead and add a bunch of other dependencies while we have the pom.xml
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-feign</artifactId>
+      <version>1.4.7.RELEASE</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-hystrix</artifactId>
+      <version>1.4.7.RELEASE</version>
     </dependency>
 ~~~
 
