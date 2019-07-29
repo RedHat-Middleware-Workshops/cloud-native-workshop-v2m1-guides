@@ -1,4 +1,4 @@
-The Containers and Cloud-Native Roadshow(Dev Track) Module 1 Guide[![Build Status](https://travis-ci.org/openshift-labs/cloud-native-guides.svg?branch=ocp-3.11)](https://travis-ci.org/openshift-labs/cloud-native-guides)
+The CCN Roadshow(Dev Track) Module 1 Guide 2019
 ===
 This module provides developers and introduction to cloud-natives applications and gives them an experience of building cloud-native applications 
 using Red Hat Application Rumties(i.e. Throntail, Spring Boot) with OpenShift and more.
