@@ -111,10 +111,6 @@ We will also make use of Java Persistance API (JPA) so we need to add the follow
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
-    <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-    </dependency>
 ~~~
 
 We will go ahead and add a bunch of other dependencies while we have the pom.xml open. These will be explained later. Add these at the
@@ -939,7 +935,7 @@ First, deploy a new instance of PostgreSQL by executing via CodeReady Workspace 
 oc new-app -e POSTGRESQL_USER=catalog \
              -e POSTGRESQL_PASSWORD=mysecretpassword \
              -e POSTGRESQL_DATABASE=catalog \
-             openshift/postgresql:latest \
+             openshift/postgresql:9.4 \
              --name=catalog-database
 ~~~
 
