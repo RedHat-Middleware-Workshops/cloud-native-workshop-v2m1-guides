@@ -1,6 +1,7 @@
-Cloud-Native Workshop Module 1[![Build Status](https://travis-ci.org/openshift-labs/cloud-native-guides.svg?branch=ocp-3.11)](https://travis-ci.org/openshift-labs/cloud-native-guides)
+The Containers and Cloud-Native Roadshow(Dev Track) Module 1 Guide[![Build Status](https://travis-ci.org/openshift-labs/cloud-native-guides.svg?branch=ocp-3.11)](https://travis-ci.org/openshift-labs/cloud-native-guides)
 ===
-This half day hands-on cloud-native workshops(`module 1`) provides developers and introduction to cloud-natives applications and gives them an experience of building cloud-native applications using Red Hat Application Rumties(i.e. Throntail, Spring Boot) with OpenShift and more.
+This module provides developers and introduction to cloud-natives applications and gives them an experience of building cloud-native applications 
+using Red Hat Application Rumties(i.e. Throntail, Spring Boot) with OpenShift and more.
 
 Agenda
 ===
@@ -16,6 +17,7 @@ Lab Instructions on OpenShift
 Note that if you have installed the lab infra via APB, the lab instructions are already deployed.
 
 Here is an example Ansible playbook to deploy the lab instruction to your OpenShift cluster manually.
+
 ```
 - name: Create Guides Module 1
   hosts: localhost
@@ -31,11 +33,11 @@ Here is an example Ansible playbook to deploy the lab instruction to your OpenSh
       workshopper_env_vars:
         PROJECT_SUFFIX: "-XX"
         COOLSTORE_PROJECT: coolstore{{ project_suffix }}
-        OPENSHIFT_CONSOLE_URL: "https://master.seoul-2922.openshiftworkshop.com"
-        ECLIPSE_CHE_URL: "http://che-labs-infra.apps.seoul-2922.openshiftworkshop.com"
-        GIT_URL: "http://gogs-labs-infra.apps.seoul-2922.openshiftworkshop.com"
-        NEXUS_URL: "http://nexus-labs-infra.apps.seoul-2922.openshiftworkshop.com"
-        LABS_DOWNLOAD_URL: "http://gogs-labs-infra.apps.seoul-2922.openshiftworkshop.com"
+        OPENSHIFT_CONSOLE_URL: "https://YOUR_OCP_MASTER_URL"
+        ECLIPSE_CHE_URL: "http://che-labs-infra.YOUR_OCP_ROUTE_SUBFFIX"
+        GIT_URL: "http://gogs-labs-infra.YOUR_OCP_ROUTE_SUBFFIX"
+        NEXUS_URL: "http://nexus-labs-infra.YOUR_OCP_ROUTE_SUBFFIX"
+        LABS_DOWNLOAD_URL: "http://gogs-labs-infra.YOUR_OCP_ROUTE_SUBFFIX"
          
-      openshift_cli: "/Users/doh/cloud-native-app-dev/oc --server https://master.seoul-2922.openshiftworkshop.com"
+      openshift_cli: "oc --server https://YOUR_OCP_MASTER_URL"
 ```
