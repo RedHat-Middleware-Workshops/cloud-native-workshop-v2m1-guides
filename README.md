@@ -1,7 +1,7 @@
 The CCN Roadshow(Dev Track) Module 1 Guide 2019
 ===
-This module provides developers and introduction to cloud-natives applications and gives them an experience of building cloud-native applications 
-using Red Hat Application Rumties(i.e. Throntail, Spring Boot) with OpenShift and more.
+This module guides developers how to get started the cloud-native journey such as monolith application migration, deployment with Kubernetes/OpenShift cluster, 
+and modernizing applications using Red Hat Application Rumties(i.e. Quarkus, Spring Boot) with OpenShift and more.
 
 Agenda
 ===
