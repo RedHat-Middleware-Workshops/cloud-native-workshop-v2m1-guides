@@ -451,11 +451,13 @@ First, open a new brower with the `OpenShift Web Console`
 Login using:
 
 * Username: `userXX`
-* Password: `openshift`
+* Password: `r3dh4t1!`
 
 You will see the OpenShift landing page:
 
 ![openshift_landing]({% image_path openshift_landing.png %})
+
+> The project displayed in the landing page depends on which labs you will run today. If you will develop **Service Mesh and Identity** then you will see pre-created projects as the above screeenshot.
 
 Click **Create Project**, fill in the fields, and click **Create**:
 
@@ -468,11 +470,9 @@ on and you will experience failures if you do not name it `userXX-coolstore-dev`
 
 ![create_dialog]({% image_path create_dialog.png %}){:width="500"}
 
-Click on the name of the newly-created project:
+This will take you to the project status. There's nothing there yet, but that's about to change.
 
 ![create_new]({% image_path create_new.png %}){:width="500"}
-
-This will take you to the project overview. There's nothing there yet, but that's about to change.
 
 ####15. Deploy the monolith
 
@@ -483,6 +483,18 @@ We'll use the CLI to deploy the components for our monolith. To deploy the monol
 Copy login command and Login OpenShift cluster:
 
 ![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
+
+Then you will redirect to OpenShift Login page again. 
+
+![openshift_login]({% image_path openshift_login.png %})
+
+When you login with your credential, you will see `Display Token` link:
+
+![openshift_login]({% image_path display_token_link.png %})
+
+Click on the link and copy the **oc login** command:
+
+![openshift_login]({% image_path your_token.png %})
 
 Paste it on CodeReady Workspaces **Terminal** window.
 
