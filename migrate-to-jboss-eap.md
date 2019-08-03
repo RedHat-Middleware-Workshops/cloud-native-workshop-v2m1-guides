@@ -472,7 +472,7 @@ on and you will experience failures if you do not name it `userXX-coolstore-dev`
 
 This will take you to the project status. There's nothing there yet, but that's about to change.
 
-![create_new]({% image_path create_new.png %})
+![create_new]({% image_path create_new.png %}){:width="700px"}
 
 ####15. Deploy the monolith
 

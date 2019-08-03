@@ -490,7 +490,7 @@ Or you can run a maven plugin command directly in **Terminal**:
 
 Click on the name of the `USERXX CoolStore Inventory Microservice Application` project:
 
-![create_new]({% image_path create_new_inventory.png %}){:width="500"}
+![create_new]({% image_path create_new_inventory.png %})
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
