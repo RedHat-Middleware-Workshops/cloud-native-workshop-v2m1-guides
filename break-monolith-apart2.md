@@ -914,7 +914,7 @@ so let's create a separate project to house it and keep it separate from our mon
 
 Click on the name of the `USERXX CoolStore Catalog Microservice Application` project:
 
-![create_new]({% image_path create_new_catalog.png %}){:width="500"}
+![create_new]({% image_path create_new_catalog.png %})
 
 This will take you to the project overview. There's nothing there yet, but that's about to change.
 
@@ -938,9 +938,6 @@ oc new-app -e POSTGRESQL_USER=catalog \
              openshift/postgresql:10 \
              --name=catalog-database
 ~~~
-
-> **NOTE:**: If you change the username and password you also need to update `src/main/fabric8/credential-secret.yml` which contains
-the credentials used when deploying to OpenShift.
 
 This will deploy the database to our new project. 
 
@@ -994,7 +991,7 @@ inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.lo
 
 Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspace **Terminal**:
 
-`mvn clean package -DskipTests`
+`mvn clean package spring-boot:repackage -DskipTests`
 
 The build and deploy may take a minute or two. Wait for it to complete. You should see a `BUILD SUCCESS` at the
 end of the build output.
@@ -1007,19 +1004,13 @@ This build uses the new [Red Hat OpenJDK Container Image](https://access.redhat.
 
 > **NOTE**: Make sure if you log in OpenShift via `oc login command` at Terminal.
 
-Next, create a temp directory to store only previously-built application with necessary lib directory via CodeReady Workspaces **Terminal**:
-
-`rm -rf target/binary && mkdir -p target/binary && cp -r target/catalog-1.0.0-SNAPSHOT.jar target/lib target/binary`
-
-> **NOTE**: You can also use a true source-based S2I build, but we're using binaries here to save time.
-
 And then start and watch the build, which will take about a minute to complete:
 
-`oc start-build catalog-springboot --from-dir=target/binary --follow`
+`oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow`
 
 Once the build is done, we'll deploy it as an OpenShift application and override the Postgres URL to specify our production Postgres credentials:
 
-`oc new-app catalog-springboot -e SPRINGBOOT_DATASOURCE_URL=jdbc:postgresql://catalog-database:5432/catalog`
+`oc new-app catalog-springboot`
 
 and expose your service to the world:
 
@@ -1034,13 +1025,17 @@ Wait for that command to report replication controller "catalog-springboot-1" su
 >**NOTE:** Even if the rollout command reports success the application may not be ready yet and the reason for
 that is that we currently don't have any liveness check configured, but we will add that in the next steps.
 
-And now we can access using curl once again to find all inventories:
+And now we can access using curl once again to find a certain inventory:
 
 `oc get routes`
 
 Replace your own route URL in the above command output: 
 
-`curl http://YOUR_CATALOG_ROUTE_URL/services/products ; echo`
+`curl http://YOUR_CATALOG_ROUTE_URL/services/product/329299 ; echo`
+
+The expected result data is here:
+
+`{"itemId":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99,"quantity":736}`
 
 So now `Catalog` service is deployed to OpenShift. You can also see it in the Project Status in the OpenShift Console 
 with running in 1 pod, along with the Postgres database pod.
@@ -1051,9 +1046,9 @@ with running in 1 pod, along with the Postgres database pod.
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
-route URL at `OpenShift Web Console` to access the sample UI.
+route URL at `Routes` in OpenShift Web Console to access the sample UI.
 
-> You can also access the application through the link on the OpenShift Web Console Overview page.
+> You can also access the application through the link on Resources tab in the Project Status page.
 
 ![catalog-route-link]({% image_path catalog-route-link.png %})
 
@@ -1096,7 +1091,7 @@ NAME      HOST/PORT                                               PATH      SERV
 www      www-coolstore-dev.apps.seoul-2922.openshiftworkshop.com            coolstore   <all>                   None
 ~~~
 
-> **NOTE**: My hostname is `www-user1-coolstore-dev.apps.seoul-7b68.openshiftworkshop.com` but **yours will be different**.
+> **NOTE**: My hostname is `www-user0-coolstore-dev.apps.cluster-seoul-a30e.seoul-a30e.openshiftworkshop.com` but **yours will be different**.
 
 Open the openshift console for Catalog - Applications - Routes at `OpenShift Web Console`
 
@@ -1104,10 +1099,17 @@ Open the openshift console for Catalog - Applications - Routes at `OpenShift Web
 
 ---
 
+Go back to `Routes` on the left menu then click on `Create Route`.
+
+![Greeting]({% image_path catalog-create-route.png %})
+
+Input the following variables and click on `Create`.
+
 * **Name**: `catalog-redirect`
 * **Hostname**: _the hostname from above_
 * **Path**: `/services/products`
-* **Service**: `catalog`
+* **Service**: `catalog-springboot`
+* **Target Port**: `8080 -> 8080(TCP)`
 
 ![Greeting]({% image_path catalog-route-vals.png %})
 
@@ -1117,7 +1119,7 @@ Leave other values set to their defaults, and click **Create**.
 
 ---
 
-Test the route by running `curl http://www-user1-coolstore-dev.apps.seoul-7b68.openshiftworkshop.com/services/products ; echo`
+Test the route by running `curl http://YOUR_CATALOG_REDIRECT_ROUTE_URL/services/products ; echo`
 
 You should get a complete set of products, along with their inventory.
 

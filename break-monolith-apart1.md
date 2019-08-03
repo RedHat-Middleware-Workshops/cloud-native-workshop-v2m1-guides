@@ -863,7 +863,7 @@ In the next step, we'll exercise the probe and watch as it fails and OpenShift r
 
 From the project status page, click on the route link to open the sample application UI:
 
-![Route Link]({% image_path inventory-routelink.png %})
+![Route Link]({% image_path inventory-route-link.png %})
 
 This will open up the sample application UI in a new browser tab:
 
