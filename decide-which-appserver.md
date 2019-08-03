@@ -42,9 +42,11 @@ Input a name and description to create a project.
 
 ---
 
-![RHAMT Add App]({% image_path rhamt_add_monolith_app.png %})
+Select `Server Path` to analyze a monolithic application:
 
-> **NOTE**: Input /opt/app in 'Server Path' to analyze a monolithic application
+ * Server Path: `/opt/apps`
+
+![RHAMT Add App]({% image_path rhamt_add_monolith_app.png %})
 
 ####4.Select "Migration to JBoss EAP 7" in Transformation Path and clicks the "Save & Run" button
 

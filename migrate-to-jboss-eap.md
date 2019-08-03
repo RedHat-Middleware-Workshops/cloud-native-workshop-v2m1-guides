@@ -488,7 +488,7 @@ Then you will redirect to OpenShift Login page again.
 
 ![openshift_login]({% image_path openshift_login.png %})
 
-When you login with your credential, you will see `Display Token` link:
+When you login with your credential, you will see `Display Token` link in the redirected page.
 
 ![openshift_login]({% image_path display_token_link.png %})
 
@@ -508,15 +508,18 @@ And finally deploy template:
 
 This will deploy both a PostgreSQL database and JBoss EAP, but it will not start a build for our application.
 
-Then open up the Monolith Overview page at `OpenShift Web Console`
+Then open up the userXX-coolstore-dev project status page at `OpenShift Web Console`
 
 and verify the monolith template items are created:
 
 ![no_deployments]({% image_path no_deployments.png %})
 
 You can see the components being deployed on the
-Project Overview, but notice the **No deployments for Coolstore**. You have not yet deployed
-the container image built in previous steps, but you'll do that next.
+Project Status, but notice the **No running pod for Coolstore**. When you click on **coolstore DC**(Deployment Configs), you will see overview and resources.
+
+![no_deployments]({% image_path dc_overview.png %})
+
+You have not yet deployed the container image built in previous steps, but you'll do that next.
 
 ####16. Deploy application using Binary build
 
@@ -534,7 +537,7 @@ file). We will do this with the `oc` command line.
 
 Build the project via CodeReady Workspaces **Terminal** window:
 
-``mvn clean package -Popenshift``
+`mvn clean package -Popenshift`
 
 > **NOTE**: Make sure to run this mvn command at working directory(i.e monolith).
 
@@ -544,32 +547,32 @@ And finally, start the build process that will take the `.war` file and combine 
 EAP and produce a Linux container image which will be automatically deployed into the project,
 thanks to the *DeploymentConfig* object created from the template:
 
-``oc start-build coolstore --from-file=deployments/ROOT.war``
+`oc start-build coolstore --from-file=deployments/ROOT.war`
 
-Check the OpenShift web console and you'll see the application being built:
+When you navigate `Builds` menu, you will find out `coolstore-xx` is `running` in Status field:
 
 ![building]({% image_path building.png %})
 
 Wait for the build and deploy to complete:
 
-``oc rollout status -w dc/coolstore``
+`oc rollout status -w dc/coolstore`
 
 This command will be used often to wait for deployments to complete. Be sure it returns success when you use it!
 You should eventually see `replication controller "coolstore-1" successfully rolled out`.
 
 > If the above command reports `Error from server (ServerTimeout)` then simply re-run the command until it reports success!
 
-
 When it's done you should see the application deployed successfully with blue circles for the
 database and the monolith:
 
-![build_done]({% image_path build_done.png %}){:width="800px"}
+![build_done]({% image_path build_done.png %})
 
-Test the application by clicking on the Route link at `OpenShift Web Console`:
+Test the application by clicking on the Route link at `Networking > Routes` on the lefe menu:
 
-![route_link]({% image_path route_link.png %}){:width="800px"}
+![route_link]({% image_path route_link.png %})
 
 #####Congratulations!
+
 Now you are using the same application that we built locally on OpenShift. That wasn't too hard right?
 
 ![coolstore_web]({% image_path coolstore_web.png %})

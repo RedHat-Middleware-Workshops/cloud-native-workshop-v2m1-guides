@@ -508,7 +508,7 @@ First, deploy a new instance of PostgreSQL by executing the following commands v
 ~~~shell
 oc new-app -e POSTGRESQL_USER=inventory \
   -e POSTGRESQL_PASSWORD=mysecretpassword \
-  -e POSTGRESQL_DATABASE=inventory openshift/postgresql:latest \
+  -e POSTGRESQL_DATABASE=inventory openshift/postgresql:10 \
   --name=inventory-database
 ~~~
 
@@ -567,10 +567,10 @@ And now we can access using curl once again to find all inventories:
 
 Replace your own route URL in the above command output: 
 
-`curl http://inventory-quarkus-userxx-inventory.apps.seoul-7b68.openshiftworkshop.com/services/inventory ; echo`
+`curl http://YOUR_INVENTORY_ROUTE_URL/services/inventory ; echo`
 
 So now `Inventory` service is deployed to OpenShift. You can also see it in the Overview in the OpenShift Console 
-with its single replica running in 1 pod (the blue circle), along with the Postgres database pod:
+with its single replica running in 1 pod (the blue circle), along with the Postgres database pod.
 
 ####12. Access the application running on OpenShift
 
@@ -578,25 +578,18 @@ with its single replica running in 1 pod (the blue circle), along with the Postg
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
-route URL at `OpenShift Web Console` to access the sample UI.
-
-> You can also access the application through the link on the OpenShift Web Console Overview page.
+route URL at `Networking > Routes` to access the sample UI.
 
 ![Overview link]({% image_path inventory-route-link.png %})
 
 > **NOTE**: If you get a '404 Not Found' error, just reload the page a few times until the Inventory UI appears. This
 is due to a lack of health check which you are about to fix!
 
+You can also access the application through the link on the `Project Status` page.
+
+![Overview link]({% image_path inventory-route-link-status.png %})
+
 The UI will refresh the inventory table every 2 seconds, as before.
-
-Back on the OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` and then click on
-the top-most `(latest)` deployment in the listing (most likely `#1` or `#2`):
-
-![Overview link]({% image_path deployment-list.png %})
-
-Notice OpenShift is warning you that the inventory application has no health checks:
-
-![Health Check Warning]({% image_path inventory-healthcheck-warning.png %}){:width="800px"}
 
 In the next steps you will enhance OpenShift's ability to manage the application lifecycle by implementing
 a _health check pattern_. By default, without health checks (or health _probes_) OpenShift considers services
@@ -765,7 +758,7 @@ And then start and watch the build, which will take about a minute to complete:
 `oc start-build inventory-quarkus --from-dir=target/binary --follow`
 
 You should see a **Push successful** at the end of the build output and it. To verify that deployment is started and completed automatically, 
-run the following command via CodeReady Workspaces **Terminal** :
+run the following command via CodeReady Workspaces **Terminal**:
 
 `oc rollout status -w dc/inventory-quarkus`
 
@@ -775,17 +768,38 @@ And wait for the result as below:
 
 > **NOTE**: The # of deployment(i.e. `inventory-quarkus-2`) might be different in your project. Be sure if the sequence is increased(i.e. #1 -> #2).
 
-Back on the OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` and then click on
-the `Edit Health Checks` in `Actions`:
+Back on the OpenShift console, Navigate to `Deployment Configs` on the left menu then click on `inventory-quarkus`:
 
-![inventory-healthcheck-redeploy]({% image_path inventory-healthcheck-redeploy.png %})
+![inventory-dc]({% image_path inventory-dc.png %})
+
+ Click on `YAML` tab then copy the following `livenessProbe`, `readinessProbe` between `image` and `ports` elements:
 
 You should input the following variables in Readiness Path Probe and Liveness Probe:
 
- * Path: _/health_
- * Port: _8080_
- * Initial Delay: _10_
- * Timeout: _1_
+~~~yaml
+livenessProbe:
+failureThreshold: 3
+httpGet:
+    path: /health
+    port: 8080
+    scheme: HTTP
+initialDelaySeconds: 10
+periodSeconds: 10
+successThreshold: 1
+timeoutSeconds: 1
+readinessProbe:
+failureThreshold: 3
+httpGet:
+    path: /health
+    port: 8080
+    scheme: HTTP
+initialDelaySeconds: 10
+periodSeconds: 10
+successThreshold: 1
+timeoutSeconds: 1
+~~~
+
+Click on `Save`.
 
 ![inventory-healthcheck-webconsole]({% image_path inventory-healthcheck-webconsole.png %})
 
@@ -821,8 +835,10 @@ You should see:
 ---
 
 The various timeout values for the probes can be configured in many ways. Let's tune the _liveness probe_ initial delay so that
-we don't have to wait 3 minutes for it to be activated. Use OpenShift console, Navigate to _Applications_ -> _Deployments_ -> `inventory-quarkus` 
-and then click on the `Edit Health Checks` in `Actions`:
+we don't have to wait 3 minutes for it to be activated. Use OpenShift console, Navigate to _Deployment Configs_ -> _inventory-quarkus_ -> _YAML_
+and then update `initialDelaySeconds` as below:
+
+ * initialDelaySeconds: `30`
 
 ![inventory-change-deplaytime]({% image_path inventory-change-deplaytime.png %})
 
@@ -845,7 +861,7 @@ In the next step, we'll exercise the probe and watch as it fails and OpenShift r
 
 ---
 
-From the OpenShift Web Console overview page, click on the route link to open the sample application UI:
+From the project status page, click on the route link to open the sample application UI:
 
 ![Route Link]({% image_path inventory-routelink.png %})
 
@@ -871,8 +887,8 @@ unhealthy.
 
 ![Greeting]({% image_path inventory-fail.png %})
 
-At this point, return to the OpenShift web console and click on the _Overview_ tab for the project. Notice that the
-dark blue circle has now gone light blue, indicating the application is failing its _liveness probe_:
+At this point, return to the OpenShift web console and click on the _Pods_ on the left menu. Notice that the
+`ContainersNotReady` indicates the application is failing its _liveness probe_:
 
 ![Not Ready]({% image_path notready.png %})
 
@@ -981,7 +997,9 @@ at `/app/config/application-prod.properties`
 You can also connect to Inventory PostgreSQL database and check if the seed data is 
 loaded into the database.
 
-In OpenShift Web Console, navigate the left sidebar, **Applications >>Pods >>inventory-database-xxxxx**. 
+In OpenShift Web Console, navigate `Pods` on the left menu and click on `inventory-database-xxxxx` pod. 
+
+![inventory-posgresql-terminal]({% image_path inventory-posgresql-pod.png %})
 
 Click on **Terminal** tab menu to run the following info:
 

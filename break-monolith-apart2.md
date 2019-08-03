@@ -935,7 +935,7 @@ First, deploy a new instance of PostgreSQL by executing via CodeReady Workspace 
 oc new-app -e POSTGRESQL_USER=catalog \
              -e POSTGRESQL_PASSWORD=mysecretpassword \
              -e POSTGRESQL_DATABASE=catalog \
-             openshift/postgresql:9.4 \
+             openshift/postgresql:10 \
              --name=catalog-database
 ~~~
 
@@ -954,11 +954,29 @@ You can also check if the deployment is complete via CodeReady Workspace **Termi
 
 ---
 
-Create the file `src/main/resources/application-openshift.properties` in CodeReady Workspace. 
+Open the file `src/main/resources/application-default.properties` in CodeReady Workspace. 
 
-Copy the following content to the file:
+Comment the local variables and add a remote variables. You can replace the whole contents with the following variables to the file:
+
+ * You have to replace `userXX` with your username in `inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080`.
 
 ~~~java
+# Tomcat port - To avoid port conflict we set this to 8081 in the local environment
+#server.port=8081
+
+#TODO: Add database properties
+#spring.datasource.url=jdbc:h2:mem:catalog;DB_CLOSE_ON_EXIT=FALSE
+#spring.datasource.username=sa
+#spring.datasource.password=sa
+#spring.datasource.driver-class-name=org.h2.Driver
+
+#TODO: Configure netflix libraries
+#inventory.ribbon.listOfServers=inventory:8080
+feign.hystrix.enabled=true
+
+#TODO: Set timeout to for inventory to 500ms
+hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
+
 server.port=8080
 spring.datasource.url=jdbc:postgresql://catalog-database:5432/catalog
 spring.datasource.username=catalog
@@ -968,8 +986,7 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080
 ~~~
 
->**NOTE:**: The `application-openshift.properties` does not have all values of `application-default.properties`, that is because on the values that need to change has to be specified here. Spring will fall back to `application-default.properties` for the other values. You should replace your username with `userXX` in `inventory.ribbon.listOfServers`.
-
+![catalog_posgresql]({% image_path catalog_changed_properties.png %})
 
 ####17. Build and Deploy
 
@@ -977,21 +994,56 @@ inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.lo
 
 Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspace **Terminal**:
 
-`mvn package fabric8:deploy -Popenshift -DskipTests`
+`mvn clean package -DskipTests`
 
-The build and deploy may take a minute or two. Wait for it to complete. You should see a **BUILD SUCCESS** at the
+The build and deploy may take a minute or two. Wait for it to complete. You should see a `BUILD SUCCESS` at the
 end of the build output.
 
-After the maven build finishes it will take less than a minute for the application to become available.
-To verify that everything is started, run the following command and wait for it complete successfully:
+Then deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces **Terminal**:
 
-![catalog_deploy_success]({% image_path catalog_deploy_success.png %})
+`oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=catalog-springboot -l app=catalog-springboot`
 
-You can also check if the deployment is complete via CodeReady Workspace **Terminal**:
+This build uses the new [Red Hat OpenJDK Container Image](https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index), providing foundational software needed to run Java applications, while staying at a reasonable size.
 
-`oc rollout status -w dc/catalog`
+> **NOTE**: Make sure if you log in OpenShift via `oc login command` at Terminal.
 
->**NOTE:**: If you recall in the Thorntail lab Fabric8 detected the `health` _fraction_ and generated health check definitions for us, the same is true for Spring Boot if you have the `spring-boot-starter-actuator` dependency in our project.
+Next, create a temp directory to store only previously-built application with necessary lib directory via CodeReady Workspaces **Terminal**:
+
+`rm -rf target/binary && mkdir -p target/binary && cp -r target/catalog-1.0.0-SNAPSHOT.jar target/lib target/binary`
+
+> **NOTE**: You can also use a true source-based S2I build, but we're using binaries here to save time.
+
+And then start and watch the build, which will take about a minute to complete:
+
+`oc start-build catalog-springboot --from-dir=target/binary --follow`
+
+Once the build is done, we'll deploy it as an OpenShift application and override the Postgres URL to specify our production Postgres credentials:
+
+`oc new-app catalog-springboot -e SPRINGBOOT_DATASOURCE_URL=jdbc:postgresql://catalog-database:5432/catalog`
+
+and expose your service to the world:
+
+`oc expose service catalog-springboot`
+
+Finally, make sure it's actually done rolling out:
+
+`oc rollout status -w dc/catalog-springboot`
+
+Wait for that command to report replication controller "catalog-springboot-1" successfully rolled out before continuing.
+
+>**NOTE:** Even if the rollout command reports success the application may not be ready yet and the reason for
+that is that we currently don't have any liveness check configured, but we will add that in the next steps.
+
+And now we can access using curl once again to find all inventories:
+
+`oc get routes`
+
+Replace your own route URL in the above command output: 
+
+`curl http://YOUR_CATALOG_ROUTE_URL/services/products ; echo`
+
+So now `Catalog` service is deployed to OpenShift. You can also see it in the Project Status in the OpenShift Console 
+with running in 1 pod, along with the Postgres database pod.
 
 ####18. Access the application running on OpenShift
 
