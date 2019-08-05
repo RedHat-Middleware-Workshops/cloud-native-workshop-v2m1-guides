@@ -57,13 +57,13 @@ the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-app
 
 You might have a question in terms of how I get started to develop a new apps in the `cloud-native way` once I complete to migreate existing apps via RHAMT.
 
-No worries!! **Red Hat Application Runtimes** allows you to generate the cloud-native apps quickly on multiple rumtimes via `Launcher`.
+No worries!! `Red Hat Application Runtimes` allows you to generate the cloud-native apps quickly on multiple rumtimes via `Launcher`.
 
 #### What is Red Hat Application Runtimes Launcher?
 
 ---
 
-LAUNCHER enables **developers** to create and/or import **modern applications**, built and deployed on OpenShift Container Platform.
+LAUNCHER enables `developers` to create and/or import `modern applications`, built and deployed on OpenShift Container Platform.
 
 ![launch-landing]({% image_path launch-landing.png %})
 
@@ -101,7 +101,7 @@ When you configure a Frontend for your application then you will be able to boot
 
 ![launch-create-app-frontend]({% image_path launch-create-app-frontend.png %})
 
-> **NOTE**: You can skip to configure a Frontend application via choosing `None`.
+> `NOTE`: You can skip to configure a Frontend application via choosing `None`.
 
 Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` 
 because we will develop and deploy Quarkus application for the next labs.
@@ -113,7 +113,7 @@ If you're looking to expose an HTTP API or interact with services like a databas
 
 ![launch-create-app-backend-detail]({% image_path launch-create-app-backend-detail.png %})
 
-Complete to configure the Backend application's capabilities(`Relational Persistence`, `Health Checks`,`HTTP API`) then click on **Save** button.
+Complete to configure the Backend application's capabilities(`Relational Persistence`, `Health Checks`,`HTTP API`) then click on `Save` button.
 
 Now your application is ready to download:
 
@@ -131,7 +131,7 @@ We prepared a set of examples to let you directly start playing with your new ap
 
 Those examples are there to get you started, soon it will be time for you to remove them and start developing your awesome application.
 
-More importantly, **Fabric8 Launcher Operator** helps enabling the Launcher on an Openshift cluster for enterprise developers who
+More importantly, `Fabric8 Launcher Operator` helps enabling the Launcher on an Openshift cluster for enterprise developers who
 want to build the cloud-native application development tool on local machine or on-premise infrastructure. You can deploy the launcher in 5 mins
 along with [Install and Configure THtheE Fabric8 Launcher Tool](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). You can also go through [Operator GIT Repository](https://github.com/fabric8-launcher/launcher-operator) how it works.
 

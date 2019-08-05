@@ -25,11 +25,11 @@ stack is a template of workspace configuration. For example, it includes the pro
 in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration
 on-demand. 
 
-For this lab, click on the **Cloud Native Workshop v2** stack and then on the **Create** button. 
+For this lab, click on the `Cloud Native Workshop v2` stack and then on the `Create` button. 
 
 ![codeready-workspace-create-workspace]({% image_path codeready-workspace-create-workspace.png %})
 
-Click on **Open** to open the workspace and then on the **Start** button to start the workspace for use, if it hasn't started automatically.
+Click on `Open` to open the workspace and then on the `Start` button to start the workspace for use, if it hasn't started automatically.
 
 ![codeready-workspace-start-workspace]({% image_path codeready-workspace-start-workspace.png %})
 
@@ -44,13 +44,13 @@ CodeReady Workspaces IDE running in your browser.
 
 Now you can import the project skeletons into your workspace.
 
-In the project explorer pane, click on the **Import Projects...** and enter the following:
+In the project explorer pane, click on the `Import Projects...` and enter the following:
 
-> You can find **GIT URL** when you log in {{GIT_URL}} with your credential(i.e. user1 / openshift).
+> You can find `GIT URL` when you log in {{GIT_URL}} with your credential(i.e. user1 / openshift).
 
   * Version Control System: `GIT`
   * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`
-  * Check **Import recursively (for multi-module projects)**
+  * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m1-labs`
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
@@ -58,19 +58,19 @@ In the project explorer pane, click on the **Import Projects...** and enter the 
 The projects are imported now into your workspace and is visible in the project explorer.
 
 CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
-enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on **monolith** and then click on **Convert to Project**.
+enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on `monolith` and then click on `Convert to Project`.
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
 
-Choose **Maven** from the project configurations and then click on **Save**.
+Choose `Maven` from the project configurations and then click on `Save`.
 
 ![codeready-workspace-maven]({% image_path codeready-workspace-maven.png %}){:width="700px"}
 
 Repeat the above for inventory and catalog projects.
 
-> **NOTE**: the **Terminal** window in CodeReady Workspaces. For the rest of these labs, anytime you need to run 
-a command in a terminal, you can use the CodeReady Workspaces **Terminal** window. If you have **no response** from the Terminal when you're typing codes, 
-**Close** the current Terminal and **Open a new Terminal again**.
+> `NOTE`: the `Terminal` window in CodeReady Workspaces. For the rest of these labs, anytime you need to run 
+a command in a terminal, you can use the CodeReady Workspaces `Terminal` window. If you have `no response` from the Terminal when you're typing codes, 
+`Close` the current Terminal and `Open a new Terminal again`.
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
 
@@ -230,7 +230,7 @@ That one was pretty easy.
 
 ---
 
-Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
+Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces `BUILD` window:
 
 ![rhamt_project_issues]({% image_path codeready-workspace-build.png %})
 
@@ -276,10 +276,10 @@ on your migration path.
 
 From the RHAMT Issues report, we will fix the remaining issues:
 
-* **Call of JNDI lookup** - Our apps use a weblogic-specific [JNDI](https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface) lookup scheme.
-* **Proprietary InitialContext initialization** - Weblogic has a very different lookup mechanism for InitialContext objects
-* **WebLogic InitialContextFactory** - This is related to the above, essentially a Weblogic proprietary mechanism
-* **WebLogic T3 JNDI binding** - The way EJBs communicate in Weblogic is over T2, a proprietary implementation of Weblogic.
+* `Call of JNDI lookup` - Our apps use a weblogic-specific [JNDI](https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface) lookup scheme.
+* `Proprietary InitialContext initialization` - Weblogic has a very different lookup mechanism for InitialContext objects
+* `WebLogic InitialContextFactory` - This is related to the above, essentially a Weblogic proprietary mechanism
+* `WebLogic T3 JNDI binding` - The way EJBs communicate in Weblogic is over T2, a proprietary implementation of Weblogic.
 
 All of the above interfaces have equivalents in JBoss, however they are greatly simplified and overkill for our application which uses
 JBoss EAP's internal message queue implementation provided by [Apache ActiveMQ Artemis](https://activemq.apache.org/artemis/).
@@ -370,7 +370,7 @@ Your MDB should now be properly migrated to JBoss EAP.
 
 ---
 
-Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces **BUILD** window:
+Build and package the app using Maven to make sure you code still compiles via CodeReady Workspaces `BUILD` window:
 
 ![rhamt_project_issues]({% image_path codeready-workspace-build.png %})
 
@@ -381,7 +381,7 @@ verify you made all the changes correctly and try the build again.
 
 ---
 
-> **NOTE**: Considering network bandwidth of the workshop environment, `The only Instructor` use a backed WAR file in /opt/solution) to run this step.
+> `NOTE`: Considering network bandwidth of the workshop environment, `The only Instructor` use a backed WAR file in /opt/solution) to run this step.
 
 In this step we will re-run the RHAMT report to verify our migration was successful.
 
@@ -391,7 +391,7 @@ You should delete the old application(i.e. monolith.war) to avoid to analyze it 
 
 ![rhamt_rerun_analysis_report]({% image_path rhamt_rerun_analysis_report.png %})
 
-**Wait for it to complete before continuing!**. 
+`Wait for it to complete before continuing!`. 
 
 ####12. View the results
 
@@ -457,15 +457,15 @@ You will see the OpenShift landing page:
 
 ![openshift_landing]({% image_path openshift_landing.png %})
 
-> The project displayed in the landing page depends on which labs you will run today. If you will develop **Service Mesh and Identity** then you will see pre-created projects as the above screeenshot.
+> The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
 
-Click **Create Project**, fill in the fields, and click **Create**:
+Click `Create Project`, fill in the fields, and click `Create`:
 
 * Name: `userXX-coolstore-dev`
 * Display Name: `USERXX Coolstore Monolith - Dev`
 * Description: _leave this field empty_
 
-> **NOTE**: YOU **MUST** USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later
+> `NOTE`: YOU `MUST` USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later
 on and you will experience failures if you do not name it `userXX-coolstore-dev`!
 
 ![create_dialog]({% image_path create_dialog.png %})
@@ -478,7 +478,7 @@ This will take you to the project status. There's nothing there yet, but that's 
 
 ---
 
-We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces **Terminal** window:
+We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces `Terminal` window:
 
 Copy login command and Login OpenShift cluster:
 
@@ -492,13 +492,13 @@ When you login with your credential, you will see `Display Token` link in the re
 
 ![openshift_login]({% image_path display_token_link.png %})
 
-Click on the link and copy the **oc login** command:
+Click on the link and copy the `oc login` command:
 
 ![openshift_login]({% image_path your_token.png %})
 
-Paste it on CodeReady Workspaces **Terminal** window.
+Paste it on CodeReady Workspaces `Terminal` window.
 
-Switch to the developer project you created earlier via CodeReady Workspaces **Terminal** window:
+Switch to the developer project you created earlier via CodeReady Workspaces `Terminal` window:
 
 `oc project userXX-coolstore-dev`
 
@@ -515,7 +515,7 @@ and verify the monolith template items are created:
 ![no_deployments]({% image_path no_deployments.png %})
 
 You can see the components being deployed on the
-Project Status, but notice the **No running pod for Coolstore**. When you click on **coolstore DC**(Deployment Configs), you will see overview and resources.
+Project Status, but notice the `No running pod for Coolstore`. When you click on `coolstore DC`(Deployment Configs), you will see overview and resources.
 
 ![no_deployments]({% image_path dc_overview.png %})
 
@@ -535,11 +535,11 @@ First, build the project once more using the `openshift` Maven profile, which wi
 suitable binary for use with OpenShift (this is not a container image yet, but just the `.war`
 file). We will do this with the `oc` command line.
 
-Build the project via CodeReady Workspaces **Terminal** window:
+Build the project via CodeReady Workspaces `Terminal` window:
 
 `mvn clean package -Popenshift`
 
-> **NOTE**: Make sure to run this mvn command at working directory(i.e monolith).
+> `NOTE`: Make sure to run this mvn command at working directory(i.e monolith).
 
 Wait for the build to finish and the `BUILD SUCCESS` message!
 
