@@ -507,11 +507,11 @@ The Spring MVC Framework default uses Jackson to serialize or map Java objects t
 
 Now you can run the `CatalogEndpointTest` and verify that it works via `Run Junit Test`:
 
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="600px"}
+![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
 The test should be successful and you should see green color `test_retriving_one_proudct`, `check_that_endpoint_returns_a_correct_list` in Default Suite window.
 
-![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %}){:width="600px"}
+![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
 
 You can also run the following command via `CodeReady Workspace Terminal` to verify the test cases.
 
