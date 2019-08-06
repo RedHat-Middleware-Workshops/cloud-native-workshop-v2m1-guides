@@ -138,3 +138,18 @@ along with [Install and Configure THtheE Fabric8 Launcher Tool](https://access.r
 When you deploy the launcher by `Operator', you will see a similar overview in OpenShift dashboard:
 
 ![launch-operator]({% image_path launch-operator.png %})
+
+#### Your Connection is not secure?
+
+---
+
+When you access OpenShift web console or the other route URL via `HTTPS` protocol, you will see `Your Connection is not secure` warning message.
+Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using `Firefox`, you will see the following screen.
+
+Click on `Advanced > Add Exception...`.
+
+![warning]({% image_path browser_warning.png %})
+
+Then, you can access the `HTTPS` page when you click on `Confirm Security Exception`
+
+![warning]({% image_path browser_warning_confirmation.png %})
