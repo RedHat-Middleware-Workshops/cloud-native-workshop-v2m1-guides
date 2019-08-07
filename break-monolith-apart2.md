@@ -135,13 +135,13 @@ We will go ahead and add a bunch of other dependencies while we have the pom.xml
     </dependency>
 ~~~
 
-Build and package the app using Maven to make sure the changed code still compiles via CodeReady Workspace `BUILD` window:
+Build and package the app using Maven to make sure the changed code still compiles via CodeReady Workspaces `BUILD` window:
 
 ![inventory_build]({% image_path catalog-build.png %})
 
 > `NOTE`: Make sure to build this mvn command at working directory(i.e catalog).
 
-> `NOTE:` The CodeReady Workspace terminal window is like your local terminal. Everything that you run here you should
+> `NOTE:` The CodeReady Workspaces terminal window is like your local terminal. Everything that you run here you should
 be able to execute on your local computer as long as you have a `Java SDK 1.8` and `Maven`. In later steps, we
 will also use the `oc` command line tool.
 
@@ -513,13 +513,13 @@ The test should be successful and you should see green color `test_retriving_one
 
 ![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
 
-You can also run the following command via `CodeReady Workspace Terminal` to verify the test cases.
+You can also run the following command via `CodeReady Workspaces Terminal` to verify the test cases.
 
 ``mvn verify -Dtest=CatalogEndpointTest``
 
 Since we now have endpoints that returns the catalog we can also start the service and load the default page again, which should now return the products.
 
-Start the application via CodeReady Workspace `RUN` Menu:
+Start the application via CodeReady Workspaces `RUN` Menu:
 
 ![catalog-spring-run]({% image_path catalog-spring-run.png %})
 
@@ -592,7 +592,7 @@ The test `should fail` and you should see red color `test_retriving_one_proudct`
 
 ![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
-You can also run the following command via `CodeReady Workspace Terminal` to verify the test cases:
+You can also run the following command via `CodeReady Workspaces Terminal` to verify the test cases:
 
 ``mvn verify``
 
@@ -722,7 +722,7 @@ The test should be successful and you should see green color `test_retriving_one
 
 ![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
 
-You can also run the following command via `CodeReady Workspace Terminal` to verify the test cases:
+You can also run the following command via `CodeReady Workspaces Terminal` to verify the test cases:
 
 ``mvn verify``
 
@@ -879,7 +879,7 @@ In the next step we now test our service locally before we deploy it to OpenShif
 
 As you have seen in previous steps, using the Spring Boot maven plugin (predefined in `pom.xml`), you can conveniently run the application locally and test the endpoint.
 
-Start the application via CodeReady Workspace `RUN` Menu:
+Start the application via CodeReady Workspaces `RUN` Menu:
 
 ![catalog-spring-run]({% image_path catalog-spring-run.png %})
 
@@ -927,7 +927,7 @@ Next, we'll deploy your new microservice to OpenShift.
 Now that you've logged into OpenShift, let's deploy our new catalog microservice:
 
 Our production catalog microservice will use an external database (PostgreSQL) to house inventory data.
-First, deploy a new instance of PostgreSQL by executing via CodeReady Workspace `Terminal`:
+First, deploy a new instance of PostgreSQL by executing via CodeReady Workspaces `Terminal`:
 
 `oc project userXX-catalog`
 
@@ -943,7 +943,7 @@ This will deploy the database to our new project.
 
 ![catalog_posgresql]({% image_path catalog_posgresql.png %})
 
-You can also check if the deployment is complete via CodeReady Workspace `Terminal`:
+You can also check if the deployment is complete via CodeReady Workspaces `Terminal`:
 
 `oc rollout status -w dc/catalog-database`
 
@@ -989,7 +989,7 @@ inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.lo
 
 ---
 
-Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspace `Terminal`:
+Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces `Terminal`:
 
 `mvn clean package spring-boot:repackage -DskipTests`
 
@@ -1080,7 +1080,7 @@ OpenShift we can route these calls to our newly created catalog services instead
 
 Flow the steps below to create a path based route.
 
-Obtain hostname of monolith UI from our Dev environment via CodeReady Workspace `BUILD` window:
+Obtain hostname of monolith UI from our Dev environment via CodeReady Workspaces `BUILD` window:
 
 `oc get route/www -n userXX-coolstore-dev`
 
