@@ -45,9 +45,12 @@ HTTP microservices, reactive applications, message-driven microservices and serv
 
 * `Developer Joy` - Cohesive platform for optimized developer joy through unified configuration, Zero config with live reload in the blink of an eye,
    streamlined code for the 80% common usages with flexible for the 20%, and no hassle native executable generation.
+
 * `Unifies Imperative and Reactive` - Inject the EventBus or the Vertx context for both Reactive and imperative development in the same application.
+
 * `Functions as a Service and Serverless` - Superfast startup and low memory utilization. With Quarkus, you can embrace this new world without having 
   to change your programming language.
+
 * `Best of Breed Frameworks & Standards` - CodeReady Workspaces Vert.x, Hibernate, RESTEasy, Apache Camel, CodeReady Workspaces MicroProfile, Netty, Kubernetes, OpenShift,
   Jaeger, Prometheus, Apacke Kafka, Infinispan, and more.
 
