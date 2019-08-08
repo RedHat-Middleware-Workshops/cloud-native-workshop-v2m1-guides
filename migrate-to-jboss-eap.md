@@ -25,7 +25,7 @@ stack is a template of workspace configuration. For example, it includes the pro
 in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration
 on-demand. 
 
-For this lab, click on the `Cloud Native Workshop v2` stack and then on the `Create` button. 
+For this lab, click on the `Cloud Native Roadshow` stack and then on the `Create` button. 
 
 ![codeready-workspace-create-workspace]({% image_path codeready-workspace-create-workspace.png %})
 
