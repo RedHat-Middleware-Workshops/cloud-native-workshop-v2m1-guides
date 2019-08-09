@@ -572,8 +572,8 @@ Replace your own route URL in the above command output:
 
 `curl http://YOUR_INVENTORY_ROUTE_URL/services/inventory ; echo`
 
-So now `Inventory` service is deployed to OpenShift. You can also see it in the Overview in the OpenShift Console 
-with its single replica running in 1 pod (the blue circle), along with the Postgres database pod.
+So now `Inventory` service is deployed to OpenShift. You can also see it in the Project Status in the OpenShift Console 
+with its single replica running in 1 pod , along with the Postgres database pod.
 
 ####12. Access the application running on OpenShift
 
