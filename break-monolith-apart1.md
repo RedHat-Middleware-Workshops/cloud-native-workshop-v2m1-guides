@@ -106,12 +106,12 @@ runs the Quarkus application in JVM mode as well as native (no JVM) mode in `src
 # docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy-jvm
 #
 ###
-> FROM fabric8/java-alpine-openjdk8-jre
-> ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-> ENV AB_ENABLED=jmx_exporter
-> COPY target/lib/* /deployments/lib/
-> COPY target/*-runner.jar /deployments/app.jar
-> ENTRYPOINT [ "/deployments/run-java.sh" ]
+FROM fabric8/java-alpine-openjdk8-jre
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV AB_ENABLED=jmx_exporter
+COPY target/lib/* /deployments/lib/
+COPY target/*-runner.jar /deployments/app.jar
+ENTRYPOINT [ "/deployments/run-java.sh" ]
 ~~~
 
 * Dockerfile in Native mode
@@ -133,12 +133,12 @@ runs the Quarkus application in JVM mode as well as native (no JVM) mode in `src
 # docker run -i --rm -p 8080:8080 quarkus/hibernate-orm-panache-resteasy
 #
 ###
-> FROM registry.fedoraproject.org/fedora-minimal
-> WORKDIR /work/
-> COPY target/*-runner /work/application
-> RUN chmod 775 /work
-> EXPOSE 8080
-> CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+FROM registry.fedoraproject.org/fedora-minimal
+WORKDIR /work/
+COPY target/*-runner /work/application
+RUN chmod 775 /work
+EXPOSE 8080
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
 ~~~
 
 Now let's write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
@@ -335,7 +335,7 @@ You should see a bunch of log output that ends with:
 12:56:43,106 INFO  [io.quarkus] Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 ~~~
 
-Open a new CodeReady Workspaces `Terminal` and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
+Open a `new` CodeReady Workspaces `Terminal` and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
 
 `curl http://localhost:8080/services/inventory ; echo`
 
@@ -353,7 +353,7 @@ yo","quantity":230}]
 
 ~~~java
 [{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
-~~~~
+~~~
 
 > `NOTE`: Make sure to stop Quarkus development mode via `Close` the `Build and Run Locally` terminal.
 
@@ -442,7 +442,7 @@ yo","quantity":230}]
 
 ~~~java
 [{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
-~~~~
+~~~
 
 > `NOTE`: Make sure to stop Quarkus runtimes via `Close` the terminal.
 
@@ -469,7 +469,7 @@ because Inventory service will connect to PostgeSQL database in production on Op
 
 Add a `quarkus-jdbc-postgresql` extendsion via CodeReady Workspaces `Terminal`:
 
-`cd cloud-native-workshop-v2m1-labs/inventory/`
+`cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
 `mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-postgresql"`
 
@@ -637,7 +637,7 @@ via CodeReady Workspaces `Terminal`:
 
 Go to `inventory' directory:
 
-`cd cloud-native-workshop-v2m1-labs/inventory/`
+`cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
 `mvn quarkus:add-extension -Dextensions="health"`
 
