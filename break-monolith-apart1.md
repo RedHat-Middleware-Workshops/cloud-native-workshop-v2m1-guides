@@ -154,7 +154,7 @@ Copy the following commands to add the Hibernate ORM with Panache extension via 
 
 Go to `inventory' directory:
 
-`cd cloud-native-workshop-v2m1-labs/inventory/`
+`cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
 `mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-hibernate-orm-panache"`
 
