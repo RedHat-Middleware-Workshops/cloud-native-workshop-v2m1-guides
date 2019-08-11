@@ -54,9 +54,8 @@ subdirectories according to Maven best practices.
 > Click on the `catalog` folder in the project explorer and navigate below folders and files.
 
 As you can see, there are some files that we have prepared for you in the project. Under `src/main/resources/static/index.html`
-we have for example prepared a simple html-based UI file for you. Except for the `fabric8/` folder and `index.html`, this
-matches very well what you would get if you generated an empty project from the [Spring Initializr](https://start.spring.io) web
-page. For the moment you can ignore the content of the `fabric8/` folder (we will discuss this later).
+we have for example prepared a simple html-based UI file for you. This matches very well what you would get if you generated an empty project from the 
+[Spring Initializr](https://start.spring.io) web page. 
 
 One this that differs slightly is the `pom.xml`. Please open the and examine it a bit closer (but do not change anything
 at this time)
@@ -95,7 +94,7 @@ Undertow. Since Red Hat offers support for Apache Tomcat (e.g., security patches
 >`NOTE:` Undertow is another an open source project that is maintained by Red Hat and therefore Red Hat plans to
 add support for Undertow shortly.
 
-To add Apache Tomcat to our project all we have to do is to add the following lines in ``pom.xml``. Open the file to automatically add these lines at the `<!-- TODO: Add web (tomcat) dependency here -->` marker:
+To add Apache Tomcat to our project all we have to do is to add the following lines in `pom.xml`. Open the file to automatically add these lines at the `<!-- TODO: Add web (tomcat) dependency here -->` marker:
 
 ~~~java
     <dependency>
@@ -675,7 +674,7 @@ By setting `inventory.ribbon.listOfServers` we are hard coding the actual URL of
 
 Now that we have a client we can make use of it in our `CatalogService`
 
-Open ``src/main/java/com/redhat/coolstore/service/CatalogService.java``
+Open `src/main/java/com/redhat/coolstore/service/CatalogService.java`
 
 And autowire (e.g. inject) the client into it by inserting this at the `//TODO: Autowire Inventory Client` marker:
 
