@@ -281,9 +281,8 @@ public class InventoryResource {
 The above REST services defines two endpoints:
 
 * `/inventory` that is accessible via `HTTP GET` which will return all known product Inventory entities as JSON
-* `/inventory/<location>` that is accessible via `HTTP GET` at
-for example `/inventory/Boston` with
-the last path parameter being the location which we want to check its inventory status.
+* `/inventory/<itemId>` that is accessible via `HTTP GET` at for example `/inventory/329199` with the last path parameter being the location which 
+we want to check its inventory status.
 
 ####6. Add inventory data
 
