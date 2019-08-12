@@ -57,7 +57,7 @@ the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-app
 
 You might have a question in terms of how I get started to develop a new apps in the `cloud-native way` once I complete to migreate existing apps via RHAMT.
 
-No worries!! `Red Hat Application Runtimes` allows you to generate the cloud-native apps quickly on multiple rumtimes via `Launcher`.
+No worries!! `Red Hat Application Runtimes` allows you to generate the cloud-native apps quickly on multiple rumtimes via the tool called `Launcher`.
 
 #### What is Red Hat Application Runtimes Launcher?
 
@@ -77,7 +77,7 @@ Suppored backend Runtimes are here:
 * [Wildfly](https://wildfly.org/) - A classic approach to packaging and running Java EE applications.
 * [Vert.x](https://projects.eclipse.org/projects/rt.vertx) - A tool-kit for building reactive applications on the JVM.
 
-When you click on start, you will first have to login or register an account for free with the Red Hat Developer Program.
+Open the [Launcher](https://developers.redhat.com/launch/login). When you click on start, you will first have to login or register an account for free with the Red Hat Developer Program.
 
 ![launch-login]({% image_path launch-login.png %})
 
@@ -95,16 +95,15 @@ You start your own new application by picking the capabilities you want (Http Ap
 
 ![launch-create-app-detail]({% image_path launch-create-app-detail.png %})
 
-You should configure a `Frontend` and/or a `Backend` for your application.
+You should configure a `Frontend` and a `Backend` for your application.
 
-When you configure a Frontend for your application then you will be able to bootstrap the frontend of your application in a few seconds.
+When you configure a Frontend for your application then you will be able to bootstrap the frontend application in a few seconds.
 
 ![launch-create-app-frontend]({% image_path launch-create-app-frontend.png %})
 
-> `NOTE`: You can skip to configure a Frontend application via choosing `None`.
+> `NOTE`: Choose `None` as your Frontend Application, which will skip the selection.
 
-Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` 
-because we will develop and deploy Quarkus application for the next labs.
+Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` because we will develop and deploy Quarkus application for the next labs.
 
 ![launch-create-app-backend-choose]({% image_path launch-create-app-backend-choose.png %})
 
@@ -113,7 +112,7 @@ If you're looking to expose an HTTP API or interact with services like a databas
 
 ![launch-create-app-backend-detail]({% image_path launch-create-app-backend-detail.png %})
 
-Complete to configure the Backend application's capabilities(`Relational Persistence`, `Health Checks`,`HTTP API`) then click on `Save` button.
+Complete the configuration of the Backend application's capabilities(Select `Relational Persistence` and `PostgreSQL` when asked, `Health Checks`, and `HTTP API`) then click on `Save` button.
 
 Now your application is ready to download:
 
@@ -134,9 +133,9 @@ Those examples are there to get you started, soon it will be time for you to rem
 More importantly, `Fabric8 Launcher Operator` helps enabling the Launcher on an Openshift cluster for enterprise developers who
 want to build the cloud-native application development tool on local machine or on-premise infrastructure. You can deploy the launcher in 5 mins
 along with [Install and Configure the Fabric8 Launcher Tool](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). 
-You can also go through [Operator Git Repository](https://github.com/fabric8-launcher/launcher-operator) how it works.
+You can also go through the [Operator Git Repository](https://github.com/fabric8-launcher/launcher-operator) to see how it works.
 
-When you deploy the launcher by `Operator', you will see a similar overview in OpenShift dashboard:
+When you deploy the launcher by `Operator`, you will see a similar overview in OpenShift dashboard:
 
 ![launch-operator]({% image_path launch-operator.png %})
 
