@@ -46,7 +46,7 @@ Now you can import the project skeletons into your workspace.
 
 In the project explorer pane, click on the `Import Projects...` and enter the following:
 
-> You can find `GIT URL` when you log in {{GIT_URL}} with your credential(i.e. user1 / r3dh4t1!).
+> You can find `GIT URL` when you log in {{GIT_URL}} with your credential(i.e. user1 / openshift).
 
   * Version Control System: `GIT`
   * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`
@@ -451,7 +451,7 @@ First, open a new brower with the `OpenShift Web Console`
 Login using:
 
 * Username: `userXX`
-* Password: `r3dh4t1!`
+* Password: `openshift`
 
 You will see the OpenShift landing page:
 
