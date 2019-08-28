@@ -10,6 +10,7 @@ The Red Hat Application Migration Toolkit can be installed and used in a few dif
 * `Eclipse Plugin` - The Eclipse plugin for Red Hat Application Migration Toolkit provides assistance directly in Eclipse and Red Hat JBoss Developer Studio for developers making changes for a migration or modernization effort. It analyzes your projects using RHAMT, marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
 
 For this lab, we will use the Web Console on top of OpenShift Container Platform.
+Access the AMT Web Console [HERE]({{ AMT_CONSOLE_URL }}).
 
 ####1. Login the RHAMT web console in OpenShift cluster
 
@@ -17,7 +18,7 @@ For this lab, we will use the Web Console on top of OpenShift Container Platform
 
 ![RHAMT Login]({% image_path rhamt_login.png %})
 
-When you login the first time, you should be asked to change the password in order to comply with RH SSO policy.
+Login using your Openshift credentials. When you login for the first time, you should be asked to change the password in order to comply with RH SSO policy.
 
 > `NOTE`: You can use the current password to input a new password.
 
@@ -29,7 +30,7 @@ When you login the first time, you should be asked to change the password in ord
 
 ![RHAMT Landing Page]({% image_path rhamt_landing_page.png %})
 
-Input a name and description to create a project. 
+Input a name and description to create a project.
 
 ![RHAMT Create Project]({% image_path rhamt_create_project.png %})
 
