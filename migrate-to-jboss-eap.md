@@ -6,26 +6,26 @@ In this step we will migrate some Weblogic-specific code in the app to use stand
 
 ---
 
-Follow these instructions to setup the development environment on CodeReady Workspaces. 
+Follow these instructions to setup the development environment on CodeReady Workspaces.
 
 You might be familiar with the CodeReady Workspaces which is one of the most popular IDEs for Java and other
-programming languages. [CodeReady Workspaces](https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces) is the next-generation Eclipse IDE 
+programming languages. [CodeReady Workspaces](https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces) is the next-generation Eclipse IDE
 which is web-based and gives you a full-featured IDE running in the cloud. You have an CodeReady Workspaces instance deployed on your OpenShift cluster
 which you will use during these labs.
 
 Go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configure your development workspace.
 
-First, you need to register as a user. Register and choose the same username and password as 
+First, you need to register as a user. Register and choose the same username and password as
 your OpenShift credentials.
 
 ![codeready-workspace-register]({% image_path codeready-workspace-register.png %})
 
-Log into CodeReady Workspaces with your user. You can now create your workspace based on a stack. A 
+Log into CodeReady Workspaces with your user. You can now create your workspace based on a stack. A
 stack is a template of workspace configuration. For example, it includes the programming language and tools needed
 in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration
-on-demand. 
+on-demand.
 
-For this lab, click on the `Cloud Native Roadshow` stack and then on the `Create` button. 
+For this lab, click on the `Cloud Native Roadshow` stack and then on the `Create` button.
 
 ![codeready-workspace-create-workspace]({% image_path codeready-workspace-create-workspace.png %})
 
@@ -37,7 +37,7 @@ You can click on the left arrow icon to switch to the wide view:
 
 ![codeready-workspace-wide]({% image_path codeready-workspace-wide.png %})
 
-It takes a little while for the workspace to be ready. When it's ready, you will see a fully functional 
+It takes a little while for the workspace to be ready. When it's ready, you will see a fully functional
 CodeReady Workspaces IDE running in your browser.
 
 ![codeready-workspace-workspace]({% image_path codeready-workspace.png %})
@@ -57,7 +57,7 @@ In the project explorer pane, click on the `Import Projects...` and enter the fo
 
 The projects are imported now into your workspace and is visible in the project explorer.
 
-CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
+CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to
 enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on `monolith` and then click on `Convert to Project`.
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
@@ -68,8 +68,8 @@ Choose `Maven` from the project configurations and then click on `Save`.
 
 Repeat the above for inventory and catalog projects.
 
-> `NOTE`: the `Terminal` window in CodeReady Workspaces. For the rest of these labs, anytime you need to run 
-a command in a terminal, you can use the CodeReady Workspaces `Terminal` window. If you have `no response` from the Terminal when you're typing codes, 
+> `NOTE`: the `Terminal` window in CodeReady Workspaces. For the rest of these labs, anytime you need to run
+a command in a terminal, you can use the CodeReady Workspaces `Terminal` window. If you have `no response` from the Terminal when you're typing codes,
 `Close` the current Terminal and `Open a new Terminal again`.
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
@@ -391,7 +391,7 @@ You should delete the old application(i.e. monolith.war) to avoid to analyze it 
 
 ![rhamt_rerun_analysis_report]({% image_path rhamt_rerun_analysis_report.png %})
 
-`Wait for it to complete before continuing!`. 
+`Wait for it to complete before continuing!`.
 
 ####12. View the results
 
@@ -444,7 +444,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 
 ---
 
-First, open a new brower with the `OpenShift Web Console`
+First, open a new brower with the [OpenShift Web Console]({{OPENSHIFT_CONSOLE_URL}})
 
 ![openshift_login]({% image_path openshift_login.png %})
 
@@ -465,8 +465,7 @@ Click `Create Project`, fill in the fields, and click `Create`:
 * Display Name: `USERXX Coolstore Monolith - Dev`
 * Description: _leave this field empty_
 
-> `NOTE`: YOU `MUST` USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later
-on and you will experience failures if you do not name it `userXX-coolstore-dev`!
+> `NOTE`: Make sure to replace userXX with your actually user number (eg. user10). YOU `MUST` USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later on and you will experience failures if you do not name it `userXX-coolstore-dev`!
 
 ![create_dialog]({% image_path create_dialog.png %}){:width="700px"}
 
@@ -484,7 +483,7 @@ Copy login command and Login OpenShift cluster:
 
 ![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
 
-Then you will redirect to OpenShift Login page again. 
+Then you will redirect to OpenShift Login page again.
 
 ![openshift_login]({% image_path openshift_login.png %})
 
@@ -584,7 +583,7 @@ monolith to a microservices architecture later on. Let's go!
 
 ---
 
-Now that you have migrating an existing Java EE app to the cloud 
+Now that you have migrating an existing Java EE app to the cloud
 with JBoss and OpenShift, you are ready to start modernizing the
 application by breaking the monolith into smaller microservices in
 incremental steps, and employing modern techniques to ensure the
