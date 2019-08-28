@@ -77,11 +77,11 @@ Suppored backend Runtimes are here:
 * [Wildfly](https://wildfly.org/) - A classic approach to packaging and running Java EE applications.
 * [Vert.x](https://projects.eclipse.org/projects/rt.vertx) - A tool-kit for building reactive applications on the JVM.
 
-Open the [Launcher](https://developers.redhat.com/launch/login). When you click on start, you will first have to login or register an account for free with the Red Hat Developer Program.
+Open the [Launcher](https://developers.redhat.com/launch/login){:target="_blank"}. When you click on start, you will first have to login or register an account for free with the Red Hat Developer Program.
 
 ![launch-login]({% image_path launch-login.png %})
 
-You can log in with your existing OpenShift Online, Red Hat Developer Program, or Red Hat Customer Portal account, 
+You can log in with your existing OpenShift Online, Red Hat Developer Program, or Red Hat Customer Portal account,
 or register for a Red Hat account if you don't have one already.
 
 
@@ -97,17 +97,17 @@ You start your own new application by picking the capabilities you want (Http Ap
 
 You should configure a `Frontend` and a `Backend` for your application.
 
-When you configure a Frontend for your application then you will be able to bootstrap the frontend application in a few seconds.
+When you configure a Frontend for your application then you will be able to bootstrap the frontend application in a few seconds. Choose AngularJS for the Frontend
 
 ![launch-create-app-frontend]({% image_path launch-create-app-frontend.png %})
 
-> `NOTE`: Choose `None` as your Frontend Application, which will skip the selection.
+> `NOTE`: Choosing `None` as your Frontend Application will skip the selection.
 
-Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` because we will develop and deploy Quarkus application for the next labs.
+Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` because we will develop and deploy a Quarkus application for the next labs.
 
 ![launch-create-app-backend-choose]({% image_path launch-create-app-backend-choose.png %})
 
-Runtimes power the server-side processing of your application, and we can get you set up in one of several languages and frameworks. 
+Runtimes power the server-side processing of your application, and we can get you set up in one of several languages and frameworks.
 If you're looking to expose an HTTP API or interact with services like a database, choosing one here will hook that together for you.
 
 ![launch-create-app-backend-detail]({% image_path launch-create-app-backend-detail.png %})
@@ -132,7 +132,7 @@ Those examples are there to get you started, soon it will be time for you to rem
 
 More importantly, `Fabric8 Launcher Operator` helps enabling the Launcher on an Openshift cluster for enterprise developers who
 want to build the cloud-native application development tool on local machine or on-premise infrastructure. You can deploy the launcher in 5 mins
-along with [Install and Configure the Fabric8 Launcher Tool](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). 
+along with [Install and Configure the Fabric8 Launcher Tool](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index).
 You can also go through the [Operator Git Repository](https://github.com/fabric8-launcher/launcher-operator) to see how it works.
 
 When you deploy the launcher by `Operator`, you will see a similar overview in OpenShift dashboard:
