@@ -101,9 +101,9 @@ When you configure a Frontend for your application then you will be able to boot
 
 ![launch-create-app-frontend]({% image_path launch-create-app-frontend.png %})
 
-> `NOTE`: Choose `None` as your Frontend Application, which will skip the selection.
+> `NOTE`: Choosing `None` as your Frontend Application will skip the selection.
 
-Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` because we will develop and deploy Quarkus application for the next labs.
+Next, you select one of runtimes for your `Backend` appliction among Red Hat supported runtimes. For example, we will walk you through `Quarkus` because we will develop and deploy a Quarkus application for the next labs.
 
 ![launch-create-app-backend-choose]({% image_path launch-create-app-backend-choose.png %})
 
