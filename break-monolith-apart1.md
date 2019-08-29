@@ -156,11 +156,11 @@ Go to `inventory' directory:
 
 `cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
-`mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-hibernate-orm-panache"`
+`mvn quarkus:add-extension -Dextensions="hibernate-orm-panache"`
 
 And then for local H2 database:
 
-`mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-h2"`
+`mvn quarkus:add-extension -Dextensions="jdbc-h2"`
 
 >`NOTE:` There are many [more extensions](https://quarkus.io/extensions/) for Quarkus for popular frameworks 
 like [CodeReady Workspaces Vert.x](https://vertx.io/), [Apache Camel](http://camel.apache.org/), [Infinispan](http://infinispan.org/), 
@@ -470,27 +470,47 @@ Add a `quarkus-jdbc-postgresql` extendsion via CodeReady Workspaces `Terminal`:
 
 `cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
-`mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-jdbc-postgresql"`
+`mvn quarkus:add-extension -Dextensions="jdbc-postgresql"`
 
-Comment the `quarkus.datasource.url, quarkus.datasource.drive` configuration and add the following variables in `src/main/resources/application.properties`:
+Quarkus supports the notion of `configuration profiles`. These allow you to have multiple configuration in the same file and select between 
+then via a `profile name`.
+
+By default Quarkus has three profiles, although it is possible to use as many as you like. The default profiles are:
+
+ * `dev` - Activated when in development mode (i.e. `quarkus:dev`)
+
+ * `test` - Activated when running tests
+
+ * `prod` - The default profile when not running in development or test mode
+
+There are two ways to set a custom profile, either via the `quarkus.profile` system property or the `QUARKUS_PROFILE` environment variable. 
+If both are set the system property takes precedence. Note that it is not necessary to define the names of these profiles anywhere, 
+all that is necessary is to create a config property with the profile name, and then set the current profile to that name. 
+
+Let's add the following variables in `src/main/resources/application.properties`:
 
 ~~~shell
-quarkus.datasource.url=jdbc:postgresql:inventory
-quarkus.datasource.driver=org.postgresql.Driver
+%prod.quarkus.datasource.url=jdbc:postgresql:inventory
+%prod.quarkus.datasource.driver=org.postgresql.Driver
+%prod.quarkus.datasource.username=inventory
+%prod.quarkus.datasource.password=mysecretpassword
+%prod.quarkus.datasource.max-size=8
+%prod.quarkus.datasource.min-size=2
+%prod.quarkus.hibernate-orm.database.generation=drop-and-create
+%prod.quarkus.hibernate-orm.log.sql=false
 ~~~
 
 Repackage the inventory application via clicking on `Package for OpenShift` in `Commands Palette`:
 
 ![codeready-workspace-maven]({% image_path quarkus-dev-run-packageforOcp.png %})
 
-
 Or you can run a maven plugin command directly in `Terminal`:
 
-`mvn clean package -DskipTests`
+`mvn clean package -DskipTests -Dquarkus.profile=prod`
 
 > `NOTE`: You should `SKIP` the Unit test because you don't have PostgreSQL database in local environment.
 
-Click on the name of the `USERXX CoolStore Inventory Microservice Application` project:
+Click on the name of the `userXX-inventory` project:
 
 ![create_new]({% image_path create_new_inventory.png %})
 
@@ -645,12 +665,6 @@ Go to `inventory' directory:
 ---
 
 Once you imported the `smallrye-health extension`, the `/health` endpoint is exposed directly that can be used to run the health check procedures.
-Be sure to rollback H2 database configuration as defined in `src/main/resources/application.properties`:
-
-~~~java 
-quarkus.datasource.url=jdbc:h2:file://projects/database.db
-quarkus.datasource.driver=org.h2.Driver
-~~~
 
  * Run the Inventory application via `mvn compile quarkus:dev` or click on `Build and Run Locally` in `Commands Palette`:
 
@@ -901,117 +915,6 @@ Return to the same sample app UI (without reloading the page) and notice that th
 re-connected to the new service and successfully accessed the inventory once again:
 
 ![Greeting]({% image_path inventory.png %})
-
-####19. Managing Application Configuration
-
----
-
-In this step, you will learn how to manage application configuration and how to provide environment 
-specific configuration to the services.
-
-Applications require configuration in order to tweak the application behavior 
-or adapt it to a certain environment without the need to write code and repackage 
-the application for every change. These configurations are sometimes specific to 
-the application itself such as the number of products to be displayed on a product 
-page and some other times they are dependent on the environment they are deployed in 
-such as the database coordinates for the application.
-
-The most common way to provide configurations to applications is using environment 
-variables and external configuration files such as properties, JSON or YAML files.
-
-configuration files and command line arguments. These configuration artifacts
-should be externalized from the application and the docker image content in
-order to keep the image portable across environments.
-
-OpenShift provides a mechanism called [ConfigMaps]({{OPENSHIFT_DOCS_BASE}}/dev_guide/configmaps.html) 
-in order to externalize configurations 
-from the applications deployed within containers and provide them to the containers 
-in a unified way as files and environment variables. OpenShift also offers a way to 
-provide sensitive configuration data such as certificates, credentials, etc to the 
-application containers in a secure and encrypted mechanism called Secrets.
-
-This allows developers to build the container image for their application only once, 
-and reuse that image to deploy the application across various environments with 
-different configurations that are provided to the application at runtime.
-
-So far Catalog and Inventory services have been using each PostgreSQL database. 
-
-####20. Externalize Inventory Configuration
-
----
-
-Quarkus supports multiple mechanisms for externalizing configurations such as environment variables, 
-Maven properties, command-line arguments and more. The recommend approach for the long-term for externalizing 
-configuration is however using a `application.properties` which you have already packaged within the Inventory Maven project.
-
-Quarkus also uses [MicroProfile Config](https://microprofile.io/project/eclipse/microprofile-config) to inject the configuration in the application. 
-The injection uses the `@ConfigProperty` annotation.
-
-> Check out `inventory/src/main/resources/application.properties` which contains the local H2 database configuration.
-
-Create a new properties file with the PostgreSQL database credentials. Note that you can give an arbitrary 
-name to this configuration (e.g. `prod`) in order to tell Quarkus which one to use. Open `src/main/resources/application-prod.properties` file and copy the following contents:
-
-~~~java
-quarkus.datasource.url=jdbc:postgresql:inventory
-quarkus.datasource.driver=org.postgresql.Driver
-quarkus.datasource.username=inventory
-quarkus.datasource.password=mysecretpassword
-quarkus.datasource.max-size=8
-quarkus.datasource.min-size=2
-quarkus.hibernate-orm.database.generation=drop-and-create
-quarkus.hibernate-orm.log.sql=false
-~~~
-
-The hostname defined for the PostgreSQL connection-url corresponds to the PostgreSQL 
-service name published on OpenShift. This name will be resolved by the internal DNS server 
-exposed by OpenShift and accessible to containers running on OpenShift.
-
-And then create a config map that you will use to overlay on the default `application-prod.properties` which is 
-packaged in the Inventory JAR archive:
-
-`oc create configmap inventory-quarkus --from-file=src/main/resources/application-prod.properties`
-
-If you don't like bash commands, Go to the `USERXX CoolStore Inventory Microservice Application` 
-project in OpenShift Web Console and then on the left sidebar, `Resources >> Config Maps`. Click 
-on `Create Config Maps` button to create a config map with the following info:
-
- * Name: `inventory-quarkus`
- * Key: `application-prod.properties`
- * Value: *copy-paste the content of the above application-prod.properties*
-
-Config maps hold key-value pairs and in the above command an `inventory-quarkus` config map 
-is created with `application-prod.properties` as the key and the content of the `application-prod.properties` as the 
-value. Whenever a config map is injected into a container, it would appear as a file with the same 
-name as the key, at specified path on the filesystem.
-
-You can see the content of the config map in the OpenShift Web Console or by 
-using `oc describe cm inventory-quarkus` command.
-
-Modify the Inventory deployment config so that it injects the `application-prod.properties` configuration you just created as 
-a config map into the Inventory container:
-
-`oc set volume dc/inventory-quarkus --add --configmap-name=inventory-quarkus --mount-path=/app/config`
-
-The above command mounts the content of the `inventory-quarkus` config map as a file inside the Inventory container 
-at `/app/config/application-prod.properties`
-
-You can also connect to Inventory PostgreSQL database and check if the seed data is 
-loaded into the database.
-
-In OpenShift Web Console, navigate `Pods` on the left menu and click on `inventory-database-xxxxx` pod. 
-
-![inventory-posgresql-terminal]({% image_path inventory-posgresql-pod.png %})
-
-Click on `Terminal` tab menu to run the following info:
-
-`sh-4.2$ psql -U inventory -c "select * from inventory"`
-
-![inventory-posgresql-terminal]({% image_path inventory-posgresql-terminal.png %})
-
-You have now created a config map that holds the configuration content for Inventory and can be updated 
-at anytime for example when promoting the container image between environments without needing to 
-modify the Inventory container image itself. 
 
 #### Summary
 
