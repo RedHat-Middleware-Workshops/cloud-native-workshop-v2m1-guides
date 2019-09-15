@@ -170,6 +170,8 @@ We will use the standard Java Logging framework, a much more portable framework.
 
 ---
 
+Navigate to the `Monolith Folder` and work on the source files under here.
+
 Open the `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java` file and replace the following codes with the exsiting entire codes:
 
 ~~~java
