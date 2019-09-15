@@ -551,15 +551,9 @@ This build uses the new [Red Hat OpenJDK Container Image](https://access.redhat.
 
 > `NOTE`: Make sure if you log in OpenShift via `oc login command` at Terminal.
 
-Next, create a temp directory to store only previously-built application with necessary lib directory via CodeReady Workspaces `Terminal`:
+Start and watch the build, which will take about a minute to complete:
 
-`rm -rf target/binary && mkdir -p target/binary && cp -r target/*runner.jar target/lib target/binary`
-
-> `NOTE`: You can also use a true source-based S2I build, but we're using binaries here to save time.
-
-And then start and watch the build, which will take about a minute to complete:
-
-`oc start-build inventory-quarkus --from-dir=target/binary --follow`
+`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow`
 
 Once the build is done, we'll deploy it as an OpenShift application and override the Postgres URL to specify our production Postgres credentials:
 
@@ -762,13 +756,9 @@ Repackage the inventory application via clicking on `Package for OpenShift` in `
 
 ![codeready-workspace-maven]({% image_path quarkus-dev-run-packageforOcp.png %})
 
-Next, update a temp directory to store only previously-built application with necessary lib directory via CodeReady Workspaces `Terminal`:
+Start and watch the build, which will take about a minute to complete:
 
-`rm -rf target/binary && mkdir -p target/binary && cp -r target/*runner.jar target/lib target/binary`
-
-And then start and watch the build, which will take about a minute to complete:
-
-`oc start-build inventory-quarkus --from-dir=target/binary --follow`
+`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow`
 
 You should see a `Push successful` at the end of the build output and it. To verify that deployment is started and completed automatically, 
 run the following command via CodeReady Workspaces `Terminal`:
