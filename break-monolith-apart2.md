@@ -156,8 +156,7 @@ In next step of this lab, we will add the logic to be able to read a list of fru
 
 Before we create the database repository class to access the data it's good practice to create test cases for the different methods that we will use.
 
-Create ``src/test/java/com/redhat/coolstore/service/ProductRepositoryTest.java`` empty file and
-then `Copy` the below code into the file:
+Create ``src/test/java/com/redhat/coolstore/service/ProductRepositoryTest.java`` empty file and replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -190,8 +189,7 @@ public class ProductRepositoryTest {
 
 Next, inject a handle to the future repository class which will provide access to the underlying data repository. It is
 injected with Spring's `@Autowired` annotation which locates, instantiates, and injects runtime instances of classes automatically,
-and manages their lifecycle (much like Java EE and it's CDI feature). Add these at the
-`<!-- TODO: Insert Catalog Component here -->` marker:
+and manages their lifecycle (much like Java EE and it's CDI feature). Add these at the `<!-- TODO: Insert Catalog Component here -->` marker:
 
 ~~~java
 @Autowired
@@ -200,8 +198,7 @@ ProductRepository repository;
 
 The `ProductRepository` should provide a method called `findById(String id)` that returns a product and collect that from the database. We test this by querying for a product with id "444434" which should have name "Pebble Smart Watch". The pre-loaded data comes from the `src/main/resources/schema.sql` file.
 
-Add these at the
-`<!-- TODO: Insert test_readOne here -->` marker:
+Add these at the `<!-- TODO: Insert test_readOne here -->` marker:
 
 ~~~java
 @Test
@@ -214,8 +211,7 @@ public void test_readOne() {
 ~~~
 
 The `ProductRepository` should also provide a methods called `readAll()` that returns a list of all products in the catalog. We test this by making sure that the list contains a "Red Fedora", "Forge Laptop Sticker" and "Oculus Rift".
-Again, add these at the
-`<!-- TODO: Insert test_readAll here -->` marker:
+Again, add these at the `<!-- TODO: Insert test_readAll here -->` marker:
 
 ~~~java
 @Test
@@ -234,7 +230,7 @@ public void test_readAll() {
 
 We are now ready to implement the database repository.  
 
-Create the ``src/main/java/com/redhat/coolstore/service/ProductRepository.java`` by clicking the open link.
+Create the `src/main/java/com/redhat/coolstore/service/ProductRepository.java` by clicking the open link.
 
 Here is the base for the calls, `Copy` to paste it into the editor:
 
@@ -335,7 +331,7 @@ Now you are going to create a service class. Later on the service class will be 
 
 Create a new class `CatalogService` by adding: ``src/main/java/com/redhat/coolstore/service/CatalogService.java``
 
-And then Open the file to implement the new service:
+Open the file to implement the new service and replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -383,7 +379,7 @@ Now we are ready to create the endpoints that will expose REST service. Let's ag
 
 Create the test case by opening: ``src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java``
 
-Add the following code to the test case and make sure to review it so that you understand how it works.
+Add the following code to the test case and make sure to `review` it without any codes change so that you understand how it works.
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -466,7 +462,7 @@ Now we are ready to implement the `CatalogEndpoint`.
 
 Start by creating the file by adding: ``src/main/java/com/redhat/coolstore/service/CatalogEndpoint.java``
 
-The add the following content: 
+Replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore.service;

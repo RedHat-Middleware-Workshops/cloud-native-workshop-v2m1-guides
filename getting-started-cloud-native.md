@@ -63,6 +63,8 @@ No worries!! `Red Hat Runtimes` allows you to generate the cloud-native apps qui
 
 ---
 
+>`NOTE`: This is `NOT` a part of self-paced hands-on experiences in this workshop but we will walk you through how Red Hat helps developers to migrate and modernize existing application using `Launcher` tool in `Red Hat Runtimes` product.
+
 LAUNCHER enables `developers` to create and/or import `modern applications`, built and deployed on OpenShift Container Platform.
 
 ![launch-landing]({% image_path launch-landing.png %})
@@ -135,7 +137,9 @@ want to build the cloud-native application development tool on local machine or 
 along with [Install and Configure the Fabric8 Launcher Tool](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). 
 You can also go through the [Operator Git Repository](https://github.com/fabric8-launcher/launcher-operator) to see how it works.
 
-When you deploy the launcher by `Operator`, you will see a similar overview in OpenShift dashboard:
+The Launcher is run on OpenShift and you can install it on your own cluster in 5 minutes following these instructions [Install and Configure the Fabric8 Launcher Tool](https://access.redhat.com/documentation/en-us/red_hat_openshift_application_runtimes/1/html-single/install_and_configure_the_fabric8_launcher_tool/index). You can also use the Operator Hub if you have a 4.x OpenShift installation. If you would like to look at the code its all in [Operator Git Repository](https://github.com/fabric8-launcher/launcher-operator).
+
+Once deployed onto your cluster, you can see the running pods under the cluster administrator user.
 
 ![launch-operator]({% image_path launch-operator.png %})
 

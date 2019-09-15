@@ -46,15 +46,22 @@ Select `Server Path` to analyze a monolithic application:
 
  * Server Path: `/opt/apps`
 
+![RHAMT Add App]({% image_path rhamt_add_monolith_app1.png %})
 ![RHAMT Add App]({% image_path rhamt_add_monolith_app.png %})
 
-####4.Select "Migration to JBoss EAP 7" in Transformation Path and clicks the "Save & Run" button
+####4. Select “Migration to JBoss EAP 7” in Transformation Path
 
 ---
 
+Choose the `com` and `weblogic` checkboxes to include these packages during analysis and click the `Save & Run` button. You will be taken to Analysis Results dashboard page, wait until the analysis is complete. 
+
+ * Check `com, weblogic` for Included packages.
+
 ![RHAMT Add App]({% image_path rhamt_check_monolith_app.png %})
 
-> `NOTE`: Check `com, weblogic` for Included packages.
+ `Tip`: This page may look just like an OpenShift console page, its not, its the Red Hat Application Migration Toolkit console - both project use PatternFly for a consistent web look and feel. 
+
+![RHAMT Add App]({% image_path rhamt_check_monolith_app.png %})
 
 ####5. Go to the Active Analysis page and clicks on the latest when it’s completed
 
@@ -110,6 +117,6 @@ There are several other sub-pages accessible by the menu near the top. Click on 
 
 You also investigate the report to see if there are any complex migrations.
 
-Now that you are comfortable that migration will only take approximately a week, which is about the same time it would take to migration from Oracle Weblogic to WebSphere Liberty Profile you feel comfortable to add `Low` in the row `Migration effort` in the `JBoss EAP` column. When you present your recommendation to the team and the architectural board your recommendation to migrate to JBoss EAP to deploy your application on OpenShift is approved.
+After analysing the results and the effort you can estimate the amount of time the effort to migrate your application. In this case you may estimate that given the 24 story points and that most of the changes are trivial the effort will be approximately a week, which is about the same time it would take to migration from Oracle Weblogic to WebSphere Liberty Profile. You may feel comfortable to add `Low in the row Migration effort` in the `JBoss EAP` when you present your recommendation to the team and the architectural board. As a result, let us assume today that your recommendation to migrate to JBoss EAP to deploy your application on OpenShift is approved.
 
 For the first sprint you will focus on migrating the application to JBoss EAP, the DBA will migrate the database to a PostgresQL instance on OpenShift while the ops engineer setup a project for you in the OpenShift cluster.

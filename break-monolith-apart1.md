@@ -149,8 +149,7 @@ Now let's write some code and create a domain model, service interface and a RES
 
 ---
 
-We will add Qurakus extensions to the Inventory application for using `Panache`, `Postgres` and we'll use the Quarkus Maven Plugin.
-Copy the following commands to add the Hibernate ORM with Panache extension via CodeReady Workspaces `Terminal`:
+We will add Qurakus extensions to the Inventory application for using `Panache`, `Postgres` and we'll use the Quarkus Maven Plugin. Copy the following commands to add the Hibernate ORM with Panache extension via CodeReady Workspaces `Terminal`:
 
 Go to `inventory' directory:
 
@@ -162,9 +161,7 @@ And then for local H2 database:
 
 `mvn quarkus:add-extension -Dextensions="jdbc-h2"`
 
->`NOTE:` There are many [more extensions](https://quarkus.io/extensions/) for Quarkus for popular frameworks 
-like [CodeReady Workspaces Vert.x](https://vertx.io/), [Apache Camel](http://camel.apache.org/), [Infinispan](http://infinispan.org/), 
-Spring DI compatibility (e.g. @Autowired), and more.
+>`NOTE:` There are many [more extensions](https://quarkus.io/extensions/) for Quarkus for popular frameworks like [CodeReady Workspaces Vert.x](https://vertx.io/), [Apache Camel](http://camel.apache.org/), [Infinispan](http://infinispan.org/), Spring DI compatibility (e.g. @Autowired), and more.
 
 ####4. Create Inventory Entity
 
@@ -172,8 +169,7 @@ Spring DI compatibility (e.g. @Autowired), and more.
 
 With our skeleton project in place, let's get to work defining the business logic.
 
-The first step is to define the model (entity) of an Inventory object. Since Quarkus uses Hibernate ORM Panache,
-we can re-use the same model definition from our monolithic application - no need to re-write or re-architect!
+The first step is to define the model (entity) of an Inventory object. Since Quarkus uses Hibernate ORM Panache, we can re-use the same model definition from our monolithic application - no need to re-write or re-architect!
 
 Create a new Java class named `Inventory.java` in
 `com.redhat.coolstore` package with the following code, identical logics to the monolith code:
@@ -203,8 +199,7 @@ public class Inventory extends PanacheEntity {
 }
 ~~~
 
-By extending `PanacheEntity` in your entities, you will get an ID field that is auto-generated. If you require a custom ID strategy, 
-you can extend `PanacheEntityBase` instead and handle the ID yourself.
+By extending `PanacheEntity` in your entities, you will get an ID field that is auto-generated. If you require a custom ID strategy, you can extend `PanacheEntityBase` instead and handle the ID yourself.
 
 By using Use public fields, there is no need for functionless getters and setters (those that simply get or set the field). You simply refer to fields like Inventory.location without the need to write a Inventory.geLocation() implementation. Panache will auto-generate any getters and setters you do not write, or you can develop your own getters/setters that do more than get/set, which will be called when the field is accessed directly.
 
@@ -218,9 +213,9 @@ This means the entity can be loaded without querying the database, but be carefu
 
 ---
 
-In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into
-various places (like a RESTful resource endpoint) in the future. This is the same approach that our monolith
-uses, so we can re-use this idea again. Create an `InventoryResource` class in the `com.redhat.coolstore` package:
+In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into various places (like a RESTful resource endpoint) in the future. This is the same approach that our monolith uses, so we can re-use this idea again. Create an `InventoryResource` class in the `com.redhat.coolstore` package.
+
+Replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore;
@@ -280,9 +275,9 @@ public class InventoryResource {
 
 The above REST services defines two endpoints:
 
-* `/inventory` that is accessible via `HTTP GET` which will return all known product Inventory entities as JSON
-* `/inventory/<itemId>` that is accessible via `HTTP GET` at for example `/inventory/329199` with the last path parameter being the location which 
-we want to check its inventory status.
+* `/inventory` that is accessible via `HTTP GET` which will return all known product Inventory entities as JSON 
+
+* `/inventory/<itemId>` that is accessible via `HTTP GET` at for example `/inventory/329199` with the last path parameter being the location which we want to check its inventory status.
 
 ####6. Add inventory data
 
@@ -361,7 +356,7 @@ yo","quantity":230}]
 ---
 
 In this step, we will add Quarkus test codes so that we can inject Unit test during `mvn package`. 
-Open up the `src/test/java/com/redhat/coolstore/InventoryEndpointTest.java` file and copy the following codes:
+Open up the `src/test/java/com/redhat/coolstore/InventoryEndpointTest.java` file and replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore;
@@ -694,6 +689,8 @@ The `checks` array is empty as we have not specified any health check procedure 
 
 Next, let's fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services.
 Open empty Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.java` and the follwing logic will be put into a new Java class.
+
+Replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore;

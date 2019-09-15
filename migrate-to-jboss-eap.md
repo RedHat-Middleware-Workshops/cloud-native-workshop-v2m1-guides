@@ -13,19 +13,19 @@ programming languages. [CodeReady Workspaces](https://access.redhat.com/document
 which is web-based and gives you a full-featured IDE running in the cloud. You have an CodeReady Workspaces instance deployed on your OpenShift cluster
 which you will use during these labs.
 
-Go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configure your development workspace.
+Open a new tab in your web browser and go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configure your development workspace.
 
-First, you need to register as a user. Register and choose the same username and password as 
-your OpenShift credentials.
+First, you need to register as a user. From the login page select the Register A New User option. For this new user, choose the same username and password as your OpenShift credentials.
 
 ![codeready-workspace-register]({% image_path codeready-workspace-register.png %})
 
-Log into CodeReady Workspaces with your user. You can now create your workspace based on a stack. A 
-stack is a template of workspace configuration. For example, it includes the programming language and tools needed
-in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration
-on-demand. 
+The new user is created and you are automatically logged in and taken to the New Workspace page.
 
-For this lab, click on the `Cloud Native Roadshow` stack and then on the `Create` button. 
+You can now create your workspace based on a stack. A stack is a template of workspace configuration. For example, it includes the programming language and tools needed in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration on-demand.
+
+For this lab, click on the `Cloud Native Roadshow` stack (you may need to scroll down this list to find it) and then on the `Create & Open` button.
+
+`Great Feature`: The Cloud Native Roadshow stack is one that we have created custom for this lab, you can do the same in your own organisation where you create templates of tools that your development teams need and make them available as a menu item from the workspace list.
 
 ![codeready-workspace-create-workspace]({% image_path codeready-workspace-create-workspace.png %})
 
@@ -33,25 +33,25 @@ Click on `Open` to open the workspace and then on the `Start` button to start th
 
 ![codeready-workspace-start-workspace]({% image_path codeready-workspace-start-workspace.png %})
 
-You can click on the left arrow icon to switch to the wide view:
-
-![codeready-workspace-wide]({% image_path codeready-workspace-wide.png %})
-
 It takes a little while for the workspace to be ready. When it's ready, you will see a fully functional 
 CodeReady Workspaces IDE running in your browser.
 
 ![codeready-workspace-workspace]({% image_path codeready-workspace.png %})
 
-Now you can import the project skeletons into your workspace.
+The projects are imported now into your workspace and are visible in the project explorer.
+
+You can click on the left arrow icon to switch to the wide view:
+
+![codeready-workspace-wide]({% image_path codeready-workspace-wide.png %})
 
 In the project explorer pane, click on the `Import Projects...` and enter the following:
 
-> You can find `GIT URL` when you log in {{GIT_URL}} with your credential(i.e. user1 / openshift).
-
   * Version Control System: `GIT`
-  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`
+  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`(IMPORTANT: replace userXX with your lab user)
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m1-labs`
+
+`Tip`: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials. 
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
@@ -98,13 +98,15 @@ using proprietary interfaces.
 While the code in our startup and shutdown is very simple, in the real world this code may require additional thought as part of the migration. However,
 using this method makes the code much more portable.
 
-####3. Open the file
+####3. Fix the ApplicationLifecycleListener issues
 
 ---
 
-Open the file `src/main/java/com/redhat/coolstore/utils/StartupListener.java` using this link.
-The first issue we will tackle is the one reporting the use of _Weblogic ApplicationLifecyleEvent_ and
-_Weblogic LifecycleListener_ in this file. Open the file to make these changes in the file.
+To begin we are fixing the issues under the Monolith application. Navigate to this folder in the project tree navigation pane to the left side, and edit the source files under there.
+
+Open the file `src/main/java/com/redhat/coolstore/utils/StartupListener.java`. Navigate the folder tree and double-click the source file to open it in the editing panel.
+
+The first issue we will tackle is the one reporting the use of _Weblogic ApplicationLifecyleEvent_ and _Weblogic LifecycleListener_ in this file. Open the file to make these changes in the file. Replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore.utils;
@@ -136,11 +138,13 @@ public class StartupListener {
 }
 ~~~
 
+`Tip`: Where is the SAVE button?  CodeReady workspaces with autosave your changes, that is why you can’t find a SAVE button. Great isn’t it - no more losing code because you forgot to save. You can undo with `CTRL+Z` or by using the `Edit -> Undo` menu option. 
+
 ####4. Test the build
 
 ---
 
-Go to `Commands Palette` and click on `build` in CodeReady Workspaces:
+Go to `Commands Palette` and dobule-click on `build` in CodeReady Workspaces:
 
 ![rhamt_project_issues]({% image_path codeready-workspace-build.png %})
 
@@ -166,10 +170,7 @@ We will use the standard Java Logging framework, a much more portable framework.
 
 ---
 
-Open the file to make these changes:
-
-`src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java`
-
+Open the `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java` file and replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -302,7 +303,7 @@ Delete the file on Eclipse Navigator:
 
 ---
 
-Open `src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java`. Open the file to fix the code:
+Open the `src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java` file and replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore.service;
