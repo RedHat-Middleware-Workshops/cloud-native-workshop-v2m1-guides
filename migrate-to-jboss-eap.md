@@ -12,7 +12,7 @@ You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe C
 
 To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}) and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
 
-![cdw]({% image_path che-login.png %}){:width="700px"}
+![cdw]({% image_path che-login.png %})
 
 Once you log in, you'll be placed on your personal dashboard. We've pre-created workspaces for you to use. Click on the name of the pre-created workspace on the left, as shown below (the name will be different depending on your assigned number). You can also click on the name of the workspace in the center, and then click on the green button that says "OPEN" on the top right hand side of the screen:
 
