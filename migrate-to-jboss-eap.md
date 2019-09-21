@@ -2,47 +2,31 @@
 
 In this step we will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
 
-####1. Open the file using CodeReady Workspaces
+####1. Getting Ready for the labs
 
 ---
 
-Follow these instructions to setup the development environment on CodeReady Workspaces. 
+##### Access Your Development Environment
 
-You might be familiar with the CodeReady Workspaces which is one of the most popular IDEs for Java and other
-programming languages. [CodeReady Workspaces](https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces) is the next-generation Eclipse IDE 
-which is web-based and gives you a full-featured IDE running in the cloud. You have an CodeReady Workspaces instance deployed on your OpenShift cluster
-which you will use during these labs.
+You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
-Open a new tab in your web browser and go to the [CodeReady Workspaces URL]({{ ECLIPSE_CHE_URL }}) in order to configure your development workspace.
+To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}) and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
 
-First, you need to register as a user. From the login page select the Register A New User option. For this new user, choose the same username and password as your OpenShift credentials.
+![cdw]({% image_path che-login.png %}){:width="700px"}
 
-![codeready-workspace-register]({% image_path codeready-workspace-register.png %})
+Once you log in, you'll be placed on your personal dashboard. We've pre-created workspaces for you to use. Click on the name of the pre-created workspace on the left, as shown below (the name will be different depending on your assigned number). You can also click on the name of the workspace in the center, and then click on the green button that says "OPEN" on the top right hand side of the screen:
 
-The new user is created and you are automatically logged in and taken to the New Workspace page.
+![cdw]({% image_path che-precreated.png %})
 
-You can now create your workspace based on a stack. A stack is a template of workspace configuration. For example, it includes the programming language and tools needed in your workspace. Stacks make it possible to recreate identical workspaces with all the tools and needed configuration on-demand.
+After a minute or two, you'll be placed in the workspace:
 
-For this lab, click on the `Cloud Native Roadshow` stack (you may need to scroll down this list to find it) and then on the `Create & Open` button.
+![cdw]({% image_path che-workspace.png %})
 
-`Great Feature`: The Cloud Native Roadshow stack is one that we have created custom for this lab, you can do the same in your own organisation where you create templates of tools that your development teams need and make them available as a menu item from the workspace list.
+To gain extra screen space, click on the yellow arrow to hide the left menu (you won't need it):
 
-![codeready-workspace-create-workspace]({% image_path codeready-workspace-create-workspace.png %})
+![cdw]({% image_path che-realestate.png %})
 
-Click on `Open` to open the workspace and then on the `Start` button to start the workspace for use, if it hasn't started automatically.
-
-![codeready-workspace-start-workspace]({% image_path codeready-workspace-start-workspace.png %})
-
-It takes a little while for the workspace to be ready. When it's ready, you will see a fully functional 
-CodeReady Workspaces IDE running in your browser.
-
-![codeready-workspace-workspace]({% image_path codeready-workspace.png %})
-
-The projects are imported now into your workspace and are visible in the project explorer.
-
-You can click on the left arrow icon to switch to the wide view:
-
-![codeready-workspace-wide]({% image_path codeready-workspace-wide.png %})
+Users of Eclipse, IntelliJ IDEA or Visual Studio Code will see a familiar layout: a project/file browser on the left, a code editor on the right, and a terminal at the bottom. You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
 In the project explorer pane, click on the `Import Projects...` and enter the following:
 
@@ -58,7 +42,8 @@ In the project explorer pane, click on the `Import Projects...` and enter the fo
 The projects are imported now into your workspace and is visible in the project explorer.
 
 CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
-enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on `monolith` and then click on `Convert to Project`.
+enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on each project and 
+then click on `Convert to Project` continuously.
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
 
@@ -68,9 +53,7 @@ Choose `Maven` from the project configurations and then click on `Save`.
 
 Repeat the above for inventory and catalog projects.
 
-> `NOTE`: the `Terminal` window in CodeReady Workspaces. For the rest of these labs, anytime you need to run 
-a command in a terminal, you can use the CodeReady Workspaces `Terminal` window. If you have `no response` from the Terminal when you're typing codes, 
-`Close` the current Terminal and `Open a new Terminal again`.
+> `NOTE`: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces `Terminal` window.
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
 

@@ -15,6 +15,8 @@ For this lab, we will use the Web Console on top of OpenShift Container Platform
 
 ---
 
+ * RHMAT URL: {{ RHAMT_URL }}
+
 ![RHAMT Login]({% image_path rhamt_login.png %})
 
 When you login the first time, you should be asked to change the password in order to comply with RH SSO policy.
