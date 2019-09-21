@@ -430,7 +430,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 
 ---
 
-First, open a new brower with the `OpenShift Web Console`
+First, open a new brower with the `[OpenShift web console]({{ CONSOLE_URL}})`
 
 ![openshift_login]({% image_path openshift_login.png %})
 
@@ -466,7 +466,7 @@ This will take you to the project status. There's nothing there yet, but that's 
 
 We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces `Terminal` window:
 
-Copy login command and Login OpenShift cluster:
+Copy login command and [Login OpenShift]({{ CONSOLE_URL}}) cluster:
 
 ![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
 
@@ -494,7 +494,7 @@ And finally deploy template:
 
 This will deploy both a PostgreSQL database and JBoss EAP, but it will not start a build for our application.
 
-Then open up the userXX-coolstore-dev project status page at `OpenShift Web Console`
+Then open up the userXX-coolstore-dev project status page at `[OpenShift web console]({{ CONSOLE_URL}})`
 
 and verify the monolith template items are created:
 

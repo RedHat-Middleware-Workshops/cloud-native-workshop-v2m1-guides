@@ -145,9 +145,9 @@ Once deployed onto your cluster, you can see the running pods under the cluster 
 
 ##### Connnecting to Openshift
 
-When you access OpenShift web console or the other route URL via HTTPS protocol, you will see `Your Connection is not secure` warning message.
-Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using Firefox, you will see the following screen.
+When you access [OpenShift web console]({{ CONSOLE_URL}}) or the other route URL via HTTPS protocol, you will see `Your Connection is not secure` warning message.
+Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using *Chrome Browser*, you will see the following screen.
 
-Click on `Advanced > Add Exception...` then, you can access the HTTPS page when you click on `Confirm Security Exception`!!!
+Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
 
 ![warning]({% image_path browser_warning.png %})

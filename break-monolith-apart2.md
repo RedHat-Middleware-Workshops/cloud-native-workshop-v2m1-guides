@@ -1041,7 +1041,7 @@ with running in 1 pod, along with the Postgres database pod.
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
-route URL at `Routes` in OpenShift Web Console to access the sample UI.
+route URL at `Routes` in [OpenShift web console]({{ CONSOLE_URL}}) to access the sample UI.
 
 > You can also access the application through the link on Resources tab in the Project Status page.
 

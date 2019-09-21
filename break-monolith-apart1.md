@@ -890,7 +890,7 @@ unhealthy.
 
 ![Greeting]({% image_path inventory-fail.png %})
 
-At this point, return to the OpenShift web console and click on the _Pods_ on the left menu. Notice that the
+At this point, return to the [OpenShift web console]({{ CONSOLE_URL}}) and click on the _Pods_ on the left menu. Notice that the
 `ContainersNotReady` indicates the application is failing its _liveness probe_:
 
 ![Not Ready]({% image_path notready.png %})
