@@ -15,7 +15,7 @@ For this lab, we will use the Web Console on top of OpenShift Container Platform
 
 ---
 
- * RHMAT URL: {{ RHAMT_URL }}
+To get started, [access the Red Hat Application Migration Toolkit]({{ RHAMT_URL }}) and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
 
 ![RHAMT Login]({% image_path rhamt_login.png %})
 
