@@ -430,7 +430,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 
 ---
 
-First, open a new brower with the `[OpenShift web console]({{ CONSOLE_URL}})`
+First, open a new brower with the [OpenShift web console]({{ CONSOLE_URL}})
 
 ![openshift_login]({% image_path openshift_login.png %})
 
@@ -494,7 +494,7 @@ And finally deploy template:
 
 This will deploy both a PostgreSQL database and JBoss EAP, but it will not start a build for our application.
 
-Then open up the userXX-coolstore-dev project status page at `[OpenShift web console]({{ CONSOLE_URL}})`
+Then open up the userXX-coolstore-dev project status page at [OpenShift web console]({{ CONSOLE_URL}})
 
 and verify the monolith template items are created:
 
