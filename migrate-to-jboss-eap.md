@@ -402,28 +402,28 @@ Open the `pom.xml` file.
 At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the following configuration to the pom.xml
 
 ~~~java
-<profile>
-  <id>openshift</id>
-  <build>
-      <plugins>
-          <plugin>
-              <artifactId>maven-war-plugin</artifactId>
-              <version>2.6</version>
-              <configuration>
-                  <webResources>
-                      <resource>
-                          <directory>${basedir}/src/main/webapp/WEB-INF</directory>
-                          <filtering>true</filtering>
-                          <targetPath>WEB-INF</targetPath>
-                      </resource>
-                  </webResources>
-                  <outputDirectory>deployments</outputDirectory>
-                  <warName>ROOT</warName>
-              </configuration>
-          </plugin>
-      </plugins>
-  </build>
-</profile>
+        <profile>
+          <id>openshift</id>
+          <build>
+              <plugins>
+                  <plugin>
+                      <artifactId>maven-war-plugin</artifactId>
+                      <version>2.6</version>
+                      <configuration>
+                          <webResources>
+                              <resource>
+                                  <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                                  <filtering>true</filtering>
+                                  <targetPath>WEB-INF</targetPath>
+                              </resource>
+                          </webResources>
+                          <outputDirectory>deployments</outputDirectory>
+                          <warName>ROOT</warName>
+                      </configuration>
+                  </plugin>
+              </plugins>
+          </build>
+        </profile>
 ~~~
 
 ####14. Create the OpenShift project
@@ -522,6 +522,8 @@ suitable binary for use with OpenShift (this is not a container image yet, but j
 file). We will do this with the `oc` command line.
 
 Build the project via CodeReady Workspaces `Terminal` window:
+
+`cd /projects/cloud-native-workshop-v2m1-labs/monolith/`
 
 `mvn clean package -Popenshift`
 
