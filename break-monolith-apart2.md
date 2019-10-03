@@ -1047,6 +1047,126 @@ The UI will refresh the catalog table every 2 seconds, as before.
 
 `Congratulations!` You have deployed the Catalog service as a microservice which in turn calls into the Inventory service to retrieve inventory data.
 
+####19. Strangling the monolith
+
+---
+
+So far we haven't started [strangling the monolith](https://www.martinfowler.com/bliki/StranglerApplication.html). To do this we are going to make use of routing capabilities in OpenShift. Each external request coming into OpenShift (unless using ingress, which we are not) will pass through a route. In our monolith the web page uses client side REST calls to load different parts of pages.
+
+For the home page the product list is loaded via a REST call to *http://<monolith-hostname>/services/products*. At the moment calls to that URL will still hit product catalog in the monolith. Now we will route these calls to our newly created catalog services instead and end up with something like:
+
+![Greeting]({% image_path catalog-goal.png %}){:width="700px"}
+
+Flow the steps below to create **Cross-origin resource sharing (CORS)** based route. CORS is a mechanism that allows restricted resources on a web page to be requested from another domain outside the domain from which the first resource was served.
+
+Create **CORSProvider** class in _src/main/java/com/redhat/coolstore_ of **inventory** project to allow restricted resources on a _catalog_ service. Copy the following all codes in the class:
+
+~~~java
+package com.redhat.coolstore;
+
+import org.jboss.resteasy.plugins.interceptors.CorsFilter;
+
+import javax.ws.rs.core.Feature;
+import javax.ws.rs.core.FeatureContext;
+import javax.ws.rs.ext.Provider;
+
+@Provider
+public class CORSProvider implements Feature {
+    @Override
+    public boolean configure(FeatureContext context) {
+        CorsFilter filter = new CorsFilter();
+        filter.getAllowedOrigins().add("*");
+        filter.setAllowedMethods("GET, POST, DELETE, OPTIONS, HEAD");
+        filter.setAllowedHeaders("accept, content-type, origin");
+        context.register(filter);
+        return true;
+    }
+}
+~~~
+
+Repackage the inventory application via clicking on **Package for OpenShift** in Commands Palette:
+
+![codeready-workspace-maven]({% image_path quarkus-dev-run-packageforOcp.png %})
+
+Or you can run a maven plugin command directly in Terminal:
+
+`cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
+
+`mvn clean package -DskipTests -Dquarkus.profile=prod`
+
+> NOTE: You should **SKIP** the Unit test because you don't have PostgreSQL database in local environment.
+
+Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
+
+`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n userXX-inventory`
+
+Once the build is done, the inventory pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
+
+Open **CatalogEndpoint** class in _src/main/java/com/redhat/coolstore/service_ of **catalog** project to allow restricted resources on a _product_ page og monolith application. Add *@CrossOrigin* annotation on _CatalogEndpoint_ class:
+
+~~~java
+@Controller
+@CrossOrigin
+@RequestMapping("/services")
+~~~
+
+Repackage the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces Terminal:
+
+`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
+
+`mvn clean package spring-boot:repackage -DskipTests`
+
+The build and deploy may take a minute or two. Wait for it to complete. You should see a **BUILD SUCCESS** at the
+end of the build output.
+
+Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
+
+`oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow -n userXX-catalog`
+
+Once the build is done, the catalog pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
+
+Let's update the catalog endpoint in monolith application. Copy the route URL of catalog service using following **oc** command in CodeReady Workspaces Terminal. Replace your username with **userXX**:
+
+`echo "http://$(oc get route -n userXX-catalog | grep catalog | awk '{print $2}')"`
+
+Open *catalog.js* in _src/main/webapp/app/services_ of **monolith** project to add the above URL as below:
+
+`baseUrl="YOUR_CATALOG_ROUTE_URL/services/products";`
+
+![strangler]({% image_path catalog_js_strangler.png %})
+
+Rebuild the project in CodeReady Workspaces Terminal:
+
+`cd /projects/cloud-native-workshop-v2m1-labs/monolith/`
+
+`mvn clean package -Popenshift`
+
+Wait for the build to finish and the `BUILD SUCCESS` message!
+
+Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
+
+`oc start-build coolstore --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow -n userXX-coolstore-dev`
+
+Once the build is done, the coolstore pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
+
+####20. Test the UI
+
+---
+
+Open the monolith UI at `OpenShift Web Console`
+
+and observe that the new catalog is being used along with the monolith:
+
+![Greeting]({% image_path coolstore-web.png %})
+
+The screen will look the same, but notice that the earlier product *Atari 2600 Joystick* is now gone,
+as it has been removed in our new catalog microservice.
+
+#####Congratulations!
+You have now successfully begun to _strangle_ the monolith. Part of the monolith's functionality (Inventory and Catalog) are
+now implemented as microservices, without touching the monolith. But there's a few more things left to do, which we'll do in the
+next steps.
+
 ##### Summary
 
 ---

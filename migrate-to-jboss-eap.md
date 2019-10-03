@@ -53,7 +53,7 @@ Choose `Maven` from the project configurations and then click on `Save`.
 
 Repeat the above for inventory and catalog projects.
 
-> `NOTE`: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces `Terminal` window.
+> `NOTE`: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window.
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
 
@@ -464,7 +464,7 @@ This will take you to the project status. There's nothing there yet, but that's 
 
 ---
 
-We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces `Terminal` window:
+We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces Terminal window:
 
 Copy login command and [Login OpenShift]({{ CONSOLE_URL}}) cluster:
 
@@ -482,9 +482,9 @@ Click on the link and copy the `oc login` command:
 
 ![openshift_login]({% image_path your_token.png %})
 
-Paste it on CodeReady Workspaces `Terminal` window.
+Paste it on CodeReady Workspaces Terminal window.
 
-Switch to the developer project you created earlier via CodeReady Workspaces `Terminal` window:
+Switch to the developer project you created earlier via CodeReady Workspaces Terminal window:
 
 `oc project userXX-coolstore-dev`
 
@@ -521,7 +521,7 @@ First, build the project once more using the `openshift` Maven profile, which wi
 suitable binary for use with OpenShift (this is not a container image yet, but just the `.war`
 file). We will do this with the `oc` command line.
 
-Build the project via CodeReady Workspaces `Terminal` window:
+Build the project via CodeReady Workspaces Terminal window:
 
 `cd /projects/cloud-native-workshop-v2m1-labs/monolith/`
 
@@ -535,7 +535,7 @@ And finally, start the build process that will take the `.war` file and combine 
 EAP and produce a Linux container image which will be automatically deployed into the project,
 thanks to the *DeploymentConfig* object created from the template:
 
-`oc start-build coolstore --from-file=deployments/ROOT.war`
+`oc start-build coolstore --from-file=deployments/ROOT.war `
 
 When you navigate `Builds` menu, you will find out `coolstore-xx` is `running` in Status field:
 
