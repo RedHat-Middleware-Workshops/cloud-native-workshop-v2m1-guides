@@ -1162,6 +1162,8 @@ and observe that the new catalog is being used along with the monolith:
 The screen will look the same, but notice that the earlier product *Atari 2600 Joystick* is now gone,
 as it has been removed in our new catalog microservice.
 
+> Note: If the web page is still same then you should clean cookies and caches in your web browser.
+
 #####Congratulations!
 You have now successfully begun to _strangle_ the monolith. Part of the monolith's functionality (Inventory and Catalog) are
 now implemented as microservices, without touching the monolith. But there's a few more things left to do, which we'll do in the
