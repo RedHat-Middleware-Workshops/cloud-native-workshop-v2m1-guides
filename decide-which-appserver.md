@@ -1,6 +1,6 @@
 ## Lab1 - Decide which Application Server to use in OpenShift
 
-In this step we will analyze an monolith application built for use with Oracle® WebLogic Server (WLS). This application is a Java EE application
+In this step we will analyze a monolithic application built for use with Oracle® WebLogic Server (WLS). This application is a Java EE application
 using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and best practices.
 
 The Red Hat Application Migration Toolkit can be installed and used in a few different ways:
@@ -15,7 +15,7 @@ For this lab, we will use the Web Console on top of OpenShift Container Platform
 
 ---
 
-To get started, [access the Red Hat Application Migration Toolkit]({{ RHAMT_URL }}) and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
+To get started, [access the Red Hat Application Migration Toolkit]({{ RHAMT_URL }}){:target="_blank"} and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
 
 ![RHAMT Login]({% image_path rhamt_login.png %})
 
@@ -31,14 +31,14 @@ When you login the first time, you should be asked to change the password in ord
 
 ![RHAMT Landing Page]({% image_path rhamt_landing_page.png %})
 
-Input a name and description to create a project. 
+Input a name and description to create a project.
 
 ![RHAMT Create Project]({% image_path rhamt_create_project.png %})
 
   * Name: `userXX-eap-migration`
   * Description: `USERXX EAP MIGRATION PROJECT`
 
-> `NOTE`: Add your username as prefix(i.e. user1-eap-migration) to distinguish each attendee's project.
+> `NOTE`: Add your username as prefix (i.e. `user1-eap-migration`) to distinguish each attendee's project.
 
 ####3. Add a monolith application to the project
 
@@ -55,21 +55,21 @@ Select `Server Path` to analyze a monolithic application:
 
 ---
 
-Choose the `com` and `weblogic` checkboxes to include these packages during analysis and click the `Save & Run` button. You will be taken to Analysis Results dashboard page, wait until the analysis is complete. 
+Choose the `com` and `weblogic` checkboxes to include these packages during analysis and click the `Save & Run` button. You will be taken to Analysis Results dashboard page, wait until the analysis is complete.
 
  * Check `com, weblogic` for Included packages.
 
 ![RHAMT Add App]({% image_path rhamt_check_monolith_app.png %})
 
- `Tip`: This page may look just like an OpenShift console page, its not, its the Red Hat Application Migration Toolkit console - both project use PatternFly for a consistent web look and feel. 
+ `Tip`: This page may look just like an OpenShift console page, its not, its the Red Hat Application Migration Toolkit console - both project use [PatternFly](https://www.patternfly.org){:target="_blank"} for a consistent web look and feel.
 
 ![RHAMT Add App]({% image_path rhamt_check_monolith_app.png %})
 
-####5. Go to the Active Analysis page and clicks on the latest when it’s completed
+####5. Go to the Active Analysis page and click on the latest when it’s completed
 
 ---
 
-Click the # of Analysis(For example, #2 in the screenshot).
+Click the # of Analysis (For example, #2 in the screenshot).
 
 ![RHAMT Complete]({% image_path rhamt_complete_analysis.png %})
 
@@ -98,8 +98,8 @@ The Dashboard gives an overview of the entire application migration effort. It s
 * The incidents by package
 
 > Story points are an abstract metric commonly used in Agile software development to estimate the relative level of effort needed to implement a feature or change.
-Red Hat Application Migration Toolkit uses story points to express the level of effort needed to migrate particular application constructs, and the application as a whole.
-The level of effort will vary greatly depending on the size and complexity of the application(s) to migrate.
+> Red Hat Application Migration Toolkit uses story points to express the level of effort needed to migrate particular application constructs, and the application as
+> a whole. The level of effort will vary greatly depending on the size and complexity of the application(s) to migrate.
 
 There are several other sub-pages accessible by the menu near the top. Click on each one and observe the results for each of these pages:
 
@@ -119,6 +119,6 @@ There are several other sub-pages accessible by the menu near the top. Click on 
 
 You also investigate the report to see if there are any complex migrations.
 
-After analysing the results and the effort you can estimate the amount of time the effort to migrate your application. In this case you may estimate that given the 24 story points and that most of the changes are trivial the effort will be approximately a week, which is about the same time it would take to migration from Oracle Weblogic to WebSphere Liberty Profile. You may feel comfortable to add `Low in the row Migration effort` in the `JBoss EAP` when you present your recommendation to the team and the architectural board. As a result, let us assume today that your recommendation to migrate to JBoss EAP to deploy your application on OpenShift is approved.
+After analysing the results and the effort you can estimate the amount of time the effort to migrate your application. In this case you may estimate that given the 24 story points and that most of the changes are trivial the effort will be approximately a week, which is about the same time it would take to migration from Oracle Weblogic to WebSphere Liberty Profile. You may feel comfortable to claim `Low Migration effort` for this app when you present your recommendation to the team and the architectural board. As a result, let us assume today that your recommendation to migrate to JBoss EAP to deploy your application on OpenShift is approved.
 
 For the first sprint you will focus on migrating the application to JBoss EAP, the DBA will migrate the database to a PostgresQL instance on OpenShift while the ops engineer setup a project for you in the OpenShift cluster.

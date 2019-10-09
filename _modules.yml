@@ -2,6 +2,8 @@ config:
     renderer: markdown
 
 modules:
+  workshop-environment:
+    name: Your Workshop Environment
   getting-started-cloud-native:
     name: Getting Started with Cloud-Native Apps
   decide-which-appserver:

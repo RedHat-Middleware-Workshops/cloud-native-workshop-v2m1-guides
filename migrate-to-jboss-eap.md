@@ -1,6 +1,6 @@
 ## Lab2 - Migrate your application to JBoss EAP
 
-In this step we will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
+In this step you will migrate some Weblogic-specific code in the app to use standard Java EE interfaces.
 
 ####1. Getting Ready for the labs
 
@@ -10,7 +10,7 @@ In this step we will migrate some Weblogic-specific code in the app to use stand
 
 You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
-To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}) and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
+To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}){:target="_blank"} and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
 
 ![cdw]({% image_path che-login.png %})
 
@@ -35,14 +35,14 @@ In the project explorer pane, click on the `Import Projects...` and enter the fo
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m1-labs`
 
-`Tip`: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials. 
+`Tip`: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials.
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
 The projects are imported now into your workspace and is visible in the project explorer.
 
-CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
-enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on each project and 
+CodeReady Workspaces is a full featured IDE and provides language-specific capabilities for various project types. In order to
+enable these capabilities, let's convert the imported project skeleton to a Maven projects. In the project explorer, right-click on each project and
 then click on `Convert to Project` continuously.
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
@@ -61,7 +61,7 @@ Repeat the above for inventory and catalog projects.
 
 ---
 
-Open the Issues report at  RHAMT Web Console:
+Open the Issues report in the RHAMT Web Console:
 
 ![rhamt_project_issues]({% image_path rhamt_project_issues.png %})
 
@@ -121,7 +121,7 @@ public class StartupListener {
 }
 ~~~
 
-`Tip`: Where is the SAVE button?  CodeReady workspaces with autosave your changes, that is why you can’t find a SAVE button. Great isn’t it - no more losing code because you forgot to save. You can undo with `CTRL+Z` or by using the `Edit -> Undo` menu option. 
+`Tip`: Where is the SAVE button?  CodeReady workspaces will autosave your changes, that is why you can’t find a SAVE button. Great isn’t it - no more losing code because you forgot to save. You can undo with `CTRL+Z` (`CMD-Z` on Mac) or by using the `Edit -> Undo` menu option.
 
 ####4. Test the build
 
@@ -131,7 +131,7 @@ Go to `Commands Palette` and dobule-click on `build` in CodeReady Workspaces:
 
 ![rhamt_project_issues]({% image_path codeready-workspace-build.png %})
 
-If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
+If it builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
 
 ![rhamt_project_issues]({% image_path codeready-workspace-build-result.png %})
@@ -147,7 +147,7 @@ localized message catalogs (hence the term _NonCatalog_).
 The WebLogic `NonCatalogLogger` is not supported on JBoss EAP (or any other Java EE platform), and should be migrated to a supported logging framework, such as the JDK Logger or JBoss Logging.
 
 We will use the standard Java Logging framework, a much more portable framework. The framework also
-[supports internationalization](https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html#a1.17) if needed.
+[supports internationalization](https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html#a1.17){:target="_blank"} if needed.
 
 ####5. Make the changes
 
@@ -226,8 +226,8 @@ verify you made all the changes correctly and try the build again.
 In this final step we will again migrate some Weblogic-specific code in the app to use standard Java EE interfaces,
 and one JBoss-specific interface.
 
-Our application uses [JMS](https://en.wikipedia.org/wiki/Java_Message_Service) to communicate. Each time an order is placed in the application, a JMS message is sent to
-a JMS Topic, which is then consumed by listeners (subscribers) to that topic to process the order using [Message-driven beans](https://docs.oracle.com/javaee/6/tutorial/doc/gipko.html), a form
+Our application uses [JMS](https://en.wikipedia.org/wiki/Java_Message_Service){:target="_blank"}{:target="_blank"} to communicate. Each time an order is placed in the application, a JMS message is sent to
+a JMS Topic, which is then consumed by listeners (subscribers) to that topic to process the order using [Message-driven beans](https://docs.oracle.com/javaee/6/tutorial/doc/gipko.html){:target="_blank"}{:target="_blank"}, a form
 of Enterprise JavaBeans (EJBs) that allow Java EE applications to process messages asynchronously.
 
 In this case, `InventoryNotificationMDB` is subscribed to and listening for messages from `ShoppingCartService`. When
@@ -252,7 +252,7 @@ long to complete (over 30 seconds), then the transaction is rolled back and exce
 Weblogic-specific so we'll need to find an equivalent in JBoss.
 
 > You should be aware that this type of migration is more involved than the previous steps, and in real world applications
-it will rarely be as simple as changing one line at a time for a migration. Consult the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit) for more detail on Red Hat's
+it will rarely be as simple as changing one line at a time for a migration. Consult the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit){:target="_blank"} for more detail on Red Hat's
 Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat can help you
 on your migration path.
 
@@ -262,13 +262,13 @@ on your migration path.
 
 From the RHAMT Issues report, we will fix the remaining issues:
 
-* `Call of JNDI lookup` - Our apps use a weblogic-specific [JNDI](https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface) lookup scheme.
+* `Call of JNDI lookup` - Our apps use a weblogic-specific [JNDI](https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface){:target="_blank"} lookup scheme.
 * `Proprietary InitialContext initialization` - Weblogic has a very different lookup mechanism for InitialContext objects
 * `WebLogic InitialContextFactory` - This is related to the above, essentially a Weblogic proprietary mechanism
 * `WebLogic T3 JNDI binding` - The way EJBs communicate in Weblogic is over T2, a proprietary implementation of Weblogic.
 
 All of the above interfaces have equivalents in JBoss, however they are greatly simplified and overkill for our application which uses
-JBoss EAP's internal message queue implementation provided by [Apache ActiveMQ Artemis](https://activemq.apache.org/artemis/).
+JBoss EAP's internal message queue implementation provided by [Apache ActiveMQ Artemis](https://activemq.apache.org/artemis/){:target="_blank"}.
 
 ####8. Remove the weblogic EJB Descriptors
 
@@ -377,7 +377,7 @@ You should delete the old application(i.e. monolith.war) to avoid to analyze it 
 
 ![rhamt_rerun_analysis_report]({% image_path rhamt_rerun_analysis_report.png %})
 
-`Wait for it to complete before continuing!`. 
+`Wait for it to complete before continuing!`.
 
 ####12. View the results
 
@@ -401,7 +401,7 @@ Open the `pom.xml` file.
 
 At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the following configuration to the pom.xml
 
-~~~java
+~~~xml
         <profile>
           <id>openshift</id>
           <build>
@@ -430,7 +430,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 
 ---
 
-First, open a new brower with the [OpenShift web console]({{ CONSOLE_URL}})
+First, open a new brower with the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}
 
 ![openshift_login]({% image_path openshift_login.png %})
 
@@ -438,6 +438,18 @@ Login using:
 
 * Username: `userXX`
 * Password: `openshift`
+
+> **NOTE**: Use of self-signed certificates
+>
+> When you access the OpenShift web console]({{ CONSOLE_URL}}) or other URLs via _HTTPS_ protocol, you will see browser warnings
+> like `Your > Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!).
+> For example, if you're using **Chrome**, you will see the following screen.
+>
+> Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
+>
+> ![warning]({% image_path browser_warning.png %})
+>
+> Other browsers have similar procedures to accept the security exception.
 
 You will see the OpenShift landing page:
 
@@ -466,11 +478,11 @@ This will take you to the project status. There's nothing there yet, but that's 
 
 We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces Terminal window:
 
-Copy login command and [Login OpenShift]({{ CONSOLE_URL}}) cluster:
+Copy login command and [Login OpenShift]({{ CONSOLE_URL}}){:target="_blank"} cluster:
 
 ![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
 
-Then you will redirect to OpenShift Login page again. 
+Then you will redirect to OpenShift Login page again.
 
 ![openshift_login]({% image_path openshift_login.png %})
 
@@ -494,7 +506,7 @@ And finally deploy template:
 
 This will deploy both a PostgreSQL database and JBoss EAP, but it will not start a build for our application.
 
-Then open up the userXX-coolstore-dev project status page at [OpenShift web console]({{ CONSOLE_URL}})
+Then open up the `userXX-coolstore-dev` project status page at [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}
 
 and verify the monolith template items are created:
 
@@ -511,7 +523,7 @@ You have not yet deployed the container image built in previous steps, but you'l
 
 ---
 
-In this development project we have selected to use a process called binary builds, which
+In this development project we have selected to use a process called _binary builds_, which
 means that instead of pointing to a public Git Repository and have the S2I (Source-to-Image) build process
 download, build, and then create a container image for us we are going to build locally
 and just upload the artifact (e.g. the `.war` file). The binary deployment will speed up
@@ -550,12 +562,11 @@ You should eventually see `replication controller "coolstore-1" successfully rol
 
 > If the above command reports `Error from server (ServerTimeout)` then simply re-run the command until it reports success!
 
-When it's done you should see the application deployed successfully with blue circles for the
-database and the monolith:
+When it's done you should see the application deployed successfully.
 
 ![build_done]({% image_path build_done.png %})
 
-Test the application by clicking on the Route link at `Networking > Routes` on the lefe menu:
+Test the application by clicking on the Route link at `Networking > Routes` on the left menu:
 
 ![route_link]({% image_path route_link.png %})
 
@@ -572,11 +583,8 @@ monolith to a microservices architecture later on. Let's go!
 
 ---
 
-Now that you have migrating an existing Java EE app to the cloud 
+Now that you have migrating an existing Java EE app to the cloud
 with JBoss and OpenShift, you are ready to start modernizing the
 application by breaking the monolith into smaller microservices in
 incremental steps, and employing modern techniques to ensure the
 application runs well in a distributed and containerized environment.
-
-But first, you'll need to dive a bit deeper into OpenShift and how
-it supports the end-to-end developer workflow.

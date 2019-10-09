@@ -13,13 +13,14 @@ vars:
   KEYCLOAK_URL:
   GIT_URL:
   CHE_USER_NAME:
-  CHE_USER_PASSWORD: 
+  CHE_USER_PASSWORD:
   OPENSHIFT_USER_NAME:
   OPENSHIFT_USER_PASSWORD:
   RHAMT_URL:
-  
+
 modules:
   activate:
+  - workshop-environment
   - getting-started-cloud-native
   - decide-which-appserver
   - migrate-to-jboss-eap
