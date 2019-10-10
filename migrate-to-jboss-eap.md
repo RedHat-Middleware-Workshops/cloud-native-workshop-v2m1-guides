@@ -437,7 +437,7 @@ First, open a new brower with the [OpenShift web console]({{ CONSOLE_URL}}){:tar
 Login using:
 
 * Username: `userXX`
-* Password: `openshift`
+* Password: `r3dh4t1!`
 
 > **NOTE**: Use of self-signed certificates
 >
@@ -463,8 +463,7 @@ Click `Create Project`, fill in the fields, and click `Create`:
 * Display Name: `USERXX Coolstore Monolith - Dev`
 * Description: _leave this field empty_
 
-> `NOTE`: YOU `MUST` USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later
-on and you will experience failures if you do not name it `userXX-coolstore-dev`!
+> NOTE: YOU `MUST` USE `userXX-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later on and you will experience failures if you do not name it `userXX-coolstore-dev`!
 
 ![create_dialog]({% image_path create_dialog.png %}){:width="700px"}
 
