@@ -144,7 +144,6 @@ Open up an **Inventory** class in _com.redhat.coolstore_ package with the follow
 package com.redhat.coolstore;
 
 import javax.persistence.Cacheable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -535,8 +534,7 @@ Finally, make sure it's actually done rolling out:
 
 Wait for that command to report replication controller "inventory-quarkus-1" successfully rolled out before continuing.
 
-> NOTE: Even if the rollout command reports success the application may not be ready yet and the reason for
-that is that we currently don't have any liveness check configured, but we will add that in the next steps.
+> NOTE: Even if the rollout command reports success the application may not be ready yet and the reason for that is that we currently don't have any liveness/readiness check configured, but we will add that in the next steps.
 
 And now we can access using curl once again to find all inventories:
 
@@ -573,30 +571,15 @@ to accept requests.
 
 ##### What is MicroProfile Health?
 
-**MicroProfile Health** allows applications to provide information about their state to external viewers
-which is typically useful in cloud environments where automated processes must be able to determine whether
-the application should be discarded or restarted. **Quarkus application** can utilize the MicroProfile Health specification through the _SmallRye Health extension_.
+**MicroProfile Health** allows applications to provide information about their state to external viewers which is typically useful in cloud environments where automated processes must be able to determine whether the application should be discarded or restarted. **Quarkus application** can utilize the MicroProfile Health specification through the _SmallRye Health extension_.
 
 ##### What is a Health Check?
 
-A key requirement in any managed application container environment is the ability to determine when the application is in a ready state. Only when an
-application has reported as ready can the manager (in this case OpenShift) act on the next step of the deployment process. OpenShift
-makes use of various _probes_ to determine the health of an application during its lifespan. A _readiness_
-probe is one of these mechanisms for validating application health and determines when an
-application has reached a point where it can begin to accept incoming traffic. At that point, the IP
-address for the pod is added to the list of endpoints backing the service and it can begin to receive
-requests. Otherwise traffic destined for the application could reach the application before it was fully
-operational resulting in error from the client perspective.
+A key requirement in any managed application container environment is the ability to determine when the application is in a ready state. Only when an application has reported as ready can the manager (in this case OpenShift) act on the next step of the deployment process. OpenShift makes use of various _probes_ to determine the health of an application during its lifespan. A _readiness_ probe is one of these mechanisms for validating application health and determines when an application has reached a point where it can begin to accept incoming traffic. At that point, the IP address for the pod is added to the list of endpoints backing the service and it can begin to receive requests. Otherwise traffic destined for the application could reach the application before it was fully operational resulting in error from the client perspective.
 
-Once an application is running, there are no guarantees that it will continue to operate with full
-functionality. Numerous factors including out of memory errors or a hanging process can cause the
-application to enter an invalid state. While a _readiness_ probe is only responsible for determining
-whether an application is in a state where it should begin to receive incoming traffic, a _liveness_ probe
-is used to determine whether an application is still in an acceptable state. If the liveness probe fails,
-OpenShift will destroy the pod and replace it with a new one.
+Once an application is running, there are no guarantees that it will continue to operate with full functionality. Numerous factors including out of memory errors or a hanging process can cause the application to enter an invalid state. While a _readiness_ probe is only responsible for determining whether an application is in a state where it should begin to receive incoming traffic, a _liveness_ probe is used to determine whether an application is still in an acceptable state. If the liveness probe fails, OpenShift will destroy the pod and replace it with a new one.
 
-In our case we will implement the health check logic in a REST endpoint and let Quarkus publish
-that logic on the _/health_ endpoint for use with OpenShift.
+In our case we will implement the health check logic in a REST endpoint and let Quarkus publish that logic on the _/health_ endpoint for use with OpenShift.
 
 ####13. Add Health Check Extension
 
@@ -655,11 +638,11 @@ package com.redhat.coolstore;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.eclipse.microprofile.health.Health;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 
-@Health
+@Readiness
 @ApplicationScoped
 public class InventoryHealthCheck implements HealthCheck {
 
@@ -678,16 +661,13 @@ public class InventoryHealthCheck implements HealthCheck {
 }
 ~~~
 
-The **call()** method exposes an HTTP GET endpoint which will return the status of the service. The logic of
-this check does a simple query to the underlying database to ensure the connection to it is stable and available.
-The method is also annotated with Quarkus's **@Health** annotation, which directs Quarkus to expose
-this endpoint as a health check at _/health_.
+The **call()** method exposes an HTTP GET endpoint which will return the status of the service. The logic of this check does a simple query to the underlying database to ensure the connection to it is stable and available. The method is also annotated with Quarkus's **@Readiness** annotation, which directs Quarkus to expose this endpoint as a health check at _/health/ready_.
 
 > NOTE: You don't need to stop and re-run re-run the Inventory application because Quarkus will **reload the changes automatically**.
 
-Access the _health check_ endpoint again using _curl_ and the result looks like:
+Access the _Readiness health check_ endpoint again using _curl_ and the result looks like:
 
-`curl http://localhost:8080/health`
+`curl http://localhost:8080/health/ready`
 
 ~~~json
 {
@@ -701,7 +681,9 @@ Access the _health check_ endpoint again using _curl_ and the result looks like:
 }
 ~~~
 
-With our new health check in place, we'll need to build and deploy the updated application in the next step.
+With our new health check in place, we'll need to build and deploy the updated application in the next step. Before move to the next step, be sure to close the termial where you're running Quarkus development mode.
+
+`Tip`: You can define liveness probe using **@Liveness** annotation and the liveness check can be accessible at **/health/live** endpoint.
 
 ####16. Re-Deploy to OpenShift
 
@@ -726,38 +708,27 @@ And wait for the result as below:
 
 > NOTE: The # of deployment(i.e. `inventory-quarkus-2`) might be different in your project. Be sure if the sequence is increased(i.e. #1 -> #2).
 
+Let's set _readiness probe_ in OpenShift using _InventoryHealthCheck_. Run the follwing _oc set probe_ command in CodeReady Workspaces:
+
+`oc set probe dc/inventory-quarkus --readiness --get-url=http://:8080/health/ready`
+
 Back on the OpenShift console, Navigate to _Deployment Configs_ on the left menu then click on _inventory-quarkus_:
 
 ![inventory-dc]({% image_path inventory-dc.png %})
 
- Click on _YAML_ tab then copy the following _livenessProbe_, _readinessProbe_ between _image_ and _ports_ elements:
-
-You should input the following variables in Readiness Path Probe and Liveness Probe:
+ Click on _YAML_ tab then you will see the following variables in _template.spec.containers.resources_ path:
 
 ~~~yaml
-livenessProbe:
-    failureThreshold: 3
-    httpGet:
-        path: /health
-        port: 8080
-        scheme: HTTP
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 1
-readinessProbe:
-    failureThreshold: 3
-    httpGet:
-        path: /health
-        port: 8080
-        scheme: HTTP
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 1
+        readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
 ~~~
-
-Click on **Save**.
 
 ![inventory-healthcheck-webconsole]({% image_path inventory-healthcheck-webconsole.png %})
 
@@ -765,7 +736,7 @@ You should also be able to access the health check logic at the _inventory_ endp
 
 `export URL="http://$(oc get route | grep inventory | awk '{print $2}')"`
 
-`curl $URL/health ; echo`
+`curl $URL/health/ready ; echo`
 
 You should see a JSON response like:
 
@@ -787,34 +758,22 @@ You can see the definition of the health check from the perspective of OpenShift
 
 You should see:
 
-
->     Liveness:   http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
->     Readiness:  http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
+>     Readiness:  http-get http://:8080/health/ready delay=0s timeout=1s period=10s #success=1 #failure=3
 
 ####17. Adjust probe timeout
 
 ---
 
-The various timeout values for the probes can be configured in many ways. Let's tune the _liveness probe_ initial delay so that
-we don't have to wait 3 minutes for it to be activated. Use OpenShift console, Navigate to _Deployment Configs_ -> _inventory-quarkus_ -> _YAML_
-and then update **initialDelaySeconds** in livenessProbe as below:
+The various timeout values for the probes can be configured in many ways. Let's tune the _readiness probe_ initial delay so that we have to wait 3o seconds for it to be activated. Use the _oc_ command to tune the probe to wait 30 seconds before starting to poll the probe:
 
- * initialDelaySeconds: **30**
+`oc set probe dc/inventory-quarkus --readiness --initial-delay-seconds=30`
 
-![inventory-change-deplaytime]({% image_path inventory-change-deplaytime.png %})
-
-You can also use the _oc_ command to tune the
-probe to wait 30 seconds before starting to poll the probe:
-
-`oc set probe dc/inventory-quarkus --liveness --initial-delay-seconds=30`
-
-And verify it's been changed (look at the _delay=_ value for the Liveness probe) via CodeReady Workspaces Terminal:
+And verify it's been changed (look at the _delay=_ value for the Readiness probe) via CodeReady Workspaces Terminal:
 
 `oc describe dc/inventory-quarkus | egrep 'Readiness|Liveness'`
 
 
->     Liveness:   http-get http://:8080/health delay=30s timeout=1s period=10s #success=1 #failure=3
->     Readiness:  http-get http://:8080/health delay=10s timeout=1s period=10s #success=1 #failure=3
+>     Readiness:  http-get http://:8080/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3
 
 In the next step, we'll exercise the probe and watch as it fails and OpenShift recovers the application.
 
@@ -834,7 +793,7 @@ The app will begin polling the inventory as before and report success:
 
 ![Greeting]({% image_path inventory.png %})
 
-Now you will corrupt the service and cause its health check to start failing.
+Now you will corrupt the service and cause its health check to start failing. 
 To simulate the app crasing, let's kill the underlying service so it stops responding. Execute via CodeReady Workspaces Terminal:
 
 `oc rsh dc/inventory-quarkus pkill java`
@@ -849,15 +808,13 @@ unhealthy.
 ![Greeting]({% image_path inventory-fail.png %})
 
 At this point, return to the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} and click on the _Pods_ on the left menu. Notice that the
-**ContainersNotReady** indicates the application is failing its _liveness probe_:
+**ContainersNotReady** indicates the application is failing its _readiness probe_:
 
 ![Not Ready]({% image_path notready.png %})
 
-After too many liveness probe failures, OpenShift will forcibly kill the pod and container running the service, and spin up a new one to take
-its place. Once this occurs, the light blue circle should return to dark blue. This should take about 30 seconds.
+After too many healthcheck probe failures, OpenShift will forcibly kill the pod and container running the service, and spin up a new one to take its place. Once this occurs, the light blue circle should return to dark blue. This should take about 30 seconds.
 
-Return to the same sample app UI (without reloading the page) and notice that the UI has automatically
-re-connected to the new service and successfully accessed the inventory once again:
+Return to the same sample app UI (without reloading the page) and notice that the UI has automatically re-connected to the new service and successfully accessed the inventory once again:
 
 ![Greeting]({% image_path inventory.png %})
 
@@ -865,17 +822,12 @@ re-connected to the new service and successfully accessed the inventory once aga
 
 ---
 
-You learned a bit more about what Quarkus is, and how it can be used to create
-modern Java microservice-oriented applications.
+You learned a bit more about what Quarkus is, and how it can be used to create modern Java microservice-oriented applications.
 
-You created a new Inventory microservice representing functionality previously implmented in the monolithic
-CoolStore application. For now this new microservice is completely disconnected from our monolith and is
-not very useful on its own. In future steps you will link this and other microservices into the monolith to
+You created a new Inventory microservice representing functionality previously implmented in the monolithic CoolStore application. For now this new microservice is completely disconnected from our monolith and is not very useful on its own. In future steps you will link this and other microservices into the monolith to
 begin the process of [strangling the monolith](https://www.martinfowler.com/bliki/StranglerApplication.html){:target="_blank"}.
 
-Quarkus brings in a number of concepts and APIs from the Java EE community, so your existing
-Java EE skills can be re-used to bring your applications into the modern world of containers,
-microservices and cloud deployments.
+Quarkus brings in a number of concepts and APIs from the Java EE community, so your existing Java EE skills can be re-used to bring your applications into the modern world of containers, microservices and cloud deployments.
 
 Quarkus will be one of many components of Red Hat OpenShift Application Runtimes soon. **Stay tuned!!**
 In the next lab, you'll use Spring Boot, another popular framework, to implement additional microservices. Let's go!
