@@ -477,9 +477,7 @@ This will take you to the project status. There's nothing there yet, but that's 
 
 Although your Eclipse Che workspace is running on the Kubernetes cluster, it's running with a default restricted _Service Account_ that prevents you from creating most resource types. If you've completed other modules, you're probably already logged in, but let's login again: open a Terminal and issue the following command:
 
-```
-oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
-```
+`oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true`
 
 Enter your username and password assigned to you:
 
@@ -488,7 +486,7 @@ Enter your username and password assigned to you:
 
 You should see like:
 
-```
+~~~shell
 Login successful.
 
 You have access to the following projects and can switch between them with 'oc project <projectname>':
@@ -503,7 +501,7 @@ You have access to the following projects and can switch between them with 'oc p
 
 Using project "default".
 Welcome! See 'oc help' to get started.
-```
+~~~
 
 Switch to the developer project you created earlier via CodeReady Workspaces Terminal window:
 

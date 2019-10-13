@@ -143,7 +143,7 @@ Now you've seen how to get started with Spring Boot development on Red Hat Runti
 
 In next step of this lab, we will add the logic to be able to read a data from the database.
 
-####4 Create Domain Objects
+####4. Create Domain Objects
 
 ---
 
@@ -151,7 +151,7 @@ Before we create the database repository class to access the data it's good prac
 
 Create _src/test/java/com/redhat/coolstore/service/ProductRepositoryTest.java_ empty file:
 
-![che]({% image_path che-right-click.png %})
+![che]({% image_path che-right-click.png %}){:width="500px"}
 
 Replace the following codes with the exsiting entire codes:
 
