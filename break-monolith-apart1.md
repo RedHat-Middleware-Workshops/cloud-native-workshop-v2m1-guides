@@ -290,7 +290,7 @@ You can also use a _maven plugin command_ to run the Quarkus application locally
 You should see a bunch of log output that ends with:
 
 ~~~
-2019-09-26 15:55:38,447 INFO  [io.quarkus] (main) Quarkus 0.23.1 started in 2.905s. Listening on: http://0.0.0.0:8080
+2019-09-26 15:55:38,447 INFO  [io.quarkus] (main) Quarkus 0.22.0 started in 2.905s. Listening on: http://0.0.0.0:8080
 2019-09-26 15:55:38,447 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
 2019-09-26 15:55:38,447 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 ~~~
@@ -590,8 +590,6 @@ Copy the following commands to import the smallrye-health extension that impleme
 via CodeReady Workspaces Terminal:
 
 Go to `inventory` directory:
-
-`cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
 `mvn quarkus:add-extension -Dextensions="health"`
 

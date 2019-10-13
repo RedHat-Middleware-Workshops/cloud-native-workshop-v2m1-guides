@@ -149,7 +149,11 @@ In next step of this lab, we will add the logic to be able to read a data from t
 
 Before we create the database repository class to access the data it's good practice to create test cases for the different methods that we will use.
 
-Create _src/test/java/com/redhat/coolstore/service/ProductRepositoryTest.java_ empty file and replace the following codes with the exsiting entire codes:
+Create _src/test/java/com/redhat/coolstore/service/ProductRepositoryTest.java_ empty file:
+
+![che]({% image_path che-right-click.png %})
+
+Replace the following codes with the exsiting entire codes:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -322,7 +326,7 @@ In next step of this lab, we will add the logic to expose the database content f
 
 Now you are going to create a service class. Later on the service class will be the one that controls the interaction with the inventory service, but for now it's basically just a wrapper of the repository class.
 
-Create a new class _CatalogService+ by adding: `_src/main/java/com/redhat/coolstore/service/CatalogService.java_
+Create a new class _CatalogService_ by adding: _src/main/java/com/redhat/coolstore/service/CatalogService.java_
 
 Open the file to implement the new service and replace the following codes with the exsiting entire codes:
 
@@ -612,7 +616,7 @@ code at the `//TODO: Add ClassRule for HoverFly Inventory simulation` marker in 
 
 This _ClassRule_ means that if our tests are trying to call our inventory url, HoverFly will intercept this and respond with our hard coded response instead.
 
- ####9. Implementing the Inventory Client
+####9. Implementing the Inventory Client
 
  ---
 
@@ -978,6 +982,8 @@ inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.lo
 
 Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces Terminal:
 
+`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
+
 `mvn clean package spring-boot:repackage -DskipTests`
 
 The build and deploy may take a minute or two. Wait for it to complete. You should see a **BUILD SUCCESS** at the
@@ -1116,6 +1122,8 @@ end of the build output.
 
 Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
 
+`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
+
 `oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow -n userXX-catalog`
 
 Once the build is done, the catalog pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
@@ -1142,7 +1150,7 @@ Wait for the build to finish and the `BUILD SUCCESS` message!
 
 Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
 
-`oc start-build coolstore --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow -n userXX-coolstore-dev`
+`oc start-build coolstore --from-file=deployments/ROOT.war --follow -n userXX-coolstore-dev`
 
 Once the build is done, the coolstore pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
 

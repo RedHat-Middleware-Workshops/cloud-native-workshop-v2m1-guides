@@ -475,25 +475,35 @@ This will take you to the project status. There's nothing there yet, but that's 
 
 ---
 
-We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces Terminal window:
+Although your Eclipse Che workspace is running on the Kubernetes cluster, it's running with a default restricted _Service Account_ that prevents you from creating most resource types. If you've completed other modules, you're probably already logged in, but let's login again: open a Terminal and issue the following command:
 
-Copy login command and [Login OpenShift]({{ CONSOLE_URL}}){:target="_blank"} cluster:
+```
+oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
+```
 
-![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
+Enter your username and password assigned to you:
 
-Then you will redirect to OpenShift Login page again.
+* Username: `userXX`
+* Password: `r3dh4t1!`
 
-![openshift_login]({% image_path openshift_login.png %})
+You should see like:
 
-When you login with your credential, you will see `Display Token` link in the redirected page.
+```
+Login successful.
 
-![openshift_login]({% image_path display_token_link.png %})
+You have access to the following projects and can switch between them with 'oc project <projectname>':
 
-Click on the link and copy the `oc login` command:
+  * default
+    istio-system
+    user0-bookinfo
+    user0-catalog
+    user0-cloudnative-pipeline
+    user0-cloudnativeapps
+    user0-inventory
 
-![openshift_login]({% image_path your_token.png %})
-
-Paste it on CodeReady Workspaces Terminal window.
+Using project "default".
+Welcome! See 'oc help' to get started.
+```
 
 Switch to the developer project you created earlier via CodeReady Workspaces Terminal window:
 
