@@ -151,7 +151,7 @@ Before we create the database repository class to access the data it's good prac
 
 Create _src/test/java/com/redhat/coolstore/service/ProductRepositoryTest.java_ empty file:
 
-![che]({% image_path che-right-click.png %}){:width="500px"}
+![che]({% image_path che-right-click.png %}){:width="700px"}
 
 Replace the following codes with the exsiting entire codes:
 
