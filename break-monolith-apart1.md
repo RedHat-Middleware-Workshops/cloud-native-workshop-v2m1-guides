@@ -450,14 +450,15 @@ all that is necessary is to create a config property with the profile name, and 
 Let's add the following variables in _src/main/resources/application.properties_:
 
 ~~~shell
-%prod.quarkus.datasource.url=jdbc:postgresql:inventory
+%prod.quarkus.datasource.url=jdbc:postgresql://inventory-database:5432/inventory
 %prod.quarkus.datasource.driver=org.postgresql.Driver
 %prod.quarkus.datasource.username=inventory
 %prod.quarkus.datasource.password=mysecretpassword
 %prod.quarkus.datasource.max-size=8
 %prod.quarkus.datasource.min-size=2
 %prod.quarkus.hibernate-orm.database.generation=drop-and-create
-%prod.quarkus.hibernate-orm.log.sql=false
+%prod.quarkus.hibernate-orm.sql-load-script=import.sql
+%prod.quarkus.hibernate-orm.log.sql=true
 ~~~
 
 Repackage the inventory application via clicking on **Package for OpenShift** in Commands Palette:
@@ -466,7 +467,7 @@ Repackage the inventory application via clicking on **Package for OpenShift** in
 
 Or you can run a maven plugin command directly in Terminal:
 
-`mvn clean package -DskipTests -Dquarkus.profile=prod`
+`mvn clean package -DskipTests`
 
 > NOTE: You should **SKIP** the Unit test because you don't have PostgreSQL database in local environment.
 
@@ -522,7 +523,7 @@ Start and watch the build, which will take about a minute to complete:
 
 Once the build is done, we'll deploy it as an OpenShift application and override the Postgres URL to specify our production Postgres credentials:
 
-`oc new-app inventory-quarkus -e QUARKUS_DATASOURCE_URL=jdbc:postgresql://inventory-database:5432/inventory`
+`oc new-app inventory-quarkus -e QUARKUS_PROFILE=prod`
 
 and expose your service to the world:
 
