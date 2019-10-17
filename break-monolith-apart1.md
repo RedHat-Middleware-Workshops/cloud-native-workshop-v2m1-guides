@@ -314,7 +314,7 @@ yo","quantity":230}]
 [{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
 ~~~
 
-> NOTE: Make sure to stop Quarkus development mode by **Close**ing the _Build and Run Locally_ terminal.
+> `NOTE`: Make sure to stop Quarkus development mode via `Close` terminal. Next, you need to open a new Terminal in CodeReady Workspaces then change the directory once again via `cd` command that you executed previously.
 
 ####8. Add Test Code and create a package
 
