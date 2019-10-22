@@ -542,7 +542,7 @@ And finally, start the build process that will take the `.war` file and combine 
 EAP and produce a Linux container image which will be automatically deployed into the project,
 thanks to the *DeploymentConfig* object created from the template:
 
-`oc start-build coolstore --from-file=deployments/ROOT.war `
+`oc start-build coolstore --from-file=target/ROOT.war `
 
 When you navigate `Builds` menu, you will find out `coolstore-xx` is `running` in Status field:
 
