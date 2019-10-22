@@ -276,7 +276,7 @@ Add these at the `<!-- TODO: Add row mapper here -->` marker:
             rs.getDouble("price"));
 ~~~
 
-Now we are ready to create the methods that are used in the test. Let's start with the _readAll()_. It should return a _List<Product>_ and then we can write the query as **SELECT * FROM catalog** and use the rowMapper to map that into _Product_ objects. Our method should look like this.
+Now we are ready to create the methods that are used in the test. Let's start with the `readAll()`. It should return a `List<Product>` and then we can write the query as `SELECT * FROM catalog` and use the rowMapper to map that into `Product` objects.
 Add these at the `<!-- TODO: Create a method for returning all products -->` marker:
 
 ~~~java
