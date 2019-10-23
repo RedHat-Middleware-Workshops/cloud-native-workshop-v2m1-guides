@@ -119,7 +119,7 @@ We will go ahead and add a bunch of other dependencies while we have the pom.xml
         <dependency>
           <groupId>org.springframework.cloud</groupId>
           <artifactId>spring-cloud-starter-feign</artifactId>
-          <version>1.4.7.RELEASE</version>
+          <version>1.3.4.RELEASE</version>
         </dependency>
 
         <dependency>
