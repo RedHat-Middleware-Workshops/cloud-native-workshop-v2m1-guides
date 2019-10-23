@@ -40,7 +40,7 @@ Input a name and description to create a project.
 
 > `NOTE`: Add your username as prefix (i.e. `user1-eap-migration`) to distinguish each attendee's project.
 
-####3. Add a monolith application to the project
+####3. Add the monolith application to the project
 
 ---
 
@@ -69,7 +69,7 @@ Choose the `com` and `weblogic` checkboxes to include these packages during anal
 
 ---
 
-Click the # of Analysis (For example, #2 in the screenshot).
+**Click the `#1` link (or `#2`) to see the report:
 
 ![RHAMT Complete]({% image_path rhamt_complete_analysis.png %})
 

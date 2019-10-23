@@ -60,7 +60,7 @@ HTTP microservices, reactive applications, message-driven microservices and serv
 
 Run the following commands to set up your environment for this lab and start in the right directory:
 
-In the project explorer, right-click on **inventory** and then change a directory to inventory path on Terminal.
+In the project explorer, expand the **inventory**  project.
 
 ![inventory_setup]({% image_path codeready-workspace-inventory-project.png %}){:width="500px"}
 
@@ -70,8 +70,6 @@ In the project explorer, right-click on **inventory** and then change a director
 
 The sample Quarkus project shows a minimal CRUD service exposing a couple of endpoints over REST,
 with a front-end based on Angular so you can play with it from your browser.
-
-> Click on the _inventory_ folder in the project explorer and navigate below folders and files.
 
 While the code is surprisingly simple, under the hood this is using:
 
@@ -792,7 +790,7 @@ The app will begin polling the inventory as before and report success:
 
 ![Greeting]({% image_path inventory.png %})
 
-Now you will corrupt the service and cause its health check to start failing. 
+Now you will corrupt the service and cause its health check to start failing.
 To simulate the app crasing, let's kill the underlying service so it stops responding. Execute via CodeReady Workspaces Terminal:
 
 `oc rsh dc/inventory-quarkus pkill java`

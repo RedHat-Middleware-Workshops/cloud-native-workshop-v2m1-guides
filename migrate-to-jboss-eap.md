@@ -22,6 +22,10 @@ After a minute or two, you'll be placed in the workspace:
 
 ![cdw]({% image_path che-workspace.png %})
 
+> **NOTE**:
+>
+> You may see random errors about websocket connections, plugins failing to load or other errors in the `dev-machine` window. You can ignore them as these are known issues that do not affect this workshop.
+
 To gain extra screen space, click on the yellow arrow to hide the left menu (you won't need it):
 
 ![cdw]({% image_path che-realestate.png %})
@@ -35,11 +39,29 @@ In the project explorer pane, click on the `Import Projects...` and enter the fo
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m1-labs`
 
-**Tip**: You can find GIT URL when you click on [GIT URL]({{GIT_URL}}){:target="_blank"} then login with your credentials.
-
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
-The projects are imported now into your workspace and is visible in the project explorer.
+At the next screen, leave the project type set to `Blank` and click **Save**.
+
+![codeready-workspace-import-save]({% image_path codeready-workspace-import-save.png %}){:width="700px"}
+
+The project is imported into your workspace and is visible in the project explorer.
+
+### Convert Projects
+
+Expand the top-level project and look carefully at the icons next to each of the `monolith`, `catalog` and `inventory` directories. **Do you see a blue Maven icon as shown below?**
+
+![maven-icon]({% image_path maven-icon.png %}){:width="900px"}
+
+If you do **not** see these icons, then you'll need to right-click on each of the projects, and select "Convert to Project" and convert them to the _Maven_ type project as shown below:
+
+![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
+
+Choose **Maven** from the project configurations and then click on **Save**.
+
+![codeready-workspace-maven]({% image_path codeready-workspace-maven.png %}){:width="700px"}
+
+Be sure to do this for each of the `monolith`, `inventory` and `catalog` projects.
 
 > `NOTE`: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window.
 
@@ -49,7 +71,7 @@ The projects are imported now into your workspace and is visible in the project 
 
 ---
 
-Open the Issues report in the RHAMT Web Console:
+Open the Issues report in the [RHAMT Console]({{ RHAMT_URL }}){:target="_blank"}:
 
 ![rhamt_project_issues]({% image_path rhamt_project_issues.png %})
 
@@ -109,7 +131,7 @@ public class StartupListener {
 }
 ~~~
 
-`Tip`: Where is the SAVE button?  CodeReady workspaces will autosave your changes, that is why you can’t find a SAVE button. Great isn’t it - no more losing code because you forgot to save. You can undo with `CTRL+Z` (`CMD-Z` on Mac) or by using the `Edit -> Undo` menu option.
+`Tip`: Where is the SAVE button?  CodeReady workspaces will autosave your changes, that is why you can’t find a SAVE button - no more losing code because you forgot to save. You can undo with `CTRL+Z` (`CMD-Z` on Mac) or by using the `Edit -> Undo` menu option.
 
 ####4. Test the build
 
@@ -268,7 +290,8 @@ EAP. Delete the file on Eclipse Navigator:
 ![codeready-workspace-convert]({% image_path codeready-workspace-delete-jar.png %}){:width="500px"}
 
 While we're at it, let's remove the `stub weblogic implementation classes` added as part of the scenario.
-Delete the file on Eclipse Navigator:
+
+Right-click on the `weblogic` folder and select **Delete** to delete the folder:
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-delete-weblogic.png %}){:width="500px"}
 
@@ -351,21 +374,25 @@ Build and package the app using Maven to make sure you code still compiles via C
 If builds successfully (you will see `BUILD SUCCESS`), then let's move on to the next issue! If it does not compile,
 verify you made all the changes correctly and try the build again.
 
-####11. Run the RHAMT Web console against the project ( Instructor Only )
+####11. Re-run the RHAMT report
 
 ---
 
-> `NOTE`: Considering network bandwidth of the workshop environment, `The only Instructor` use a backed WAR file in /opt/solution) to run this step.
-
 In this step we will re-run the RHAMT report to verify our migration was successful.
 
-Navigate to `Applications` on the left menu and click on `Add` the fixed application in /opt/solution to analyze the project.
+In the [RHAMT Console]({{ RHAMT_URL }}){:target="_blank"}, navigate to `Applications` on the left menu and click on `Add`. Enter the path to the fixed project at `/opt/solution` and click **Upload** to add the project:
 
-You should delete the old application(i.e. monolith.war) to avoid to analyze it again and `Run Analysis` to analyze the project:
+![rhamt_rerun_analysis_report]({% image_path rhamt_rerun_analysis_report_solution.png %})
+
+Be sure to delete the old `monolith.war` to avoid analyzing it again:
+
+![rhamt_rerun_analysis_report]({% image_path rhamt_rerun_analysis_report_solution_del.png %})
+
+and then click **Save and Run** to analyze the project:
 
 ![rhamt_rerun_analysis_report]({% image_path rhamt_rerun_analysis_report.png %})
 
-`Wait for it to complete before continuing!`.
+Depending on how many other students are running reports, your analysis might be _queued_ for several minutes. If it is taking too long, feel free to skip the next section and proceed to step **13** and return back to the analysis later to confirm that you eliminated all the issues.
 
 ####12. View the results
 

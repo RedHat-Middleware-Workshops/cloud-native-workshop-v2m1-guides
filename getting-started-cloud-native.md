@@ -62,20 +62,14 @@ the [RHAMT documentation](https://access.redhat.com/documentation/en/red-hat-app
 
 You might wonder about developing **new** cloud-native apps once you complete your migration of existing apps via RHAMT.
 
-No worries!! Red Hat Runtimes allows you to get started building cloud-native apps quickly on multiple rumtimes via the it's **Launcher**.
-The Launcher enables developers to create and/or import modern applications, built and deployed on OpenShift Container Platform.
+Red Hat Runtimes provides a curated, best-of-breed collection of cloud native runtimes that let you match application requirements to the best runtime, and allows your organization to standardize on a set of runtimes to support the business. Fully supported runtimes include:
 
-![launch-landing]({% image_path launch-landing.png %})
-
-Suppored backend Runtimes are here:
-
-* [.NET](https://docs.microsoft.com/en-us/dotnet/core/){:target="_blank"} - Create stand-alone, production-grade .NET Core Applications that you can "just run".
+* [Spring Boot](https://spring.io/projects/spring-boot){:target="_blank"} - Create stand-alone, production-grade Spring based Applications that you can "just run".
 * [Node.Js](https://nodejs.org/en/){:target="_blank"} - A JavaScript runtime built on Chrome's V8 JavaScript engine, using an event-driven, non-blocking I/O model for lightweight efficiency.
 * [Quarkus](https://quarkus.io/){:target="_blank"} - A Kubernetes Native Java stack tailored for GraalVM and OpenJDK HotSpot, crafted from the best of breed Java libraries and standards
-* [Spring Boot](https://spring.io/projects/spring-boot){:target="_blank"} - Create stand-alone, production-grade Spring based Applications that you can "just run".
-* [Thorntail](https://thorntail.io/){:target="_blank"} - An innovative approach to packaging and running Java EE applications, packaging them with just enough of the server runtime to "java -jar" your application.
-* [Wildfly](https://wildfly.org/){:target="_blank"} - A classic approach to packaging and running Java EE applications.
-* [Vert.x](https://projects.eclipse.org/projects/rt.vertx){:target="_blank"} - A tool-kit for building reactive applications on the JVM.
+* [MicroProfile](https://thorntail.io/){:target="_blank"} - Thorntail, a MicroProfile implementation, allows you to develop Java microservices, packaging them with just enough of the server runtime to `java -jar` your application.
+* [Eclipse Vert.x](https://projects.eclipse.org/projects/rt.vertx){:target="_blank"} - A tool-kit for building reactive applications on the JVM.
 
-We will use several of these runtimes during the course of this workshop. To try out other runtimes later using Launcher when you have spare time, open the [Launcher](https://developers.redhat.com/launch/login){:target="_blank"} (you will first have to login or register an account for free with the Red Hat Developer Program).
+We will use several of these runtimes during the course of this workshop. After this workshop you can try these on your own using our [self-paced, in-browser learning guides](https://learn.openshift.com/middleware/).
 
+Let's get started!
