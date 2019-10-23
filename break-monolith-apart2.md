@@ -776,7 +776,7 @@ public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
 //                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
                 .get(startsWith("/services/inventory"))
 //                    .willReturn(serverError())
-                .willReturn(success(json(new Inventory("9999",9999))))
+                .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
 
 ));
 ~~~
@@ -790,7 +790,7 @@ public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
 //                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
                 .get(startsWith("/services/inventory"))
                 .willReturn(serverError())
-//                    .willReturn(success(json(new Inventory("9999",9999))))
+//                    .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
 
 ));
 ~~~
@@ -820,7 +820,7 @@ public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
 //                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
                 .get(startsWith("/services/inventory"))
 //                    .willReturn(serverError())
-                .willReturn(success(json(new Inventory("9999",9999))))
+                .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
 
 ));
 ~~~
