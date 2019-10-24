@@ -1147,8 +1147,7 @@ as it has been removed in our new catalog microservice.
 
 #####Congratulations!
 You have now successfully begun to _strangle_ the monolith. Part of the monolith's functionality (Inventory and Catalog) are
-now implemented as microservices. But there's a few more things left to do, which we'll do in the
-next steps.
+now implemented as microservices.
 
 ##### Summary
 
