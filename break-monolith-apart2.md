@@ -129,13 +129,9 @@ We will go ahead and add a bunch of other dependencies while we have the pom.xml
         </dependency>
 ~~~
 
-Build and package the app using Maven to make sure the changed code still compiles via CodeReady Workspaces **BUILD** window:
+Use the command palette and select 'Build' to build and package the app using Maven to make sure the changed code still compiles:
 
 ![catalog_build]({% image_path catalog-build.png %})
-
-> NOTE: Make sure to build this mvn command at working directory(i.e catalog).
-
-> NOTE: The CodeReady Workspaces terminal window is like your local terminal. Everything that you run here you should be able to execute on your local computer as long as you have a Java SDK 1.8 and Maven. In later steps, we will also use the `oc` command line tool.
 
 If it builds successfully (you will see **BUILD SUCCESS**), you have now successfully executed the first step in this lab.
 
@@ -149,11 +145,11 @@ In next step of this lab, we will add the logic to be able to read a data from t
 
 Before we create the database repository class to access the data it's good practice to create test cases for the different methods that we will use.
 
-Create _src/test/java/com/redhat/coolstore/service/ProductRepositoryTest.java_ empty file:
+Right-click on the `src/test/java/com.redhat.coolstore.service` package, and select _New > Java Class_. Type `ProductRepositoryTest` into the dialog box and press **OK** which will create an empty class file.
 
 ![che]({% image_path che-right-click.png %}){:width="700px"}
 
-Replace the following codes with the exsiting entire codes:
+Replace the content of this new file with the below code:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -227,9 +223,7 @@ Again, add these at the `<!-- TODO: Insert test_readAll here -->` marker:
 
 We are now ready to implement the database repository.
 
-Create the _src/main/java/com/redhat/coolstore/service/ProductRepository.java_ by clicking the open link.
-
-Here is the base for the calls, **Copy** to paste it into the editor:
+Use the same procedure to create a new Java Class in the `src/main/java/com/redhat/coolstore/service` package called `ProductRepository`. Replace the empty class with the following code:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -256,7 +250,7 @@ public class ProductRepository {
 }
 ~~~
 
-> NOTE: That the class is annotated with `@Repository`. This is a feature of Spring that makes it possible to avoid a lot of boiler plate code and only write the implementation details for this data repository. It also makes it very easy to switch to another data storage, like a NoSQL database.
+> NOTE: This class is annotated with `@Repository`. This is a feature of Spring that makes it possible to avoid a lot of boiler plate code and only write the implementation details for this data repository. It also makes it very easy to switch to another data storage, like a NoSQL database.
 
 Spring Data provides a convenient way for us to access data without having to write a lot of boiler plate code. One way to do that is to use a _JdbcTemplate_. First we need to autowire that as a member to _ProductRepository_. Add these at the `<!-- TODO: Autowire the jdbcTemplate here -->` marker:
 
@@ -306,7 +300,7 @@ spring.datasource.driver-class-name=org.h2.Driver
 
 The Spring Data framework will automatically see if there is a `schema.sql` in the class path and run that when initializing.
 
-Now we are ready to run the test to verify that everything works. Because we created the _ProductRepositoryTest.java_ via **Run Junit Test**:
+Now we are ready to run the test to verify that everything works. Right-click on the `src/test/java/com/redhat/coolstore/service` package and select _Run Test > Run JUnit Test_.
 
 ![catalog-test-run]({% image_path catalog-test-run.png %}){:width="600px"}
 
@@ -326,9 +320,9 @@ In next step of this lab, we will add the logic to expose the database content f
 
 Now you are going to create a service class. Later on the service class will be the one that controls the interaction with the inventory service, but for now it's basically just a wrapper of the repository class.
 
-Create a new class _CatalogService_ by adding: _src/main/java/com/redhat/coolstore/service/CatalogService.java_
+Again, create a new class `CatalogService` in the `src/main/java/com/redhat/coolstore/service` package.
 
-Open the file to implement the new service and replace the following codes with the exsiting entire codes:
+Replace the empty class with this code:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -368,11 +362,11 @@ public class CatalogService {
 }
 ~~~
 
-As you can see there is a number of `TODO` in the code, and later we will use these placeholders to add logic for calling the Inventory Client to get the quantity. However for the moment we will ignore these placeholders.
+As you can see there is a number of `TODO` in the code, and later we will use these placeholders to add logic for calling the Inventory Client to get the quantity.
 
-Now we are ready to create the endpoints that will expose REST service. Let's again first start by creating a test case for our endpoint. We need to endpoints, one that exposes for GET calls to _/services/products_ that will return all product in the catalog as JSON array, and the second one exposes GET calls to _/services/produc/{prodId}_ which will return a single Product as a JSON Object. Let's again start by creating a test case.
+Now we are ready to create the endpoints that will expose REST service. Let's again first start by creating a test case for our endpoint. We need two endpoints, one that exposes for GET calls to `/services/products` that will return all product in the catalog as JSON array, and the second one exposes GET calls to `/services/produc/{prodId}` which will return a single Product as a JSON Object. Let's again start by creating a test case.
 
-Create the test case by opening: _src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java_
+Create the test case by creating a new class file called `CatalogEndpointTest` in the `src/test/java/com/redhat/coolstore/service` package.
 
 Add the following code to the test case and make sure to *review* it without any codes change so that you understand how it works.
 
@@ -455,7 +449,7 @@ public class CatalogEndpointTest {
 
 Now we are ready to implement the _CatalogEndpoint_.
 
-Start by creating the file by adding: _src/main/java/com/redhat/coolstore/service/CatalogEndpoint.java_
+Start by creating a new class called `CatalogEndpoint` in the `src/main/java/com/redhat/coolstore/service` package.
 
 Replace the contents with this code:
 
@@ -495,7 +489,7 @@ public class CatalogEndpoint {
 
 The Spring MVC Framework default uses Jackson to serialize or map Java objects to JSON and vice versa. Because Jackson extends upon JAX-B and does can automatically parse simple Java structures and parse them into JSON and vice verse and since our `Product.java` is very simple and only contains basic attributes we do not need to tell Jackson how to parse between Product and JSON.
 
-Now you can run the _CatalogEndpointTest_ and verify that it works via **Run Junit Test**:
+Now you can run the _CatalogEndpointTest_ and verify that it works via **Run Junit Test**. Right-click on the `CatalogEndpointTest` and select _Run Test > Run JUnit Test_.
 
 ![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
@@ -504,6 +498,8 @@ The test should be successful and you should see green color _test_retriving_one
 ![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
 
 You can also run the following command via `CodeReady Workspaces Terminal` to verify the test cases.
+
+`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
 
 `mvn verify -Dtest=CatalogEndpointTest`
 
@@ -515,13 +511,19 @@ Start the application via CodeReady Workspaces **RUN** Menu:
 
 Wait for the application to start. Then we can verify the endpoint by running the following command in Eclipse Terminal:
 
-`curl http://localhost:8081/services/products ; echo`
+`curl http://localhost:8081/services/products | jq`
 
 You should get a full JSON array consisting of all the products:
 
 ~~~json
-[{"itemId":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99,"quantity":0},{"itemId":"329199","name":"Forge Laptop Sticker",
-...
+  {
+    "itemId": "329299",
+    "name": "Red Fedora",
+    "desc": "Official Red Hat Fedora",
+    "price": 34.99,
+    "quantity": 0
+  },
+  { ... }
 ~~~
 
 You have now successfully executed the third step in this lab.
@@ -574,7 +576,7 @@ And add it to the second test as well at the remaining _//TODO: Add check for Qu
 
 `                .returns(9999,Product::getQuantity)`
 
-Now you can run the _CatalogEndpointTest_ and verify that it works via _Run Junit Test_:
+Now you can run the _CatalogEndpointTest_ and verify that it **fails** via _Run Junit Test_:
 
 ![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
@@ -582,22 +584,10 @@ The test _should fail_ and you should see red color **test_retriving_one_proudct
 
 ![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
-You can also run the following command via CodeReady Workspaces Terminal to verify the test cases:
+The test fails because we are trying to call the Inventory service which is not runninmg.
 
-`mvn verify`
-
-Then you have the following failed result:
-
-~~~
-Tests run: 4, Failures: 2, Errors: 0, Skipped: 0
-
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
-~~~
-
-Again the test fails because we are trying to call the Inventory service which is not running. We will soon implement the code to call the inventory service, but first
-we need a away to test this service without having to really on the inventory services to be up an running. For that we are going to use an API Simulator
+We will soon implement the code to call the inventory service, but first
+we need a away to test this service without having to rely on the inventory services to be up and running. For that we are going to use an API Simulator
 called [HoverFly](http://hoverfly.io){:target="_blank"} and particular it's capability to simulate remote APIs. HoverFly is very convenient to use with Unit test and all we have to do is
 to add a **ClassRule** that will simulate all calls to inventory. Open the file to insert the
 code at the `//TODO: Add ClassRule for HoverFly Inventory simulation` marker in _CatalogEndpointTest_ class:
@@ -616,17 +606,19 @@ code at the `//TODO: Add ClassRule for HoverFly Inventory simulation` marker in 
 
 This _ClassRule_ means that if our tests are trying to call our inventory url, HoverFly will intercept this and respond with our hard coded response instead.
 
+We will soon use the `// commented-out` lines, so keep them in there!
+
 ####9. Implementing the Inventory Client
 
  ---
 
 Since we now have a nice way to test our service-to-service interaction we can now create the client that calls the Inventory. Netflix has provided some nice extensions to the Spring Framework that are mostly captured in the Spring Cloud project, however Spring Cloud is mainly focused on Pivotal Cloud Foundry and because of that Red Hat and others have contributed Spring Cloud Kubernetes to the Spring Cloud project, which enables the same functionallity for Kubernetes based platforms like OpenShift.
 
-The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circute Break calls that doesn't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface that details which parameters and return type we expect, annotate it with _@RequestMapping_ and provide some details and then annotate the interface with _@Feign_ and provide it with a name.
+The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circute Break calls that doesn't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface that details which parameters and return type we expect, annotate it with    `@RequestMapping` and provide some details and then annotate the interface with `@Feign` and provide it with a name.
 
-Create the Inventory client, _src/main/java/com/redhat/coolstore/client/InventoryClient.java_ file in the project explorer.
+Create the `InventoryClient` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
 
-Add the followng small code to the file:
+Add the following code to the file:
 
 ~~~java
 package com.redhat.coolstore.client;
@@ -650,11 +642,11 @@ public interface InventoryClient {
 }
 ~~~
 
-There is one more thing that we need to do which is to tell Feign where the inventory service is running. Before that notice that we are setting the _@FeignClient(name="inventory")_.
+There is one more thing that we need to do which is to tell Feign where the inventory service is running. Before that notice that we are setting the `@FeignClient(name="inventory")`.
 
-Open _src/main/resources/application-default.properties_
+Open the `src/main/resources/application-default.properties file.
 
-And add these properties by **Copying** and adding to the `#TODO: Configure netflix libraries` marker:
+Add these properties to it at the `#TODO: Configure netflix libraries` marker:
 
 ~~~java
 inventory.ribbon.listOfServers=inventory:8080
@@ -713,11 +705,7 @@ The test should be successful and you should see green color **test_retriving_on
 
 ![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
 
-You can also run the following command via CodeReady Workspaces Terminal to verify the test cases:
-
-`mvn verify`
-
-So even if we don't have any inventory service running we can still run our test. However to actually run the service using `mvn spring-boot:run` we need to have an inventory service or the calls to _/services/products/_ will fail. We will fix this in the next step.
+So even if we don't have any inventory service running we can still run our test. However to actually run the service using `mvn spring-boot:run` we need to have an inventory service or the calls to `/services/products/` will fail. We will fix this in the next step.
 
 #####Congratulations!
 You now have the framework for retrieving products from the product catalog and enriching the data with inventory data from
@@ -755,7 +743,7 @@ And paste this into it at the `//TODO: Add Fallback factory here` marker:
     }
 ~~~
 
-After creating the fallback factory all we have todo is to tell Feign to use that fallback in case of an issue, by adding the fallbackFactory property to the _@FeignClient_ annotation. Open the file to replace it for you at the _@FeignClient(name="inventory")_ line:
+After creating the fallback factory all we have todo is to tell Feign to use that fallback in case of an issue, by adding the fallbackFactory property to the `@FeignClient` annotation. and replace the existing `@FeignClient(name="inventory")` line with this line:
 
 ~~~java
 @FeignClient(name="inventory",fallbackFactory = InventoryClient.InventoryClientFallbackFactory.class)
@@ -795,19 +783,15 @@ public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
 ));
 ~~~
 
-Notice that the Hoverfly Rule will now return serverError for all request to inventory.
+Notice that the Hoverfly Rule will now return `serverError` for all requests to inventory.
 
-Now you can run the _CatalogEndpointTest_ and verify that it works via **Run Junit Test**:
+Now you can run the _CatalogEndpointTest_ and verify that it **fails** via **Run Junit Test**:
 
 ![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
 The test _should fail_ and you _should see red color `test_retriving_one_proudct_, _check_that_endpoint_returns_a_correct_list` in Default Suite window.
 
 ![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
-
-If you also run **mvn verify -Dtest=CatalogEndpointTest** the test will fail with the following error message:
-
-`Failed tests:   test_retriving_one_proudct(com.redhat.coolstore.service.CatalogEndpointTest): expected:<[9999]> but was:<[-1]>`
 
 So since even if our inventory service fails we are still returning inventory quantity -1. The test fails because we are expecting the quantity to be 9999.
 
@@ -825,7 +809,7 @@ public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
 ));
 ~~~
 
-Make sure the test works again by running `mvn verify -Dtest=CatalogEndpointTest`
+Make sure the test works again by re-running the `CatalogEndpointTest` JUnit Test.
 
 ####12. Slow running services
 
@@ -843,7 +827,7 @@ hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
 
 Open _src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java_ and un-comment the **.andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")**
 
-Now you can run the _CatalogEndpointTest_ and verify that it works via **Run Junit Test**:
+Now you can run the _CatalogEndpointTest_ and verify that it **fails** via **Run Junit Test**:
 
 ![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
 
@@ -851,13 +835,7 @@ The test _should fail_ and you should see red color `test_retriving_one_proudct`
 
 ![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
-If you also run **mvn verify -Dtest=CatalogEndpointTest** the test will fail with the following error message:
-
-`Failed tests:   test_retriving_one_proudct(com.redhat.coolstore.service.CatalogEndpointTest): expected:<[9999]> but was:<[-1]>`
-
-This shows that the timeout works nicely. However, since we want our test to be successful **you should now comment out `.andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")`** again and then verify that the test works by executing:
-
-`mvn verify -Dtest=CatalogEndpointTest`
+This shows that the timeout works nicely. However, since we want our test to be successful **you should now comment out `.andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")`** again and then verify that the test works by re-running the JUnit test.
 
 ####Congratulations!
 You have now successfully executed the fourth step in this lab.
@@ -999,7 +977,7 @@ And then start and watch the build, which will take about a minute to complete:
 
 `oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow`
 
-Once the build is done, we'll deploy it as an OpenShift application and override the Postgres URL to specify our production Postgres credentials:
+Once the build is done, we'll deploy it as an OpenShift application:
 
 `oc new-app catalog-springboot`
 
@@ -1025,6 +1003,8 @@ The expected result data is here:
 
 `{"itemId":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99,"quantity":736}`
 
+> **NOTE** if you do not get the expected output, make sure you replaced `userXX` in the `application-default.properties` file! If you forgot to do this, go back and make the change and re-build using the previous `mvn` command and re-deploy to OpenShift with the previous `oc start-build` command.
+
 So now **Catalog** service is deployed to OpenShift. You can also see it in the Project Status in the OpenShift Console
 with running in 1 pod, along with the Postgres database pod.
 
@@ -1034,7 +1014,7 @@ with running in 1 pod, along with the Postgres database pod.
 
 This sample project includes a simple UI that allows you to access the Inventory API. This is the same
 UI that you previously accessed outside of OpenShift which shows the CoolStore inventory. Click on the
-route URL at **Routes** in [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} to access the sample UI.
+route URL at **Networking > Routes** in [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} to access the sample UI.
 
 > You can also access the application through the link on Resources tab in the Project Status page.
 
@@ -1085,19 +1065,13 @@ public class CORSProvider implements Feature {
 }
 ~~~
 
-Repackage the inventory application via clicking on **Package for OpenShift** in Commands Palette:
+Repackage the **inventory** application via clicking on **Package for OpenShift** in Commands Palette:
 
 ![codeready-workspace-maven]({% image_path quarkus-dev-run-packageforOcp.png %})
 
-Or you can run a maven plugin command directly in Terminal:
+Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
 
 `cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
-
-`mvn clean package -DskipTests -Dquarkus.profile=prod`
-
-> NOTE: You should **SKIP** the Unit test because you don't have PostgreSQL database in local environment.
-
-Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
 
 `oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n userXX-inventory`
 
@@ -1132,7 +1106,7 @@ Let's update the catalog endpoint in monolith application. Copy the route URL of
 
 `echo "http://$(oc get route -n userXX-catalog | grep catalog | awk '{print $2}')"`
 
-Open *catalog.js* in _src/main/webapp/app/services_ of **monolith** project to add the above URL as below:
+In the **monolith** project, open `catalog.js` in `src/main/webapp/app/services` and add a line as shown in the image to define the value of `baseUrl`.
 
 `baseUrl="YOUR_CATALOG_ROUTE_URL/services/products";`
 
@@ -1152,15 +1126,17 @@ Restart and watch the build, which will take about a minute to complete. Replace
 
 `oc start-build coolstore --from-file=deployments/ROOT.war --follow -n userXX-coolstore-dev`
 
-Once the build is done, the coolstore pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
+Once the build is done, the coolstore pod will be deployed automatically via DeploymentConfig Trigger in OpenShift. Ensure it's rolled out:
+
+`oc rollout status -w dc/coolstore -n userXX-coolstore-dev` (replace `userXX` with your username)
 
 ####20. Test the UI
 
 ---
 
-Open the monolith UI at `OpenShift Web Console`
+Open the monolith UI at by selecting the `userXX-coolstore-dev` project in the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}, navigate to _Networking > Routes_ and click on the link to the monolith UI.
 
-and observe that the new catalog is being used along with the monolith:
+Observe that the new catalog is being used along with the monolith:
 
 ![Greeting]({% image_path coolstore-web.png %})
 

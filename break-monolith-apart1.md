@@ -74,37 +74,13 @@ with a front-end based on Angular so you can play with it from your browser.
 While the code is surprisingly simple, under the hood this is using:
 
  * RESTEasy to expose the REST endpoints
- * Hibernate ORM with Panache to perform the CRUD operations on the database
+ * Hibernate ORM with Panache to perform CRUD operations on the database
  * A PostgreSQL database; see below to run one via Linux Container
+ * Some example `Dockerfile`s to generate new images for JVM and Native mode compilation
 
 `Hibernate ORM` is the de facto JPA implementation and offers you the full breadth of an Object Relational Mapper.
 It makes complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with
 Panache focuses on making your entities trivial and fun to write in Quarkus.
-
-This project currently contains no code other than web resources in _src/main/resources_ and Dockerfile to build a container that
-runs the Quarkus application in JVM mode as well as native (no JVM) mode in _src/main/docker_:
-
-* Dockerfile in JVM mode
-
-~~~
-FROM fabric8/java-alpine-openjdk8-jre
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV AB_ENABLED=jmx_exporter
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/app.jar
-ENTRYPOINT [ "/deployments/run-java.sh" ]
-~~~
-
-* Dockerfile in Native mode
-
-~~~
-FROM registry.fedoraproject.org/fedora-minimal
-WORKDIR /work/
-COPY target/*-runner /work/application
-RUN chmod 775 /work
-EXPOSE 8080
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
-~~~
 
 Now let's write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
 
@@ -136,7 +112,7 @@ With our skeleton project in place, let's get to work defining the business logi
 
 The first step is to define the model (entity) of an Inventory object. Since Quarkus uses Hibernate ORM Panache, we can re-use the same model definition from our monolithic application - no need to re-write or re-architect!
 
-Open up an **Inventory** class in _com.redhat.coolstore_ package with the following code (identical to the monolith code):
+Open up the empty **Inventory.java** file in _com.redhat.coolstore_ package and paste the following code into it (identical to the monolith code):
 
 ~~~java
 package com.redhat.coolstore;
@@ -176,9 +152,9 @@ This means the entity can be loaded quicker without querying the database for fr
 
 ---
 
-In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into various places (like a RESTful resource endpoint) in the future. This is the same approach that our monolith uses, so we can re-use this idea again. Open up an **InventoryResource** class in the _com.redhat.coolstore_ package.
+In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into various places (like a RESTful resource endpoint) in the future. This is the same approach that our monolith uses, so we can re-use this idea again. Open up the empty **InventoryResource.java** class in the _com.redhat.coolstore_ package.
 
-Replace the following codes with the exsiting entire codes:
+Add this code to it:
 
 ~~~java
 package com.redhat.coolstore;
@@ -238,15 +214,15 @@ public class InventoryResource {
 
 The above REST services defines two endpoints:
 
-* **/inventory** that is accessible via _HTTP GET_ which will return all known product Inventory entities as JSON
+* `/inventory` that is accessible via _HTTP GET_ which will return all known product Inventory entities as JSON
 
-* **/inventory/<itemId>** that is accessible via _HTTP GET_ at for example _/inventory/329199_ with the last path parameter being the location which we want to check its inventory status.
+* `/inventory/<itemId>` that is accessible via _HTTP GET_ at for example `/inventory/329199` with the last path parameter being the ID for which we want inventory status.
 
 ####6. Add inventory data
 
 ---
 
-Let's add inventory data to the database so we can test things out. Open up the _src/main/resources/import.sql_ file and
+Let's add inventory data to the database so we can test things out. Open up the `src/main/resources/import.sql` file and
 copy the following SQL statements to **import.sql**:
 
 ~~~sql
@@ -260,7 +236,7 @@ INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hi
 INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444437', 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
 ~~~
 
-In Development, we will configure to use local in-memory H2 database for local testing, as defined in _src/main/resources/application.properties_:
+In Development, we will configure to use local in-memory H2 database for local testing. Add these lines to `src/main/resources/application.properties`:
 
 ~~~
 quarkus.datasource.url=jdbc:h2:file://projects/database.db
@@ -281,9 +257,7 @@ Now we are ready to run the inventory application. Click on **Commands Palette**
 
 ![codeready-workspace-maven]({% image_path quarkus-dev-run-paletter.png %})
 
-You can also use a _maven plugin command_ to run the Quarkus application locally via CodeReady Workspaces Terminal:
-
-`mvn compile quarkus:dev`
+> This simply runs `mvn compile quarkus:dev` for you
 
 You should see a bunch of log output that ends with:
 
@@ -312,14 +286,16 @@ yo","quantity":230}]
 [{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
 ~~~
 
-> `NOTE`: Make sure to stop Quarkus development mode via `Close` terminal. Next, you need to open a new Terminal in CodeReady Workspaces then change the directory once again via `cd` command that you executed previously.
+##### Stop the application
+
+Stop Quarkus development mode by closing the _Build and Run Locally_ Terminal window.
 
 ####8. Add Test Code and create a package
 
 ---
 
 In this step, we will add unit tests so that we can test during `mvn package`.
-Open up the _src/test/java/com/redhat/coolstore/InventoryEndpointTest.java_ file and replace the following code with the below code:
+Open up the `src/test/java/com/redhat/coolstore/InventoryEndpointTest.java` file and replace the following code with the below code:
 
 ~~~java
 package com.redhat.coolstore;
@@ -366,9 +342,9 @@ public class InventoryEndpointTest {
 
 Next we'll build an executable jar then deploy it to **OpenShift** soon. Use the following maven command via CodeReady Workspaces Terminal:
 
-`mvn clean package`
+`cd /projects/cloud-native-workshop-v2m1-labs/inventory`
 
-> NOTE: Make sure to build this mvn command at working directory(i.e `/projects/cloud-native-workshop-v2m1-labs/inventory/`).
+`mvn clean package`
 
 If builds successfully (you will see **BUILD SUCCESS**), continue to the next step to deploy the application to OpenShift.
 
@@ -401,7 +377,9 @@ yo","quantity":230}]
 [{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
 ~~~
 
-> NOTE: Make sure to stop Quarkus app by closing the terminal.
+##### Stop the application
+
+Stop Quarkus development mode by closing the Terminal window in which you ran `java -jar`
 
 You have now successfully created your first microservice using Quarkus and implemented a basic RESTful
 API on top of the Inventory database. Most of the code looks simpler than the monolith, demonstrating how
@@ -463,12 +441,6 @@ Repackage the inventory application via clicking on **Package for OpenShift** in
 
 ![codeready-workspace-maven]({% image_path quarkus-dev-run-packageforOcp.png %})
 
-Or you can run a maven plugin command directly in Terminal:
-
-`mvn clean package -DskipTests`
-
-> NOTE: You should **SKIP** the Unit test because you don't have PostgreSQL database in local environment.
-
 In OpenShift, click on the name of the **userXX-inventory** project:
 
 ![create_new]({% image_path create_new_inventory.png %})
@@ -485,6 +457,8 @@ Our production inventory microservice will use an external database (PostgreSQL)
 First, deploy a new instance of PostgreSQL by executing the following commands via CodeReady Workspaces Terminal:
 
 `oc project userXX-inventory`
+
+Then run:
 
 ~~~shell
 oc new-app -e POSTGRESQL_USER=inventory \
@@ -588,7 +562,9 @@ We will add a Qurakus extension to the Inventory application for using **smallry
 Copy the following commands to import the smallrye-health extension that implements the MicroProfile Health specification
 via CodeReady Workspaces Terminal:
 
-Go to `inventory` directory:
+Go to `inventory` directory and add the extension:
+
+`cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
 `mvn quarkus:add-extension -Dextensions="health"`
 
@@ -596,13 +572,13 @@ Go to `inventory` directory:
 
 ---
 
-When you import the _smallrye-health extension_, the _/health_ endpoint is automatically exposed directly that can be used to run the health check procedures.
+When you import the _smallrye-health extension_, the `/health` endpoint is automatically exposed directly that can be used to run the health check procedures.
 
  * Run the Inventory application via `mvn compile quarkus:dev` or click on **Build and Run Locally** in Commands Palette:
 
 ![codeready-workspace-maven]({% image_path quarkus-dev-run-paletter.png %})
 
- * Access the `health check` endpoint using `curl http://localhost:8080/health` and the result looks like:
+ * In a separate Terminal, access the `health check` endpoint using `curl http://localhost:8080/health` and the result should look like:
 
 ~~~json
 {
@@ -703,11 +679,11 @@ And wait for the result as below:
 
 `replication controller "inventory-quarkus-XX" successfully rolled out`
 
-> NOTE: The # of deployment(i.e. `inventory-quarkus-2`) might be different in your project. Be sure if the sequence is increased(i.e. #1 -> #2).
-
 Let's set _readiness probe_ in OpenShift using _InventoryHealthCheck_. Run the follwing _oc set probe_ command in CodeReady Workspaces:
 
 `oc set probe dc/inventory-quarkus --readiness --get-url=http://:8080/health/ready`
+
+This will instruct OpenShift to use the `/health/ready` endpoint to continually check the health of the app.
 
 Back on the OpenShift console, Navigate to _Deployment Configs_ on the left menu then click on _inventory-quarkus_:
 
