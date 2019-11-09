@@ -262,9 +262,12 @@ Now we are ready to run the inventory application. Click on **Commands Palette**
 You should see a bunch of log output that ends with:
 
 ~~~
-2019-09-26 15:55:38,447 INFO  [io.quarkus] (main) Quarkus 0.22.0 started in 2.905s. Listening on: http://0.0.0.0:8080
-2019-09-26 15:55:38,447 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
-2019-09-26 15:55:38,447 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+2019-11-08 16:09:49,243 INFO  [io.qua.dep.QuarkusAugmentor] (main) Beginning quarkus augmentation
+2019-11-08 16:09:50,349 INFO  [io.qua.dep.QuarkusAugmentor] (main) Quarkus augmentation completed in 1106ms
+2019-11-08 16:09:51,556 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
+2019-11-08 16:09:51,820 INFO  [io.quarkus] (main) Quarkus 1.0.0.CR1 started in 2.814s. Listening on: http://0.0.0.0:8080
+2019-11-08 16:09:51,822 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
+2019-11-08 16:09:51,822 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 ~~~
 
 Open a **new** CodeReady Workspaces Terminal and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
@@ -353,9 +356,10 @@ You can also run the Uber.jar to make sure if the inventory works. Use the follo
 `java -jar target/inventory-1.0-SNAPSHOT-runner.jar`
 
 ~~~
-2019-09-26 16:16:08,977 INFO  [io.quarkus] (main) Quarkus 0.23.1 started in 1.806s. Listening on: http://0.0.0.0:8080
-2019-09-26 16:16:08,989 INFO  [io.quarkus] (main) Profile prod activated.
-2019-09-26 16:16:08,989 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+019-11-08 16:14:42,393 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
+2019-11-08 16:14:42,709 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus 1.0.0.CR1) started in 1.743s. Listening on: http://0.0.0.0:8080
+2019-11-08 16:14:42,712 INFO  [io.quarkus] (main) Profile prod activated.
+2019-11-08 16:14:42,712 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 ~~~
 
 Open a new CodeReady Workspaces Terminal and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
@@ -530,17 +534,10 @@ route URL at `Networking > Routes` to access the sample UI.
 
 > NOTE: If you get a '404 Not Found' error, just reload the page a few times until the Inventory UI appears. This is due to a lack of health check which you are about to fix!
 
-You can also access the application through the link on the `Project Status` page.
-
-![Overview link]({% image_path inventory-route-link-status.png %})
-
 The UI will refresh the inventory table every 2 seconds, as before.
 
-In the next steps you will enhance OpenShift's ability to manage the application lifecycle by implementing
-a _health check pattern_. By default, without health checks (or health _probes_) OpenShift considers services
-to be ready to accept service requests even before the application is truly ready or if the application is hung
-or otherwise unable to service requests. OpenShift must be _taught_ how to recognize that our app is alive and ready
-to accept requests.
+In the next steps you will enhance OpenShift's ability to manage the application lifecycle by implementing a _health check pattern_. By default, without health checks (or health _probes_) OpenShift considers services to be ready to accept service requests even before the application is truly ready or if the application is hung
+or otherwise unable to service requests. OpenShift must be _taught_ how to recognize that our app is alive and ready to accept requests.
 
 ##### What is MicroProfile Health?
 
@@ -790,6 +787,16 @@ After too many healthcheck probe failures, OpenShift will forcibly kill the pod 
 Return to the same sample app UI (without reloading the page) and notice that the UI has automatically re-connected to the new service and successfully accessed the inventory once again:
 
 ![Greeting]({% image_path inventory.png %})
+
+####19. Viewing the topology of Inventory application
+
+---
+
+The **Topology** view in the _Developer_ perspective of the web console provides a visual representation of all the applications within a project, their build status, and the components and services associated with them.
+
+You can navigate to the **Topology view** using the left navigation panel in the Developer perspective. After you create an application, you are directed automatically to the Topology view where you can see the status of the application Pods, quickly access the application on a public URL, access the source code to modify it, and see the status of your last build. You can zoom in and out to see more details for a particular application.
+
+![topology]({% image_path inventory_topology.png %})
 
 #### Summary
 

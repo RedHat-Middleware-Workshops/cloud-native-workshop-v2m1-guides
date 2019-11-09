@@ -1149,6 +1149,16 @@ as it has been removed in our new catalog microservice.
 You have now successfully begun to _strangle_ the monolith. Part of the monolith's functionality (Inventory and Catalog) are
 now implemented as microservices.
 
+####21. Viewing the topology of Catalog application
+
+---
+
+The **Topology** view in the _Developer_ perspective of the web console provides a visual representation of all the applications within a project, their build status, and the components and services associated with them.
+
+You can navigate to the **Topology view** using the left navigation panel in the Developer perspective. After you create an application, you are directed automatically to the Topology view where you can see the status of the application Pods, quickly access the application on a public URL, access the source code to modify it, and see the status of your last build. You can zoom in and out to see more details for a particular application.
+
+![topology]({% image_path catalog_topology.png %})
+
 ##### Summary
 
 ---

@@ -482,7 +482,7 @@ Click `Create Project`, fill in the fields, and click `Create`:
 
 ![create_dialog]({% image_path create_dialog.png %}){:width="700px"}
 
-This will take you to the project status. There's nothing there yet, but that's about to change.
+This will take you to the project overview. There's nothing there yet, but that's about to change.
 
 ![create_new]({% image_path create_new.png %})
 
@@ -510,8 +510,6 @@ You have access to the following projects and can switch between them with 'oc p
     istio-system
     user0-bookinfo
     user0-catalog
-    user0-cloudnative-pipeline
-    user0-cloudnativeapps
     user0-inventory
 
 Using project "default".
@@ -528,16 +526,11 @@ And finally deploy template:
 
 This will deploy both a PostgreSQL database and JBoss EAP, but it will not start a build for our application.
 
-Then open up the `userXX-coolstore-dev` project status page at [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}
+Then open up the `userXX-coolstore-dev` Deployment Configs page at [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}
 
 and verify the monolith template items are created:
 
 ![no_deployments]({% image_path no_deployments.png %})
-
-You can see the components being deployed on the
-Project Status, but notice the `No running pod for Coolstore`. When you click on `coolstore DC`(Deployment Configs), you will see overview and resources.
-
-![no_deployments]({% image_path dc_overview.png %})
 
 You have not yet deployed the container image built in previous steps, but you'll do that next.
 
@@ -597,6 +590,16 @@ Test the application by clicking on the Route link at `Networking > Routes` on t
 Now you are using the same application that we built locally on OpenShift. That wasn't too hard right?
 
 ![coolstore_web]({% image_path coolstore_web.png %})
+
+####17. Viewing the topology of Coolstore application
+
+---
+
+The **Topology** view in the _Developer_ perspective of the web console provides a visual representation of all the applications within a project, their build status, and the components and services associated with them.
+
+You can navigate to the **Topology view** using the left navigation panel in the Developer perspective. After you create an application, you are directed automatically to the Topology view where you can see the status of the application Pods, quickly access the application on a public URL, access the source code to modify it, and see the status of your last build. You can zoom in and out to see more details for a particular application.
+
+![topology]({% image_path coolstore_dev_topology.png %})
 
 In the next step you'll explore more of the developer features of OpenShift in preparation for moving the
 monolith to a microservices architecture later on. Let's go!
