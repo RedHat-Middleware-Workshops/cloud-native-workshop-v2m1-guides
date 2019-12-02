@@ -582,7 +582,7 @@ When you import the _smallrye-health extension_, the `/health` endpoint is autom
 
 ~~~json
 {
-      "outcome": "UP",
+      "status": "UP",
      "checks": [
      ]
 }
@@ -590,10 +590,10 @@ When you import the _smallrye-health extension_, the `/health` endpoint is autom
 
 The health REST enpoint returns a simple JSON object with two fields:
 
- * **outcome** - the overall result of all the health check procedures
+ * **status** - the overall result of all the health check procedures
  * **checks** - an array of individual checks
 
-The general _outcome_ of the health check is computed as a logical AND of all the declared health check procedures.
+The general _status_ of the health check is computed as a logical AND of all the declared health check procedures.
 The _checks_ array is empty as we have not specified any health check procedure yet so let’s define some.
 
 ####15. Create your first health check
