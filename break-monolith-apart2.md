@@ -98,12 +98,12 @@ To add Apache Tomcat to our project all we have to do is to add the following li
         </dependency>
 ~~~
 
-We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the `<!-- TODO: Add data jpa dependency here -->` marker:
+We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the `<!-- TODO: Add jdbc dependency here -->` marker:
 
 ~~~xml
         <dependency>
           <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-data-jpa</artifactId>
+          <artifactId>spring-boot-starter-data-jdbc</artifactId>
         </dependency>
 ~~~
 
@@ -112,20 +112,20 @@ We will go ahead and add a bunch of other dependencies while we have the pom.xml
 
 ~~~xml
         <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-actuator</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
         <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-starter-feign</artifactId>
-          <version>1.4.7.RELEASE</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
         <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-starter-hystrix</artifactId>
-          <version>1.4.7.RELEASE</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
         </dependency>
 ~~~
 
@@ -168,7 +168,7 @@ import com.redhat.coolstore.model.Product;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest()
+@SpringBootTest
 public class ProductRepositoryTest {
 
     //TODO: Insert Catalog Component here
@@ -186,7 +186,7 @@ and manages their lifecycle (much like Java EE and it's CDI feature). Add these 
 
 ~~~java
     @Autowired
-    ProductRepository repository;
+    private ProductRepository repository;
 ~~~
 
 The _ProductRepository_ should provide a method called _findById(String id)_ that returns a product and collect that from the database. We test this by querying for a product with id "444434" which should have name **Pebble Smart Watch**. The pre-loaded data comes from the _src/main/resources/schema.sql_ file.
@@ -210,8 +210,9 @@ Again, add these at the `<!-- TODO: Insert test_readAll here -->` marker:
     @Test
     public void test_readAll() {
         List<Product> productList = repository.readAll();
-        assertThat(productList).isNotNull();
-        assertThat(productList).isNotEmpty();
+        assertThat(productList)
+          .isNotNull()
+          .isNotEmpty();
         List<String> names = productList.stream().map(Product::getName).collect(Collectors.toList());
         assertThat(names).contains("Red Fedora","Forge Laptop Sticker","Oculus Rift");
     }
@@ -275,7 +276,7 @@ Add these at the `<!-- TODO: Create a method for returning all products -->` mar
 
 ~~~java
     public List<Product> readAll() {
-        return jdbcTemplate.query("SELECT * FROM catalog", rowMapper);
+        return this.jdbcTemplate.query("SELECT * FROM catalog", rowMapper);
     }
 ~~~
 
@@ -283,7 +284,7 @@ The _ProductRepositoryTest_ also used another method called _findById(String id)
 
 ~~~java
     public Product findById(String id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = '" + id + "'", rowMapper);
+        return this.jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = '" + id + "'", rowMapper);
     }
 ~~~
 
@@ -459,31 +460,26 @@ package com.redhat.coolstore.service;
 import java.util.List;
 
 import com.redhat.coolstore.model.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/services")
 public class CatalogEndpoint {
+    private final CatalogService catalogService;
 
-    @Autowired
-    private CatalogService catalogService;
+    public CatalogEndpoint(CatalogService catalogService) {
+      this.catalogService = catalogService;
+    }
 
-    @ResponseBody
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> readAll() {
-        return new ResponseEntity<List<Product>>(catalogService.readAll(),HttpStatus.OK);
+    public List<Product> readAll() {
+      return this.catalogService.readAll();
     }
 
-    @ResponseBody
     @GetMapping("/product/{id}")
-    public ResponseEntity<Product> read(@PathVariable("id") String id) {
-        return new ResponseEntity<Product>(catalogService.read(id),HttpStatus.OK);
+    public Product read(@PathVariable("id") String id) {
+      return this.catalogService.read(id);
     }
-
 }
 ~~~
 
@@ -614,7 +610,7 @@ We will soon use the `// commented-out` lines, so keep them in there!
 
 Since we now have a nice way to test our service-to-service interaction we can now create the client that calls the Inventory. Netflix has provided some nice extensions to the Spring Framework that are mostly captured in the Spring Cloud project, however Spring Cloud is mainly focused on Pivotal Cloud Foundry and because of that Red Hat and others have contributed Spring Cloud Kubernetes to the Spring Cloud project, which enables the same functionallity for Kubernetes based platforms like OpenShift.
 
-The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circute Break calls that doesn't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface that details which parameters and return type we expect, annotate it with    `@RequestMapping` and provide some details and then annotate the interface with `@Feign` and provide it with a name.
+The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circuit Break calls that don't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface that details which parameters and return type we expect, annotate it with    `@RequestMapping` and provide some details and then annotate the interface with `@Feign` and provide it with a name.
 
 Create the `InventoryClient` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
 
@@ -624,9 +620,9 @@ Add the following code to the file:
 package com.redhat.coolstore.client;
 
 import feign.hystrix.FallbackFactory;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -664,7 +660,7 @@ And autowire (e.g. inject) the client into it by inserting this at the `//TODO: 
 
 ~~~java
     @Autowired
-    InventoryClient inventoryClient;
+    private InventoryClient inventoryClient;
 ~~~
 
 Next, update the _read(String id)_ method at the comment `//TODO: Update the quantity for the product by calling the Inventory service` add the following:
@@ -686,13 +682,13 @@ import com.redhat.coolstore.client.InventoryClient;
 Also in the _readAll()_ method replace the comment `//TODO: Update the quantity for the products by calling the Inventory service` with the following:
 
 ~~~java
-        for ( Product p : productList ) {
-            JSONArray jsonArray = new JSONArray(inventoryClient.getInventoryStatus(p.getItemId()));
-            List<String> quantity = IntStream.range(0, jsonArray.length())
-                .mapToObj(index -> ((JSONObject)jsonArray.get(index))
-                .optString("quantity")).collect(Collectors.toList());
-            p.setQuantity(Integer.parseInt(quantity.get(0)));
-        }
+        productList.forEach(p -> {
+          JSONArray jsonArray = new JSONArray(this.inventoryClient.getInventoryStatus(p.getItemId()));
+          List<String> quantity = IntStream.range(0, jsonArray.length())
+            .mapToObj(index -> ((JSONObject)jsonArray.get(index))
+            .optString("quantity")).collect(Collectors.toList());
+          p.setQuantity(Integer.parseInt(quantity.get(0)));
+        });
 ~~~
 
 > NOTE: Class `JSONArray` is an ordered sequence of values. Its external text form is a string wrapped in square brackets with commas separating the values. The internal form is an object having get and opt methods for accessing the values by index, and element methods for adding or replacing values.
@@ -730,16 +726,11 @@ And paste this into it at the `//TODO: Add Fallback factory here` marker:
 ~~~java
     //TODO: Add Callback Factory Component
     @Component
-    static class InventoryClientFallbackFactory implements FallbackFactory<InventoryClient> {
-        @Override
-        public InventoryClient create(Throwable cause) {
-            return new InventoryClient() {
-                @Override
-                public String getInventoryStatus(@PathVariable("itemId") String itemId) {
-                    return "[{'quantity':-1}]";
-                }
-            };
-        }
+    class InventoryClientFallbackFactory implements FallbackFactory<InventoryClient> {
+      @Override
+      public InventoryClient create(Throwable cause) {
+        return itemId -> "[{'quantity':-1}]";
+      }
     }
 ~~~
 
@@ -938,7 +929,7 @@ Comment the local variables and add a remote variables. You can replace the whol
 
 #TODO: Configure netflix libraries
 #inventory.ribbon.listOfServers=inventory:8080
-#feign.hystrix.enabled=true
+feign.hystrix.enabled=true
 
 #TODO: Set timeout to for inventory to 500ms
 hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
@@ -1080,7 +1071,7 @@ Once the build is done, the inventory pod will be deployed automatically via Dep
 Open **CatalogEndpoint** class in _src/main/java/com/redhat/coolstore/service_ of **catalog** project to allow restricted resources on a _product_ page of the monolith application. Add *@CrossOrigin* annotation on _CatalogEndpoint_ class:
 
 ~~~java
-@Controller
+@RestController
 @CrossOrigin
 @RequestMapping("/services")
 ~~~
