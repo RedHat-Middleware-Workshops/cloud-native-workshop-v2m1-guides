@@ -39,7 +39,7 @@ Other possible solutions would be to use a microservices gateway or combine serv
 
 Run the following commands to set up your environment for this lab and start in the right directory:
 
-In the project explorer, right-click on _catalog_ and then change a directory to catalog path on Terminal.
+In the project explorer, expand the _catalog_ project.
 
 ![catalog-setup]({% image_path catalog-project.png %}){:width="500px"}
 
@@ -686,13 +686,13 @@ import com.redhat.coolstore.client.InventoryClient;
 Also in the _readAll()_ method replace the comment `//TODO: Update the quantity for the products by calling the Inventory service` with the following:
 
 ~~~java
-        for ( Product p : productList ) {
+        productList.forEach(p -> {
             JSONArray jsonArray = new JSONArray(inventoryClient.getInventoryStatus(p.getItemId()));
             List<String> quantity = IntStream.range(0, jsonArray.length())
                 .mapToObj(index -> ((JSONObject)jsonArray.get(index))
                 .optString("quantity")).collect(Collectors.toList());
             p.setQuantity(Integer.parseInt(quantity.get(0)));
-        }
+        });
 ~~~
 
 > NOTE: Class `JSONArray` is an ordered sequence of values. Its external text form is a string wrapped in square brackets with commas separating the values. The internal form is an object having get and opt methods for accessing the values by index, and element methods for adding or replacing values.
@@ -1095,8 +1095,6 @@ The build and deploy may take a minute or two. Wait for it to complete. You shou
 end of the build output.
 
 Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
-
-`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
 
 `oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow -n userXX-catalog`
 
