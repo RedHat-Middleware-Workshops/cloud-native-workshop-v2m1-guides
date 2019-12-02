@@ -644,7 +644,7 @@ Access the _Readiness health check_ endpoint again using _curl_ and the result l
 
 ~~~json
 {
-   "outcome": "UP",
+   "status": "UP",
     "checks": [
         {
             "name": "Success of Inventory Health Check!!!",
@@ -715,7 +715,7 @@ You should see a JSON response like:
 
 ~~~java
 {
-    "outcome": "UP",
+    "status": "UP",
     "checks": [
         {
             "name": "Success of Inventory Health Check!!!",
