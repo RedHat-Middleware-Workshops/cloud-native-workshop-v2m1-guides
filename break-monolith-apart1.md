@@ -58,8 +58,6 @@ HTTP microservices, reactive applications, message-driven microservices and serv
 
 ---
 
-Run the following commands to set up your environment for this lab and start in the right directory:
-
 In the project explorer, expand the **inventory**  project.
 
 ![inventory_setup]({% image_path codeready-workspace-inventory-project.png %}){:width="500px"}
@@ -140,7 +138,7 @@ public class Inventory extends PanacheEntity {
 
 By extending `PanacheEntity` in your entities, you will get an ID field that is auto-generated. If you require a custom ID strategy, you can extend `PanacheEntityBase` instead and handle the ID yourself.
 
-By using Use public fields, there is no need for functionless getters and setters (those that simply get or set the field). You simply refer to fields like Inventory.location without the need to write a Inventory.geLocation() implementation. Panache will auto-generate any getters and setters you do not write, or you can develop your own getters/setters that do more than get/set, which will be called when the field is accessed directly.
+By using public fields, there is no need for functionless getters and setters (those that simply get or set the field). You simply refer to fields like `Inventory.location` without the need to write a `Inventory.getLocation()` implementation. Panache will auto-generate any getters and setters you do not write, or you can develop your own getters/setters that do more than get/set, which will be called when the field is accessed directly.
 
 The `PanacheEntity` superclass comes with lots of super useful static methods and you can add your own in your derived entity class, and much like traditional object-oriented programming it's natural and recommended to place custom queries as close to the entity as possible, ideally within the entity definition itself.
 Users can just start using your entity Inventory by typing Inventory, and getting completion for all the operations in a single place.
@@ -588,7 +586,7 @@ When you import the _smallrye-health extension_, the `/health` endpoint is autom
 }
 ~~~
 
-The health REST enpoint returns a simple JSON object with two fields:
+The health REST endpoint returns a simple JSON object with two fields:
 
  * **status** - the overall result of all the health check procedures
  * **checks** - an array of individual checks
