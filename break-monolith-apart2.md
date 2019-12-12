@@ -79,6 +79,67 @@ Notice that we are not using the default BOM (Bill of material) that Spring Boot
 
 We use this bill of material to make sure that we are using the version of for example Apache Tomcat that Red Hat supports.
 
+####2a. Add Red Hat Maven repositories
+
+To be able to pull in Red Hat artifacts, add the following repository definitions to your `pom.xml` just after the `</properties>` section near the top:
+
+~~~xml
+      <repositories>
+        <repository>
+          <id>redhat-ga-repository</id>
+          <url>https://maven.repository.redhat.com/ga/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+        <repository>
+          <id>redhat-ea-repository</id>
+          <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+        <repository>
+          <id>jboss-eap-repository</id>
+          <url>https://maven.repository.redhat.com/techpreview/all</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>redhat-ga-plugin-repository</id>
+          <url>https://maven.repository.redhat.com/ga/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+          <id>redhat-ea-plugin-repository</id>
+          <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+~~~
+
 ####3. Adding web (Apache Tomcat) to the application
 
 ---
