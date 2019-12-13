@@ -33,7 +33,7 @@ monitoring applications are then handled by the container platform instead of an
 Another thing you will learn in this lab is one of the techniques to aggregate services using service-to-service calls.
 Other possible solutions would be to use a microservices gateway or combine services using client-side logic.
 
-####1. Setup a Catalog proejct
+####1. Setup a Catalog project
 
 ---
 
