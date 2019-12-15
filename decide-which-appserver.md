@@ -49,7 +49,6 @@ Select `Server Path` to analyze a monolithic application:
  * Server Path: `/opt/apps`
 
 ![RHAMT Add App]({% image_path rhamt_add_monolith_app1.png %})
-![RHAMT Add App]({% image_path rhamt_add_monolith_app.png %})
 
 ####4. Select “Migration to JBoss EAP 7” in Transformation Path
 
@@ -64,6 +63,8 @@ Choose the `com` and `weblogic` checkboxes to include these packages during anal
  `Tip`: This page may look just like an OpenShift console page, its not, its the Red Hat Application Migration Toolkit console - both project use [PatternFly](https://www.patternfly.org){:target="_blank"} for a consistent web look and feel.
 
 ![RHAMT Add App]({% image_path rhamt_check_monolith_app.png %})
+
+ * Click `Save & Run`
 
 ####5. Go to the Active Analysis page and click on the latest when it’s completed
 

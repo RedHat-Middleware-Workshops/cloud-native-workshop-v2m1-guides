@@ -262,12 +262,10 @@ Now we are ready to run the inventory application. Click on **Commands Palette**
 You should see a bunch of log output that ends with:
 
 ~~~
-2019-11-08 16:09:49,243 INFO  [io.qua.dep.QuarkusAugmentor] (main) Beginning quarkus augmentation
-2019-11-08 16:09:50,349 INFO  [io.qua.dep.QuarkusAugmentor] (main) Quarkus augmentation completed in 1106ms
-2019-11-08 16:09:51,556 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
-2019-11-08 16:09:51,820 INFO  [io.quarkus] (main) Quarkus 1.0.0.CR1 started in 2.814s. Listening on: http://0.0.0.0:8080
-2019-11-08 16:09:51,822 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
-2019-11-08 16:09:51,822 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+2019-12-01 10:40:03,679 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
+2019-12-01 10:40:03,944 INFO  [io.quarkus] (main) Quarkus 1.0.1.Final started in 2.969s. Listening on: http://0.0.0.0:8080
+2019-12-01 10:40:03,946 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
+2019-12-01 10:40:03,946 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 ~~~
 
 Open a **new** CodeReady Workspaces Terminal and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
@@ -356,10 +354,10 @@ You can also run the Uber.jar to make sure if the inventory works. Use the follo
 `java -jar target/inventory-1.0-SNAPSHOT-runner.jar`
 
 ~~~
-019-11-08 16:14:42,393 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
-2019-11-08 16:14:42,709 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus 1.0.0.CR1) started in 1.743s. Listening on: http://0.0.0.0:8080
-2019-11-08 16:14:42,712 INFO  [io.quarkus] (main) Profile prod activated.
-2019-11-08 16:14:42,712 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+2019-12-01 10:43:44,963 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
+2019-12-01 10:43:45,297 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus 1.0.1.Final) started in 1.782s. Listening on: http://0.0.0.0:8080
+2019-12-01 10:43:45,299 INFO  [io.quarkus] (main) Profile prod activated.
+2019-12-01 10:43:45,299 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
 ~~~
 
 Open a new CodeReady Workspaces Terminal and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
@@ -579,9 +577,13 @@ When you import the _smallrye-health extension_, the `/health` endpoint is autom
 
 ~~~json
 {
-      "outcome": "UP",
-     "checks": [
-     ]
+    "status": "UP",
+    "checks": [
+        {
+            "name": "Database connection(s) health check",
+            "status": "UP"
+        }
+    ]
 }
 ~~~
 
@@ -641,11 +643,15 @@ Access the _Readiness health check_ endpoint again using _curl_ and the result l
 
 ~~~json
 {
-   "outcome": "UP",
+    "status": "UP",
     "checks": [
         {
             "name": "Success of Inventory Health Check!!!",
-            "state": "UP"
+            "status": "UP"
+        },
+        {
+            "name": "Database connection(s) health check",
+            "status": "UP"
         }
     ]
 }
@@ -712,11 +718,15 @@ You should see a JSON response like:
 
 ~~~java
 {
-    "outcome": "UP",
+    "status": "UP",
     "checks": [
         {
+            "name": "Database connection(s) health check",
+            "status": "UP"
+        },
+        {
             "name": "Success of Inventory Health Check!!!",
-          "state": "UP"
+            "status": "UP"
         }
     ]
 }

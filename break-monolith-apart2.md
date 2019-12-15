@@ -33,13 +33,13 @@ monitoring applications are then handled by the container platform instead of an
 Another thing you will learn in this lab is one of the techniques to aggregate services using service-to-service calls.
 Other possible solutions would be to use a microservices gateway or combine services using client-side logic.
 
-####1. Setup a Catalog proejct
+####1. Setup a Catalog project
 
 ---
 
 Run the following commands to set up your environment for this lab and start in the right directory:
 
-In the project explorer, right-click on _catalog_ and then change a directory to catalog path on Terminal.
+In the project explorer, expand the _catalog_ project.
 
 ![catalog-setup]({% image_path catalog-project.png %}){:width="500px"}
 
@@ -64,17 +64,17 @@ As you review the content, you will notice that there are a lot of _TODO_ commen
 Notice that we are not using the default BOM (Bill of material) that Spring Boot projects typically use. Instead, we are using a BOM provided by Red Hat as part of the [Snowdrop](http://snowdrop.me/){:target="_blank"} project.
 
 ~~~xml
-<dependencyManagement>
-<dependencies>
-  <dependency>
-    <groupId>me.snowdrop</groupId>
-    <artifactId>spring-boot-bom</artifactId>
-    <version>${spring-boot.bom.version}</version>
-    <type>pom</type>
-    <scope>import</scope>
-  </dependency>
-</dependencies>
-</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>me.snowdrop</groupId>
+                <artifactId>spring-boot-bom</artifactId>
+                <version>2.1.6.SP3-redhat-00001</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 ~~~
 
 We use this bill of material to make sure that we are using the version of for example Apache Tomcat that Red Hat supports.
@@ -98,34 +98,36 @@ To add Apache Tomcat to our project all we have to do is to add the following li
         </dependency>
 ~~~
 
-We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the `<!-- TODO: Add data jpa dependency here -->` marker:
+We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the `<!-- TODO: Add jdbc dependency here -->` marker:
 
 ~~~xml
-        <dependency>
+        endency>
           <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-data-jpa</artifactId>
+          <artifactId>spring-boot-starter-data-jdbc</artifactId>
         </dependency>
 ~~~
 
-We will go ahead and add a bunch of other dependencies while we have the pom.xml open. These will be explained later. Add these at the
-`<!-- TODO: Add actuator, feign and hystrix dependency here -->` marker:
+We will go ahead and add a bunch of other dependencies while we have the pom.xml open. These will be explained later. Add these at the `<!-- TODO: Add actuator, feign and hystrix dependency here -->` marker:
 
 ~~~xml
-        <dependency>
+       <dependency>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <dependency>
           <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-starter-feign</artifactId>
-          <version>1.4.7.RELEASE</version>
+          <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
         <dependency>
           <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-starter-hystrix</artifactId>
-          <version>1.4.7.RELEASE</version>
+          <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
         </dependency>
 ~~~
 
@@ -168,7 +170,7 @@ import com.redhat.coolstore.model.Product;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest()
+@SpringBootTest
 public class ProductRepositoryTest {
 
     //TODO: Insert Catalog Component here
@@ -186,7 +188,7 @@ and manages their lifecycle (much like Java EE and it's CDI feature). Add these 
 
 ~~~java
     @Autowired
-    ProductRepository repository;
+    private ProductRepository repository;
 ~~~
 
 The _ProductRepository_ should provide a method called _findById(String id)_ that returns a product and collect that from the database. We test this by querying for a product with id "444434" which should have name **Pebble Smart Watch**. The pre-loaded data comes from the _src/main/resources/schema.sql_ file.
@@ -210,8 +212,9 @@ Again, add these at the `<!-- TODO: Insert test_readAll here -->` marker:
     @Test
     public void test_readAll() {
         List<Product> productList = repository.readAll();
-        assertThat(productList).isNotNull();
-        assertThat(productList).isNotEmpty();
+        assertThat(productList)
+          .isNotNull()
+          .isNotEmpty();
         List<String> names = productList.stream().map(Product::getName).collect(Collectors.toList());
         assertThat(names).contains("Red Fedora","Forge Laptop Sticker","Oculus Rift");
     }
@@ -275,7 +278,7 @@ Add these at the `<!-- TODO: Create a method for returning all products -->` mar
 
 ~~~java
     public List<Product> readAll() {
-        return jdbcTemplate.query("SELECT * FROM catalog", rowMapper);
+        return this.jdbcTemplate.query("SELECT * FROM catalog", rowMapper);
     }
 ~~~
 
@@ -283,7 +286,7 @@ The _ProductRepositoryTest_ also used another method called _findById(String id)
 
 ~~~java
     public Product findById(String id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = '" + id + "'", rowMapper);
+        return this.jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = '" + id + "'", rowMapper);
     }
 ~~~
 
@@ -373,10 +376,7 @@ Add the following code to the test case and make sure to *review* it without any
 ~~~java
 package com.redhat.coolstore.service;
 
-import com.redhat.coolstore.model.Inventory;
 import com.redhat.coolstore.model.Product;
-import io.specto.hoverfly.junit.rule.HoverflyRule;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -389,16 +389,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static io.specto.hoverfly.junit.dsl.HttpBodyConverter.json;
-import static io.specto.hoverfly.junit.dsl.ResponseCreators.success;
-import static io.specto.hoverfly.junit.dsl.ResponseCreators.serverError;
-import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.startsWith;
 import static org.assertj.core.api.Assertions.assertThat;
-import static io.specto.hoverfly.junit.core.SimulationSource.dsl;
-import static io.specto.hoverfly.junit.dsl.HoverflyDsl.service;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -406,8 +399,6 @@ public class CatalogEndpointTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    //TODO: Add ClassRule for HoverFly Inventory simulation
 
     @Test
     public void test_retriving_one_proudct() {
@@ -417,7 +408,7 @@ public class CatalogEndpointTest {
         assertThat(response.getBody())
                 .returns("329199",Product::getItemId)
                 .returns("Forge Laptop Sticker",Product::getName)
-    //TODO: Add check for Quantity
+                //TODO: Add check for Quantity
                 .returns(8.50,Product::getPrice);
     }
 
@@ -440,7 +431,7 @@ public class CatalogEndpointTest {
         assertThat(fedora)
                 .returns("329299",Product::getItemId)
                 .returns("Red Fedora", Product::getName)
-    //TODO: Add check for Quantity
+                //TODO: Add check for Quantity
                 .returns(34.99,Product::getPrice);
     }
 
@@ -457,31 +448,28 @@ Replace the contents with this code:
 package com.redhat.coolstore.service;
 
 import java.util.List;
-
 import com.redhat.coolstore.model.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@CrossOrigin
 @RequestMapping("/services")
 public class CatalogEndpoint {
 
-    @Autowired
-    private CatalogService catalogService;
+    private final CatalogService catalogService;
 
-    @ResponseBody
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> readAll() {
-        return new ResponseEntity<List<Product>>(catalogService.readAll(),HttpStatus.OK);
+    public CatalogEndpoint(CatalogService catalogService) {
+      this.catalogService = catalogService;
     }
 
-    @ResponseBody
+    @GetMapping("/products")
+    public List<Product> readAll() {
+      return this.catalogService.readAll();
+    }
+
     @GetMapping("/product/{id}")
-    public ResponseEntity<Product> read(@PathVariable("id") String id) {
-        return new ResponseEntity<Product>(catalogService.read(id),HttpStatus.OK);
+    public Product read(@PathVariable("id") String id) {
+      return this.catalogService.read(id);
     }
 
 }
@@ -584,29 +572,7 @@ The test _should fail_ and you should see red color **test_retriving_one_proudct
 
 ![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
 
-The test fails because we are trying to call the Inventory service which is not runninmg.
-
-We will soon implement the code to call the inventory service, but first
-we need a away to test this service without having to rely on the inventory services to be up and running. For that we are going to use an API Simulator
-called [HoverFly](http://hoverfly.io){:target="_blank"} and particular it's capability to simulate remote APIs. HoverFly is very convenient to use with Unit test and all we have to do is
-to add a **ClassRule** that will simulate all calls to inventory. Open the file to insert the
-code at the `//TODO: Add ClassRule for HoverFly Inventory simulation` marker in _CatalogEndpointTest_ class:
-
-~~~java
-    @ClassRule
-    public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
-            service("inventory:8080")
-    //                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
-                    .get(startsWith("/services/inventory"))
-    //                    .willReturn(serverError())
-                    .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
-
-    ));
-~~~
-
-This _ClassRule_ means that if our tests are trying to call our inventory url, HoverFly will intercept this and respond with our hard coded response instead.
-
-We will soon use the `// commented-out` lines, so keep them in there!
+The test fails because we are trying to call the Inventory service which is not runninng. Don't worry, we will soon implement the code to call the inventory service.
 
 ####9. Implementing the Inventory Client
 
@@ -614,7 +580,7 @@ We will soon use the `// commented-out` lines, so keep them in there!
 
 Since we now have a nice way to test our service-to-service interaction we can now create the client that calls the Inventory. Netflix has provided some nice extensions to the Spring Framework that are mostly captured in the Spring Cloud project, however Spring Cloud is mainly focused on Pivotal Cloud Foundry and because of that Red Hat and others have contributed Spring Cloud Kubernetes to the Spring Cloud project, which enables the same functionallity for Kubernetes based platforms like OpenShift.
 
-The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circute Break calls that doesn't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface that details which parameters and return type we expect, annotate it with    `@RequestMapping` and provide some details and then annotate the interface with `@Feign` and provide it with a name.
+The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circuit Break calls that don't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface that details which parameters and return type we expect, annotate it with    `@RequestMapping` and provide some details and then annotate the interface with `@Feign` and provide it with a name.
 
 Create the `InventoryClient` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
 
@@ -624,9 +590,9 @@ Add the following code to the file:
 package com.redhat.coolstore.client;
 
 import feign.hystrix.FallbackFactory;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -637,12 +603,10 @@ public interface InventoryClient {
     @RequestMapping(method = RequestMethod.GET, value = "/services/inventory/{itemId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     String getInventoryStatus(@PathVariable("itemId") String itemId);
 
-    //TODO: Add Fallback factory here
+    //TODO: Add Callback Factory Component
 
 }
 ~~~
-
-There is one more thing that we need to do which is to tell Feign where the inventory service is running. Before that notice that we are setting the `@FeignClient(name="inventory")`.
 
 Open the `src/main/resources/application-default.properties file.
 
@@ -664,7 +628,7 @@ And autowire (e.g. inject) the client into it by inserting this at the `//TODO: 
 
 ~~~java
     @Autowired
-    InventoryClient inventoryClient;
+    private InventoryClient inventoryClient;
 ~~~
 
 Next, update the _read(String id)_ method at the comment `//TODO: Update the quantity for the product by calling the Inventory service` add the following:
@@ -686,30 +650,16 @@ import com.redhat.coolstore.client.InventoryClient;
 Also in the _readAll()_ method replace the comment `//TODO: Update the quantity for the products by calling the Inventory service` with the following:
 
 ~~~java
-        for ( Product p : productList ) {
-            JSONArray jsonArray = new JSONArray(inventoryClient.getInventoryStatus(p.getItemId()));
-            List<String> quantity = IntStream.range(0, jsonArray.length())
-                .mapToObj(index -> ((JSONObject)jsonArray.get(index))
-                .optString("quantity")).collect(Collectors.toList());
-            p.setQuantity(Integer.parseInt(quantity.get(0)));
-        }
+        productList.forEach(p -> {
+          JSONArray jsonArray = new JSONArray(this.inventoryClient.getInventoryStatus(p.getItemId()));
+          List<String> quantity = IntStream.range(0, jsonArray.length())
+            .mapToObj(index -> ((JSONObject)jsonArray.get(index))
+            .optString("quantity")).collect(Collectors.toList());
+          p.setQuantity(Integer.parseInt(quantity.get(0)));
+        });
 ~~~
 
 > NOTE: Class `JSONArray` is an ordered sequence of values. Its external text form is a string wrapped in square brackets with commas separating the values. The internal form is an object having get and opt methods for accessing the values by index, and element methods for adding or replacing values.
-
-Now you can run the _CatalogEndpointTest_ and verify that it works via **Run Junit Test**:
-
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
-
-The test should be successful and you should see green color **test_retriving_one_proudct**, **check_that_endpoint_returns_a_correct_list** in Default Suite window.
-
-![catalog-endpoint-test-success]({% image_path catalog-endpoint-test-success.png %})
-
-So even if we don't have any inventory service running we can still run our test. However to actually run the service using `mvn spring-boot:run` we need to have an inventory service or the calls to `/services/products/` will fail. We will fix this in the next step.
-
-#####Congratulations!
-You now have the framework for retrieving products from the product catalog and enriching the data with inventory data from
-an external service. But what if that external inventory service does not respond? That's the topic for the next step.
 
 
 ####10. Create a fallback for inventory
@@ -730,16 +680,11 @@ And paste this into it at the `//TODO: Add Fallback factory here` marker:
 ~~~java
     //TODO: Add Callback Factory Component
     @Component
-    static class InventoryClientFallbackFactory implements FallbackFactory<InventoryClient> {
-        @Override
-        public InventoryClient create(Throwable cause) {
-            return new InventoryClient() {
-                @Override
-                public String getInventoryStatus(@PathVariable("itemId") String itemId) {
-                    return "[{'quantity':-1}]";
-                }
-            };
-        }
+    class InventoryClientFallbackFactory implements FallbackFactory<InventoryClient> {
+      @Override
+      public InventoryClient create(Throwable cause) {
+        return itemId -> "[{'quantity':-1}]";
+      }
     }
 ~~~
 
@@ -749,69 +694,7 @@ After creating the fallback factory all we have todo is to tell Feign to use tha
 @FeignClient(name="inventory",fallbackFactory = InventoryClient.InventoryClientFallbackFactory.class)
 ~~~
 
-####11. Test the Fallback
-
----
-
-Now let's see if we can test the fallback. Optimally we should create a different test that fails the request and then verify the fallback value, however because we are limited in time we are just going to change our test so that it returns a server error and then verify that the test fails.
-
-Open _src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java_ and change the following lines:
-
-~~~
-@ClassRule
-public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
-        service("inventory:8080")
-//                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
-                .get(startsWith("/services/inventory"))
-//                    .willReturn(serverError())
-                .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
-
-));
-~~~
-
-TO
-
-~~~
-@ClassRule
-public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
-        service("inventory:8080")
-//                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
-                .get(startsWith("/services/inventory"))
-                .willReturn(serverError())
-//                    .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
-
-));
-~~~
-
-Notice that the Hoverfly Rule will now return `serverError` for all requests to inventory.
-
-Now you can run the _CatalogEndpointTest_ and verify that it **fails** via **Run Junit Test**:
-
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
-
-The test _should fail_ and you _should see red color `test_retriving_one_proudct_, _check_that_endpoint_returns_a_correct_list` in Default Suite window.
-
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
-
-So since even if our inventory service fails we are still returning inventory quantity -1. The test fails because we are expecting the quantity to be 9999.
-
-Change back the class rule by re-commenting out the _.willReturn(serverError())_ line so that we don't fail the tests like this:
-
-~~~
-@ClassRule
-public static HoverflyRule hoverflyRule = HoverflyRule.inSimulationMode(dsl(
-        service("inventory:8080")
-//                    .andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")
-                .get(startsWith("/services/inventory"))
-//                    .willReturn(serverError())
-                .willReturn(success("[{\"itemId\":\"329199\",\"quantity\":9999}]", "application/json"))
-
-));
-~~~
-
-Make sure the test works again by re-running the `CatalogEndpointTest` JUnit Test.
-
-####12. Slow running services
+####11. Slow running services
 
 ---
 
@@ -825,56 +708,10 @@ And add this line to it at the **#TODO: Set timeout to for inventory to 500ms** 
 hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
 ~~~
 
-Open _src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java_ and un-comment the **.andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")**
+#####Congratulations!
+You now have the framework for retrieving products from the product catalog and enriching the data with inventory data from an external service. In next step of this lab we will deploy our application to OpenShift Container Platform and then start adding additional features to take care of various aspects of cloud native microservice development.
 
-Now you can run the _CatalogEndpointTest_ and verify that it **fails** via **Run Junit Test**:
-
-![catalog-endpoint-test-run]({% image_path catalog-endpoint-test-run.png %}){:width="700px"}
-
-The test _should fail_ and you should see red color `test_retriving_one_proudct`, `check_that_endpoint_returns_a_correct_list` in Default Suite window.
-
-![catalog-endpoint-test-failure]({% image_path catalog-endpoint-test-failure.png %})
-
-This shows that the timeout works nicely. However, since we want our test to be successful **you should now comment out `.andDelay(2500, TimeUnit.MILLISECONDS).forMethod("GET")`** again and then verify that the test works by re-running the JUnit test.
-
-####Congratulations!
-You have now successfully executed the fourth step in this lab.
-In this step you've learned how to add Fallback logic to your class and how to add timeout to service calls.
-In the next step we now test our service locally before we deploy it to OpenShift.
-
-####13. Test Locally
-
----
-
-As you have seen in previous steps, using the Spring Boot maven plugin (predefined in _pom.xml_), you can conveniently run the application locally and test the endpoint.
-
-Start the application via CodeReady Workspaces **RUN** Menu:
-
-![catalog-spring-run]({% image_path catalog-spring-run.png %})
-
-Wait for the application to start. Then we can verify the endpoint by running the following command in Eclipse Terminal:
-
-`curl http://localhost:8081/services/product/329299 ; echo`
-
-You would see a JSON response like this:
-
-~~~json
-{"itemId":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99,"quantity":-1}%
-~~~
-
-> NOTE: Since we do not have an inventory service running locally the value for the quantity is -1, which matches the fallback value that we have configured.
-
-The REST API returned a JSON object representing the inventory count for this product. Well done!
-
-> NOTE: Make sure to stop the service by closing run spring-boot tab window in CodeReady Workspace.
-
-You have now successfully created your the Catalog service using Spring Boot and implemented basic REST
-API on top of the product catalog database. You have also learned how to deal with service failures.
-
-In next step of this lab we will deploy our application to OpenShift Container Platform and then start
-adding additional features to take care of various aspects of cloud native microservice development.
-
-####14. Create the OpenShift project
+####12. Create the OpenShift project
 
 ---
 
@@ -889,7 +726,7 @@ This will take you to the project overview. There's nothing there yet, but that'
 
 Next, we'll deploy your new microservice to OpenShift.
 
-####15. Deploy to OpenShift
+####13. Deploy to OpenShift
 
 ---
 
@@ -902,10 +739,10 @@ First, deploy a new instance of PostgreSQL by executing via CodeReady Workspaces
 
 ~~~shell
 oc new-app -e POSTGRESQL_USER=catalog \
-             -e POSTGRESQL_PASSWORD=mysecretpassword \
-             -e POSTGRESQL_DATABASE=catalog \
-             openshift/postgresql:10 \
-             --name=catalog-database
+    -e POSTGRESQL_PASSWORD=mysecretpassword \
+    -e POSTGRESQL_DATABASE=catalog \
+    openshift/postgresql:10 \
+    --name=catalog-database
 ~~~
 
 This will deploy the database to our new project.
@@ -916,7 +753,7 @@ You can also check if the deployment is complete via CodeReady Workspaces Termin
 
 `oc rollout status -w dc/catalog-database`
 
-####16. Update configuration
+####14. Update configuration
 
 ---
 
@@ -936,25 +773,24 @@ Comment the local variables and add a remote variables. You can replace the whol
 #spring.datasource.password=sa
 #spring.datasource.driver-class-name=org.h2.Driver
 
-#TODO: Configure netflix libraries
-#inventory.ribbon.listOfServers=inventory:8080
-#feign.hystrix.enabled=true
-
-#TODO: Set timeout to for inventory to 500ms
-hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
-
+# Production
 server.port=8080
 spring.datasource.url=jdbc:postgresql://catalog-database:5432/catalog
 spring.datasource.username=catalog
 spring.datasource.password=mysecretpassword
-spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.initialization-mode=always
+spring.datasource.initialize=true
+spring.datasource.schema=classpath:/schema.sql
+spring.datasource.continue-on-error=true
 
+feign.hystrix.enabled=true
+hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
 inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080
 ~~~
 
 ![catalog_posgresql]({% image_path catalog_changed_properties.png %})
 
-####17. Build and Deploy
+####15. Build and Deploy
 
 ---
 
@@ -964,8 +800,7 @@ Build and deploy the project using the following command, which will use the mav
 
 `mvn clean package spring-boot:repackage -DskipTests`
 
-The build and deploy may take a minute or two. Wait for it to complete. You should see a **BUILD SUCCESS** at the
-end of the build output.
+The build and deploy may take a minute or two. Wait for it to complete. You should see a **BUILD SUCCESS** at the end of the build output.
 
 Then deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces Terminal:
 
@@ -1008,7 +843,7 @@ The expected result data is here:
 So now **Catalog** service is deployed to OpenShift. You can also see it in the Project Status in the OpenShift Console
 with running in 1 pod, along with the Postgres database pod.
 
-####18. Access the application running on OpenShift
+####16. Access the application running on OpenShift
 
 ---
 
@@ -1028,7 +863,7 @@ The UI will refresh the catalog table every 2 seconds, as before.
 
 `Congratulations!` You have deployed the Catalog service as a microservice which in turn calls into the Inventory service to retrieve inventory data.
 
-####19. Strangling the monolith
+####17. Strangling the monolith
 
 ---
 
@@ -1070,8 +905,6 @@ Repackage the **inventory** application via clicking on **Package for OpenShift*
 ![codeready-workspace-maven]({% image_path quarkus-dev-run-packageforOcp.png %})
 
 Restart and watch the build, which will take about a minute to complete. Replace your username with **userXX**:
-
-`cd /projects/cloud-native-workshop-v2m1-labs/inventory/`
 
 `oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n userXX-inventory`
 
@@ -1130,7 +963,7 @@ Once the build is done, the coolstore pod will be deployed automatically via Dep
 
 `oc rollout status -w dc/coolstore -n userXX-coolstore-dev` (replace `userXX` with your username)
 
-####20. Test the UI
+####18. Test the UI
 
 ---
 
@@ -1149,7 +982,7 @@ as it has been removed in our new catalog microservice.
 You have now successfully begun to _strangle_ the monolith. Part of the monolith's functionality (Inventory and Catalog) are
 now implemented as microservices.
 
-####21. Viewing the topology of Catalog application
+####19. Viewing the topology of Catalog application
 
 ---
 

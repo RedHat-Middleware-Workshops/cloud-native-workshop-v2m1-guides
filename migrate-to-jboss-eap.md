@@ -35,7 +35,7 @@ Users of Eclipse, IntelliJ IDEA or Visual Studio Code will see a familiar layout
 In the project explorer pane, click on the `Import Projects...` and enter the following:
 
   * Version Control System: `GIT`
-  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m1-labs.git`(IMPORTANT: replace userXX with your lab user)
+  * URL: `https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git`
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m1-labs`
 
@@ -99,7 +99,7 @@ To begin we are fixing the issues under the Monolith application. Navigate to th
 
 Open the file `src/main/java/com/redhat/coolstore/utils/StartupListener.java`. Navigate the folder tree and double-click the source file to open it in the editing panel.
 
-The first issue we will tackle is the one reporting the use of _Weblogic ApplicationLifecyleEvent_ and _Weblogic LifecycleListener_ in this file. Open the file to make these changes in the file. Replace the following codes with the exsiting entire codes:
+The first issue we will tackle is the one reporting the use of _Weblogic ApplicationLifecyleEvent_ and _Weblogic LifecycleListener_ in this file. Open the file to make these changes in the file. Replace the file so it is as follows:
 
 ~~~java
 package com.redhat.coolstore.utils;
@@ -165,7 +165,7 @@ We will use the standard Java Logging framework, a much more portable framework.
 
 Navigate to the `Monolith Folder` and work on the source files under here.
 
-Open the `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java` file and replace the following codes with the exsiting entire codes:
+Open the `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java` file and replace its contents with:
 
 ~~~java
 package com.redhat.coolstore.service;
@@ -299,7 +299,7 @@ Right-click on the `weblogic` folder and select **Delete** to delete the folder:
 
 ---
 
-Open the `src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java` file and replace the following codes with the exsiting entire codes:
+Open the `src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java` file and replace its contents with:
 
 ~~~java
 package com.redhat.coolstore.service;
