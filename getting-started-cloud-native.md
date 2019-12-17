@@ -3,7 +3,7 @@
 In this module you'll work with an existing Java EE application for a retail webshop and migrate it and modernize it.
 The current version of the webshop is a Java EE application built for Oracle Weblogic Application Server and as part of a modernization strategy and to be able to automate releases and eventually apply advanced deployment scenarios (like Canary or Blue/Green deployments) there has been a decision to move this application to a container native environment from Red Hat called OpenShift.
 
-During the first planning sprint you have investigated the possibility to deploy Oracle Weblogic to Red Hat OpenShift, but since Oracle Weblogic is limited in support and also not recommended to use in an orchestrated container native platform like OpenShift you have two options. Either you migrate to WebSphere Liberty Profile or you migrate to JBoss EAP. You have tested both and since both are supported on OpenShift you compare them side-by-side in this matrix.
+During the first planning sprint you have investigated the possibility to deploy Oracle Weblogic to Red Hat OpenShift, but since Oracle Weblogic is limited in support and also not recommended to use in an orchestrated container native platform like OpenShift you have two options. Either you migrate to WebSphere Liberty Profile or you migrate to JBoss EAP. 
 
 | Charateristics                                                    | Oracle Weblogic   | JBoss EAP         |
 |-------------------------------------------------------------------|-------------------|-------------------|
