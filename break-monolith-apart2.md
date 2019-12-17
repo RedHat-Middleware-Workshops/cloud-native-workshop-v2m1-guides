@@ -56,7 +56,7 @@ As you can see, there are some files that we have prepared for you in the projec
 we have for example prepared a simple html-based UI file for you. This matches very well what you would get if you generated an empty project from the
 [Spring Initializr](https://start.spring.io){:target="_blank"} web page.
 
-One this that differs slightly is the `pom.xml`. Please open the and examine it a bit closer (but do not change anything
+One file that differs slightly is the `pom.xml`. Please open the and examine it a bit closer (but do not change anything
 at this time)
 
 As you review the content, you will notice that there are a lot of _TODO_ comments. **Do not remove them!** These comments are used as a marker and without them, you will not be able to finish this lab.
