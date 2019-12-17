@@ -248,7 +248,7 @@ the supplier of the product needs to be notified.
 Unfortunately this MDB was written a while ago and makes use of weblogic-proprietary interfaces to configure and operate the
 MDB. RHAMT has flagged this and reported it using a number of issues.
 
-JBoss EAP provides and even more efficient and declarative way
+JBoss EAP provides an even more efficient and declarative way
 to configure and manage the lifecycle of MDBs. In this case, we can use annotations to provide the necessary initialization
 and configuration logic and settings. We will use the
 `@MessageDriven` and `@ActivationConfigProperty` annotations, along with the `MessageListener` interfaces to provide the
