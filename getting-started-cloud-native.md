@@ -39,7 +39,7 @@ It is used by organizations for:
 * Rule extension and customizability
 * Ability to analyze source code or application archives
 
-RHAMT examines application artifacts, including project source directories and application archives, then produces an HTML report that highlights areas needing changes. RHAMT can be used to migrate Java applications from previous versions of Red Hat JBoss Enterprise Application Platform or from other containers, such as Oracle® WebLogic Server or IBM® WebSphere® Application Server.
+RHAMT examines application artifacts, including project source directories and application archives, then produces an HTML report that highlights areas needing changes. RHAMT can be used to migrate Java applications from previous versions of Red Hat JBoss Enterprise Application Platform or from other technologies, such as Oracle® WebLogic Server or IBM® WebSphere® Application Server.
 
 #### How Does Red Hat Application Migration Toolkit Simplify Migration?
 
