@@ -84,7 +84,7 @@ Now let's write some code and create a domain model, service interface and a RES
 
 ![Inventory RESTful Service]({% image_path inventory-arch.png %}){:width="700px"}
 
-####3. Add Qurkus Extensions
+####3. Add Quarkus Extensions
 
 ---
 
@@ -100,7 +100,7 @@ And then for local H2 database:
 
 `mvn quarkus:add-extension -Dextensions="jdbc-h2"`
 
-> NOTE: There are many [more extensions](https://quarkus.io/extensions/){:target="_blank"} for Quarkus for popular frameworks like [CodeReady Workspaces Vert.x](https://vertx.io/){:target="_blank"}, [Apache Camel](http://camel.apache.org/){:target="_blank"}, [Infinispan](http://infinispan.org/){:target="_blank"}, Spring DI compatibility (e.g. `@Autowired`), and more.
+> NOTE: There are many [more extensions](https://quarkus.io/extensions/){:target="_blank"} for Quarkus for popular frameworks like [Vert.x](https://vertx.io/){:target="_blank"}, [Apache Camel](http://camel.apache.org/){:target="_blank"}, [Infinispan](http://infinispan.org/){:target="_blank"}, Spring DI compatibility (e.g. `@Autowired`), and more.
 
 ####4. Create Inventory Entity
 
