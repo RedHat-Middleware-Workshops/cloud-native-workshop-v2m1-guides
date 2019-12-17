@@ -5,7 +5,7 @@ The current version of the webshop is a Java EE application built for Oracle Web
 
 During the first planning sprint you have investigated the possibility to deploy Oracle Weblogic to Red Hat OpenShift, but since Oracle Weblogic is limited in support and also not recommended to use in an orchestrated container native platform like OpenShift you have two options. Either you migrate to WebSphere Liberty Profile or you migrate to JBoss EAP. You have tested both and since both are supported on OpenShift you compare them side-by-side in this matrix.
 
-| Charateristics                                                    | Oracle Weblogic   | JBoss EAP         |
+| Charateristics                                                    | WebSphere Liberty | JBoss EAP         |
 |-------------------------------------------------------------------|-------------------|-------------------|
 |Supported on OpenShift                                             | Limited           | Yes               |
 |Supports Java EE 8 Web Profile                                     | Yes               | Yes               |
