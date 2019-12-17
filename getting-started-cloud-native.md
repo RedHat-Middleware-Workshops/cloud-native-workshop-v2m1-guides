@@ -45,7 +45,7 @@ RHAMT examines application artifacts, including project source directories and a
 
 ---
 
-Red Hat Application Migration Toolkit looks for common resources and highlights technologies and known trouble spots when migrating applications. The goal is to provide a high-level view into the technologies used by the application and provide a detailed report organizations can use to estimate, document and carry out migration of enterprise applications to Java EE and Red Hat JBoss Enterprise Application Platform.
+Red Hat Application Migration Toolkit looks for common resources and highlights technologies and known trouble spots when migrating applications. The goal is to provide a high-level view into the technologies used by the application and provide a detailed report organizations can use to estimate, document, and carry out migration of enterprise applications to Java EE and Red Hat JBoss Enterprise Application Platform.
 
 > RHAMT is usually part of a much larger application migration and modernization program that involves well defined and repeatable phases over weeks or months and involves many people from a given business. Do not be fooled into thinking that every single
 migration is a simple affair and takes an hour or less! To learn more about Red Hat's philosophy and proven methodology, check out
