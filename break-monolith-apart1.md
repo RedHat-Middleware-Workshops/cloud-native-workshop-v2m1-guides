@@ -140,8 +140,8 @@ By extending `PanacheEntity` in your entities, you will get an ID field that is 
 
 By using public fields, there is no need for functionless getters and setters (those that simply get or set the field). You simply refer to fields like `Inventory.location` without the need to write a `Inventory.getLocation()` implementation. Panache will auto-generate any getters and setters you do not write, or you can develop your own getters/setters that do more than get/set, which will be called when the field is accessed directly.
 
-The `PanacheEntity` superclass comes with lots of super useful static methods and you can add your own in your derived entity class, and much like traditional object-oriented programming it's natural and recommended to place custom queries as close to the entity as possible, ideally within the entity definition itself.
-Users can just start using your entity Inventory by typing Inventory, and getting completion for all the operations in a single place.
+The `PanacheEntity` superclass comes with lots of super useful static methods and you can add your own in your derived entity class. Much like traditional object-oriented programming it's natural and recommended to place custom queries as close to the entity as possible, ideally within the entity definition itself.
+Users can just start using your entity Inventory by typing Inventory, and get completion for all the operations in a single place.
 
 When an entity is annotated with `@Cacheable`, all its field values are cached except for collections and relations to other entities.
 This means the entity can be loaded quicker without querying the database for frequently-accessed, but rarely-changing data.
