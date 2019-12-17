@@ -144,13 +144,13 @@ To be able to pull in Red Hat artifacts, add the following repository definition
 
 ---
 
-Since our applications (like most) will be a web application, we need to use a servlet container like Apache Tomcat or
+Our application will be a web application, so we need to use a servlet container like Apache Tomcat or
 Undertow. Since Red Hat offers support for Apache Tomcat (e.g., security patches, bug fixes, etc.), we will use it.
 
 > NOTE: Undertow is another an open source project that is maintained by Red Hat and therefore Red Hat plans to
 add support for Undertow shortly.
 
-To add Apache Tomcat to our project all we have to do is to add the following lines in _pom.xml_. Open the file to automatically add these lines at the `<!-- TODO: Add web (tomcat) dependency here -->` marker:
+Because of the Red Hat BOM and access to the Red Hat maven repositories all we need to do to enable the supported Apache Tomcat as servlet container is to add the following dependency to your _pom.xml_. Add these lines at the `<!-- TODO: Add web (tomcat) dependency here -->` marker:
 
 ~~~xml
         <dependency>
