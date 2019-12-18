@@ -56,7 +56,7 @@ As you can see, there are some files that we have prepared for you in the projec
 we have for example prepared a simple html-based UI file for you. This matches very well what you would get if you generated an empty project from the
 [Spring Initializr](https://start.spring.io){:target="_blank"} web page.
 
-One this that differs slightly is the `pom.xml`. Please open the and examine it a bit closer (but do not change anything
+One file that differs slightly is the `pom.xml`. Please open the and examine it a bit closer (but do not change anything
 at this time)
 
 As you review the content, you will notice that there are a lot of _TODO_ comments. **Do not remove them!** These comments are used as a marker and without them, you will not be able to finish this lab.
@@ -83,13 +83,13 @@ We use this bill of material to make sure that we are using the version of for e
 
 ---
 
-Since our applications (like most) will be a web application, we need to use a servlet container like Apache Tomcat or
+Our application will be a web application, so we need to use a servlet container like Apache Tomcat or
 Undertow. Since Red Hat offers support for Apache Tomcat (e.g., security patches, bug fixes, etc.), we will use it.
 
 > NOTE: Undertow is another an open source project that is maintained by Red Hat and therefore Red Hat plans to
 add support for Undertow shortly.
 
-To add Apache Tomcat to our project all we have to do is to add the following lines in _pom.xml_. Open the file to automatically add these lines at the `<!-- TODO: Add web (tomcat) dependency here -->` marker:
+Because of the Red Hat BOM and access to the Red Hat maven repositories all we need to do to enable the supported Apache Tomcat as servlet container is to add the following dependency to your _pom.xml_. Add these lines at the `<!-- TODO: Add web (tomcat) dependency here -->` marker:
 
 ~~~xml
         <dependency>
