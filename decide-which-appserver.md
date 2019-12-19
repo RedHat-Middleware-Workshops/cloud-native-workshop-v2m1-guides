@@ -33,12 +33,12 @@ When you login the first time, you should be asked to change the password in ord
 
 Input a name and description to create a project.
 
-![RHAMT Create Project]({% image_path rhamt_create_project.png %})
-
   * Name: `userXX-eap-migration`
   * Description: `USERXX EAP MIGRATION PROJECT`
-
+  
 > `NOTE`: Add your username as prefix (i.e. `user1-eap-migration`) to distinguish each attendee's project.
+
+![RHAMT Create Project]({% image_path rhamt_create_project.png %})
 
 ####3. Add the monolith application to the project
 
