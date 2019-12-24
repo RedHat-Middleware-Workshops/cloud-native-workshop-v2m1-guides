@@ -941,6 +941,8 @@ spring.datasource.password=mysecretpassword
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080
+
+spring.datasource.initialization-mode=always
 ~~~
 
 ![catalog_posgresql]({% image_path catalog_changed_properties.png %})
