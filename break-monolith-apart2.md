@@ -101,7 +101,7 @@ Because of the Red Hat BOM and access to the Red Hat maven repositories all we n
 We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the `<!-- TODO: Add jdbc dependency here -->` marker:
 
 ~~~xml
-        endency>
+        <dependency>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-data-jdbc</artifactId>
         </dependency>
@@ -603,7 +603,7 @@ public interface InventoryClient {
     @RequestMapping(method = RequestMethod.GET, value = "/services/inventory/{itemId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     String getInventoryStatus(@PathVariable("itemId") String itemId);
 
-    //TODO: Add Callback Factory Component
+    //TODO: Add Fallback factory here
 
 }
 ~~~
@@ -678,7 +678,6 @@ Open: _src/main/java/com/redhat/coolstore/client/InventoryClient.java_
 And paste this into it at the `//TODO: Add Fallback factory here` marker:
 
 ~~~java
-    //TODO: Add Callback Factory Component
     @Component
     class InventoryClientFallbackFactory implements FallbackFactory<InventoryClient> {
       @Override
