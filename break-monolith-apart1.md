@@ -170,15 +170,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
+
 @Path("/services/inventory")
-@ApplicationScoped
-@Produces("application/json")
-@Consumes("application/json")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class InventoryResource {
 
     @GET
@@ -187,7 +188,7 @@ public class InventoryResource {
     }
 
     @GET
-    @Path("{itemId}")
+    @Path("/{itemId}")
     public List<Inventory> getAvailability(@PathParam String itemId) {
         return Inventory.<Inventory>streamAll()
         .filter(p -> p.itemId.equals(itemId))
@@ -347,48 +348,20 @@ Next we'll build an executable jar then deploy it to **OpenShift** soon. Use the
 
 `mvn clean package`
 
-If builds successfully (you will see **BUILD SUCCESS**), continue to the next step to deploy the application to OpenShift.
+If builds successfully (you will see **BUILD SUCCESS**) as below:
 
-You can also run the Uber.jar to make sure if the inventory works. Use the following **Java command** then you see a similar output:
-
-`java -jar target/inventory-1.0-SNAPSHOT-runner.jar`
-
-~~~
-2019-12-01 10:43:44,963 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
-2019-12-01 10:43:45,297 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus 1.0.1.Final) started in 1.782s. Listening on: http://0.0.0.0:8080
-2019-12-01 10:43:45,299 INFO  [io.quarkus] (main) Profile prod activated.
-2019-12-01 10:43:45,299 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+~~~shell
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.56 s - in com.redhat.coolstore.InventoryEndpointTest
+2020-01-06 20:05:21,499 INFO  [io.quarkus] (main) Quarkus stopped in 0.028s
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ~~~
 
-Open a new CodeReady Workspaces Terminal and invoke the RESTful endpoint using the following CURL commands. The output looks like here:
+You have now successfully created your first microservice using Quarkus and implemented a basic RESTful API on top of the Inventory database. Most of the code looks simpler than the monolith, demonstrating how easy it is to migrate existing monolithic Java EE application to microservices using `Quarkus`.
 
-`curl http://localhost:8080/services/inventory ; echo`
-
-~~~json
-[{"id":1,"itemId":"329299","link":"http://maps.google.com/?q=Raleigh","location":"Raleigh","quantity":736},{"id":2,"itemId":"329199","link":"http://maps.google.com
-/?q=Boston","location":"Boston","quantity":512},{"id":3,"itemId":"165613","link":"http://maps.google.com/?q=Seoul","location":"Seoul","quantity":256},{"id":4,"item
-Id":"165614","link":"http://maps.google.com/?q=Singapore","location":"Singapore","quantity":54},{"id":5,"itemId":"165954","link":"http://maps.google.com/?q=London"
-,"location":"London","quantity":87},{"id":6,"itemId":"444434","link":"http://maps.google.com/?q=NewYork","location":"NewYork","quantity":443},{"id":7,"itemId":"444
-435","link":"http://maps.google.com/?q=Paris","location":"Paris","quantity":600},{"id":8,"itemId":"444437","link":"http://maps.google.com/?q=Tokyo","location":"Tok
-yo","quantity":230}]
-~~~
-
-`curl http://localhost:8080/services/inventory/329199 ; echo`
-
-~~~json
-[{"id":2,"itemId":"329199","link":"http://maps.google.com/?q=Boston","location":"Boston","quantity":512}]
-~~~
-
-##### Stop the application
-
-Stop Quarkus development mode by closing the Terminal window in which you ran `java -jar`
-
-You have now successfully created your first microservice using Quarkus and implemented a basic RESTful
-API on top of the Inventory database. Most of the code looks simpler than the monolith, demonstrating how
-easy it is to migrate existing monolithic Java EE application to microservices using `Quarkus`.
-
-In next steps of this lab we will deploy our application to OpenShift Container Platform and then start
-adding additional features to take care of various aspects of cloud native microservice development.
+In next steps of this lab we will deploy our application to OpenShift Container Platform and then start adding additional features to take care of various aspects of cloud native microservice development.
 
 ####9. Create OpenShift Project
 
