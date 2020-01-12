@@ -452,7 +452,6 @@ import com.redhat.coolstore.model.Product;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/services")
 public class CatalogEndpoint {
 
@@ -701,10 +700,10 @@ Having fallbacks is good but that also requires that we can correctly detect whe
 
 Open _src/main/resources/application-default.properties_
 
-And add this line to it at the **#TODO: Set timeout to for inventory to 500ms** marker:
+And add this line to it at the **#TODO: Set timeout to for inventory** marker:
 
 ~~~java
-hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
 ~~~
 
 #####Congratulations!
@@ -783,7 +782,7 @@ spring.datasource.schema=classpath:/schema.sql
 spring.datasource.continue-on-error=true
 
 feign.hystrix.enabled=true
-hystrix.command.inventory.execution.isolation.thread.timeoutInMilliseconds=500
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
 inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080
 ~~~
 
