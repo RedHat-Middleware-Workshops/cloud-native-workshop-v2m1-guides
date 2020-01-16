@@ -452,8 +452,7 @@ This will deploy the database to our new project.
 
 ---
 
-Red Hat OpenShift Application Runtimes includes a powerful maven plugin that can take an
-existing Quarkus application and generate the necessary Kubernetes configuration.
+Red Hat OpenShift Application Runtimes includes a powerful maven plugin that can take an existing Quarkus application and generate the necessary Kubernetes configuration.
 
 Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces Terminal:
 
