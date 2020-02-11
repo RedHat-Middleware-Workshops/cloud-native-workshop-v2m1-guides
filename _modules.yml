@@ -1,13 +1,11 @@
 config:
-    renderer: markdown
+    renderer: asciidoc
 
 modules:
   workshop-environment:
     name: Your Workshop Environment
-  getting-started-cloud-native:
-    name: Getting Started with Cloud-Native Apps
-  decide-which-appserver:
-    name: Decide which Application Server to use in OpenShift
+  getting-started-rhamt:
+    name: Getting Started with Application Migration Toolkit
   migrate-to-jboss-eap:
     name: Migrate to JBoss EAP
   break-monolith-apart1:

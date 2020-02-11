@@ -1,0 +1,622 @@
+= Lab3 - Breaking the monolith apart - I
+:experimental:
+
+In the previous labs you learned how to take an existing monolithic Java EE application to the cloud with JBoss EAP and OpenShift,
+and you got a glimpse into the power of OpenShift for existing applications.
+
+You will now begin the process of modernizing the application by breaking the application into multiple microservices using
+different technologies, with the eventual goal of re-architecting the entire application as a set of distributed microservices.
+Later on we’ll explore how you can better manage and monitor the application after it is re-architected.
+
+In this lab you will learn more about _Supersonic, Subatomic Java_ with https://quarkus.io/[Quarkus, window=_blank], which is
+designed to be container and developer friendly.
+
+Quarkus is a _Kubernetes Native_ Java stack, crafted from the best of breed Java libraries and standards. Amazingly fast boot
+time, incredibly low RSS memory (not just heap size!) offering near instant scale up and high density memory utilization in
+container orchestration platforms like Kubernetes. Quarkus uses a technique called compile time boot.
+https://quarkus.io/vision/container-first[Learn more, window=_blank].
+
+This will be one of the runtimes included in https://www.redhat.com/en/products/runtimes[Red Hat Runtimes, window=_blank].
+
+=== Goals of this lab
+
+You will implement one component of the monolith as a Quarkus microservice and modify it to address microservice concerns,
+understand its structure, deploy it to OpenShift and exercise the interfaces between Quarkus apps, microservices, and
+OpenShift/Kubernetes.
+
+The goal is to deploy this new microservice alongside the existing monolith, and then later on we’ll tie them together. But after
+this lab, you should end up with something like:
+
+image::goal.png[lab3_goal, 700]
+
+==== 1. Setup an Inventory proejct
+
+Run the following commands to set up your environment for this lab and start in the right directory:
+
+In the project explorer, expand the *inventory* project.
+
+image::codeready-workspace-inventory-project.png[inventory_setup, 700]
+
+==== 2. Examine the Maven project structure
+
+The sample Quarkus project shows a minimal CRUD service exposing a couple of endpoints over REST, with a front-end based on
+Angular so you can play with it from your browser.
+
+While the code is surprisingly simple, under the hood this is using:
+
+* RESTEasy to expose the REST endpoints
+* Hibernate ORM with Panache to perform CRUD operations on the database
+* A PostgreSQL database; see below to run one via Linux Container
+* Some example `Dockerfile`s to generate new images for JVM and Native mode compilation
+
+`Hibernate ORM` is the de facto JPA implementation and offers you the full breadth of an Object Relational Mapper. It makes
+complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with Panache focuses on making
+your entities trivial and fun to write in Quarkus.
+
+Now let’s write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
+
+image::inventory-arch.png[Inventory RESTful Service, 700]
+
+==== 3. Add Quarkus Extensions
+
+We will add Quarkus extensions to the Inventory application for using _Panache_ (a simplified way to access data via Hibernate
+ORM), a database with Postgres (in production) and _H2_ (in-memory database for testing). We'll also add the ability to add health probes (which we'll use later on) using the MicroProfile Health extension.
+Run the following commands to add the extensions using CodeReady Terminal:
+
+[source,sh,role="copypaste"]
+----
+cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/
+mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health"
+----
+
+This adds the extensions to `pom.xml`.
+
+[NOTE]
+====
+There are many https://quarkus.io/extensions/[more extensions, window=_blank] for Quarkus for popular frameworks like
+https://vertx.io/[Vert.x, window=_blank], http://camel.apache.org/[Apache Camel, window=_blank],
+http://infinispan.org/[Infinispan, window=_blank], Spring (e.g. `@Autowired`), and more.
+====
+
+==== 4. Create Inventory Entity
+
+With our skeleton project in place, let’s get to work defining the business logic.
+
+The first step is to define the model (entity) of an Inventory object. Since Quarkus uses Hibernate ORM Panache, we can re-use the
+same model definition from our monolithic application - no need to re-write or re-architect!
+
+Under the `inventory` directory, open up the empty *Inventory.java* file in _com.redhat.coolstore_ package and paste the following code into it (identical to the
+monolith code):
+
+[source,java, role="copypaste"]
+----
+package com.redhat.coolstore;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+@Entity
+@Cacheable
+public class Inventory extends PanacheEntity {
+
+    public String itemId;
+    public String location;
+    public int quantity;
+    public String link;
+
+    public Inventory() {
+
+    }
+
+}
+----
+
+By extending `PanacheEntity` in your entities, you will get an ID field that is auto-generated. If you require a custom ID
+strategy, you can extend `PanacheEntityBase` instead and handle the ID yourself.
+
+By using Use public fields, there is no need for functionless getters and setters (those that simply get or set the field). You
+simply refer to fields like Inventory.location without the need to write a Inventory.getLocation() implementation. Panache will
+auto-generate any getters and setters you do not write, or you can develop your own getters/setters that do more than get/set,
+which will be called when the field is accessed directly.
+
+The `PanacheEntity` superclass comes with lots of super useful static methods and you can add your own in your derived entity
+class. Much like traditional object-oriented programming it’s natural and recommended to place custom queries as close to the
+entity as possible, ideally within the entity definition itself. Users can just start using your entity Inventory by typing
+Inventory, and get completion for all the operations in a single place.
+
+When an entity is annotated with `@Cacheable`, all its field values are cached except for collections and relations to other
+entities. This means the entity can be loaded quicker without querying the database for frequently-accessed, but rarely-changing
+data.
+
+==== 5. Define the RESTful endpoint of Inventory
+
+In this step we will mirror the abstraction of a _service_ so that we can inject the Inventory _service_ into various places (like
+a RESTful resource endpoint) in the future. This is the same approach that our monolith uses, so we can re-use this idea again.
+Open up the empty *InventoryResource.java* class in the _com.redhat.coolstore_ package.
+
+Add this code to it:
+
+[source,java, role="copypaste"]
+----
+package com.redhat.coolstore;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.json.Json;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
+
+@Path("/services/inventory")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class InventoryResource {
+
+    @GET
+    public List<Inventory> getAll() {
+        return Inventory.listAll();
+    }
+
+    @GET
+    @Path("/{itemId}")
+    public List<Inventory> getAvailability(@PathParam String itemId) {
+        return Inventory.<Inventory>streamAll()
+        .filter(p -> p.itemId.equals(itemId))
+        .collect(Collectors.toList());
+    }
+
+    @Provider
+    public static class ErrorMapper implements ExceptionMapper<Exception> {
+
+        @Override
+        public Response toResponse(Exception exception) {
+            int code = 500;
+            if (exception instanceof WebApplicationException) {
+                code = ((WebApplicationException) exception).getResponse().getStatus();
+            }
+            return Response.status(code)
+                    .entity(Json.createObjectBuilder().add("error", exception.getMessage()).add("code", code).build())
+                    .build();
+        }
+
+    }
+}
+----
+
+The above REST services defines two endpoints:
+
+* `/services/inventory` that is accessible via _HTTP GET_ which will return all known product Inventory entities as JSON
+* `/services/inventory/<itemId>` that is accessible via _HTTP GET_ at for example `services/inventory/329199` with the last path parameter
+being the ID for which we want inventory status.
+
+==== 6. Add inventory data
+
+Let’s add inventory data to the database so we can test things out. Open up the `src/main/resources/import.sql` file and copy
+the following SQL statements to *import.sql*:
+
+[source,sql, role="copypaste"]
+----
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '329299', 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '329199', 'http://maps.google.com/?q=Boston', 'Boston', 512);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165613', 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165614', 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165954', 'http://maps.google.com/?q=London', 'London', 87);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444434', 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444435', 'http://maps.google.com/?q=Paris', 'Paris', 600);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444437', 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
+----
+
+In Development, we will configure to use local in-memory H2 database for local testing. Add these lines to
+`src/main/resources/application.properties`:
+
+[source,properties,role="copypaste"]
+----
+quarkus.datasource.url=jdbc:h2:file://projects/database.db
+quarkus.datasource.driver=org.h2.Driver
+quarkus.datasource.username=inventory
+quarkus.datasource.password=mysecretpassword
+quarkus.datasource.max-size=8
+quarkus.datasource.min-size=2
+quarkus.hibernate-orm.database.generation=drop-and-create
+quarkus.hibernate-orm.log.sql=false
+----
+
+==== 7. Run Quarkus Inventory application
+
+In the Terminal, run the project in _Live Coding_ mode:
+
+[source,sh,role="copypaste"]
+----
+mvn clean compile quarkus:dev -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+----
+
+You should see a bunch of log output that ends with:
+
+[source,console,role="copypaste"]
+----
+2019-12-01 10:40:03,944 INFO  [io.quarkus] (main) Quarkus 1.0.1.Final started in 2.969s. Listening on: http://0.0.0.0:8080
+2019-12-01 10:40:03,946 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
+2019-12-01 10:40:03,946 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+----
+
+CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but when prompted, open the port `8080`, which opens a small web browser in CodeReady:
+
+image::open-port.png[Inventory RESTful Service, 700]
+
+You should see the inventory web frontend directly in CodeReady (you may need to click the _reload_ icon):
+
+image::inventory-codeready.png[Inventory RESTful Service, 700]
+
+Open a *new* CodeReady Workspaces Terminal:
+
+image::codeready-workspace-terminal.png[Inventory RESTful Service, 700]
+
+and invoke the RESTful endpoint using the following CURL commands.
+
+[source,sh,role="copypaste"]
+----
+curl http://localhost:8080/services/inventory | jq
+----
+
+The output looks like:
+
+[source,json]
+----
+  ...
+  {
+    "id": 7,
+    "itemId": "444435",
+    "link": "http://maps.google.com/?q=Paris",
+    "location": "Paris",
+    "quantity": 600
+  },
+  {
+    "id": 8,
+    "itemId": "444437",
+    "link": "http://maps.google.com/?q=Tokyo",
+    "location": "Tokyo",
+    "quantity": 230
+  }
+----
+
+==== 8. Add health probe
+
+==== What is MicroProfile Health?
+
+*MicroProfile Health* allows applications to provide information about their state to external viewers which is typically useful
+in cloud environments like OpenShift where automated processes must be able to determine whether the application should be discarded or
+restarted.
+
+==== Run the health check
+
+When you imported the _smallrye-health extension_ earlier, the `/health` endpoint is automatically exposed directly that can be used to
+run the health check procedures.
+
+Our application is still running, so you can exercise the default (no-op) health check with this command in a separate Terminal:
+
+[source,sh,role="copypaste"]
+----
+curl -s http://localhost:8080/health | jq
+----
+
+The output shows:
+
+[source,json]
+----
+{
+  "status": "UP",
+  "checks": []
+}
+----
+
+The general _outcome_ of the health check is computed as a logical AND of all the declared health check procedures. The _checks_
+array is empty as we have not specified any health check procedure yet so let’s define some.
+
+==== 9. Create your first health check
+
+'''''
+
+Next, let’s fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services. Open empty
+Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.java` and add the following code:
+
+[source,java]
+----
+package com.redhat.coolstore;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+
+@Readiness
+@ApplicationScoped
+public class InventoryHealthCheck implements HealthCheck {
+
+    @Inject
+    private InventoryResource inventoryResource;
+
+    @Override
+    public HealthCheckResponse call() {
+
+        if (inventoryResource.getAll() != null) {
+            return HealthCheckResponse.named("Success of Inventory Health Check!!!").up().build();
+        } else {
+            return HealthCheckResponse.named("Failure of Inventory Health Check!!!").down().build();
+        }
+    }
+}
+----
+
+The `call()`` method exposes an HTTP GET endpoint which will return the status of the service. The logic of this check does a
+simple query to the underlying database to ensure the connection to it is stable and available. The method is also annotated with
+MicroProfile's `@Readiness` annotation, which directs Quarkus to expose this endpoint as a health check at `/health/ready`.
+
+[NOTE]
+====
+You don’t need to stop and re-run re-run the Inventory application because Quarkus will *reload the changes automatically* via the _Live Coding_ feature.
+====
+
+Access the health endpoint again using _curl_ and the result looks like:
+
+[source,sh,role="copypaste"]
+----
+curl -s http://localhost:8080/health | jq
+----
+
+The result should be:
+
+[source,json]
+----
+{
+  "status": "UP",
+  "checks": [
+    {
+      "name": "Success of Inventory Health Check!!!",
+      "status": "UP"
+    }
+  ]
+}
+----
+
+[NOTE]
+====
+You can define separate readiness and liveness probes using `@Liveness` and `@Readiness` annotations and access them separately at `/health/live` and `/health/ready`.
+====
+
+==== 10. Create OpenShift Project
+
+In this step, we will deploy our new Inventory microservice for our CoolStore application in a separate project to house
+it and keep it separate from our monolith and our other microservices we will create later on.
+
+Before going to OpenShift console, we will repackage the Quarkus application for adding a PostgreSQL extension because our
+Inventory service will connect to PostgeSQL database in production on OpenShift.
+
+Add a _quarkus-jdbc-postgresql_ extension via CodeReady Workspaces Terminal:
+
+[source,sh,role="copypaste"]
+----
+mvn quarkus:add-extension -Dextensions="jdbc-postgresql" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+----
+
+Quarkus supports the notion of _configuration profiles_. These allows you to have multiple configurations in the same file and
+select between then via a _profile name_.
+
+By default Quarkus has three profiles, although it is possible to use as many as you like. The default profiles are:
+
+* `dev` - Activated when in development mode (i.e. *quarkus:dev*)
+* `test` - Activated when running tests
+* `prod` - The default profile when not running in development or test mode
+
+Let’s add the following variables in _src/main/resources/application.properties_:
+
+[source,shell]
+----
+%prod.quarkus.datasource.url=jdbc:postgresql://inventory-database:5432/inventory
+%prod.quarkus.datasource.driver=org.postgresql.Driver
+%prod.quarkus.datasource.username=inventory
+%prod.quarkus.datasource.password=mysecretpassword
+%prod.quarkus.datasource.max-size=8
+%prod.quarkus.datasource.min-size=2
+%prod.quarkus.hibernate-orm.database.generation=drop-and-create
+%prod.quarkus.hibernate-orm.sql-load-script=import.sql
+%prod.quarkus.hibernate-orm.log.sql=true
+----
+
+Repackage the inventory application:
+[source,sh,role="copypaste"]
+----
+mvn package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests
+----
+
+In OpenShift, ensure you're in the _Developer_ perspective and then choose the `{{ USER_ID }}-inventory` project which has already been created for you.
+
+There’s nothing there yet, but that’s about to change.
+
+==== 11. Deploy to OpenShift
+
+Let’s deploy our new inventory microservice to OpenShift!
+
+Our production inventory microservice will use an external database (PostgreSQL) to house inventory data. First, deploy a new
+instance of PostgreSQL. Click **+Add** on the left, on the _Database_ box on the project overview:
+
+image::db.png[db, 700]
+
+Type in `postgres` in the search box, and click on the *PostgreSQL (ephemeral)*:
+
+image::db-postgres.png[db, 700]
+
+Click on *Instantiate Template* and fill in the following fields, leaving the others as their default values:
+
+* **Namespace**: _choose `{{ USER_ID }}-inventory` for the first Namespace. Leave the second one as `openshift`_
+* **Database Service Name**: `inventory-database`
+* **PostgreSQL Connection Username**: `inventory`
+* **PostgreSQL Connection Password**: `mysecretpassword`
+* **PostgreSQL Database Name**: `inventory`
+
+This will deploy the database to our new project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View, window=_blank] to see it:
+
+image::inventory-database-deployment.png[inventory_db_deployments, 700]
+
+==== 12. Build and Deploy
+
+Create a new binary S2I build using the following command in a CodeReady Terminal:
+
+[source,sh,role="copypaste"]
+----
+oc project {{ USER_ID }}-inventory
+oc new-build -n {{ USER_ID }}-inventory registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=inventory-quarkus -l app=inventory-quarkus
+----
+
+[INFO]
+====
+This build uses the new
+https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index[Red
+Hat OpenJDK Container Image, window=_blank], providing foundational software needed to run Java applications, while staying at
+a reasonable size.
+====
+
+Start and watch the build, which will take about a minute to complete:
+
+[source,sh,role="copypaste"]
+----
+oc start-build inventory-quarkus --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/target/*-runner.jar --follow
+----
+
+Once the build is done, we’ll deploy it as an OpenShift application and override the Postgres URL to specify our production
+Postgres credentials:
+
+[source,sh,role="copypaste"]
+----
+oc new-app inventory-quarkus; oc expose svc/inventory-quarkus
+----
+
+And enable our new health check in OpenShift:
+[source,sh,role="copypaste"]
+----
+oc set probe dc/inventory-quarkus --readiness --get-url=http://:8080/health/ready
+----
+
+Back on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View, window=_blank], make sure it's done deploying (dark blue circle):
+
+image::inventory-rollout.png[inventory_db_deployments, 700]
+
+Click on the Route icon above (the arrow) to access our inventory running on OpenShift:
+
+image::inventory-web.png[web, 700]
+
+The UI will refresh the inventory table every 2 seconds.
+
+You should also be able to access the health check logic at the _inventory_ endpoint using _curl_ in the Terminal:
+
+[source,sh,role="copypaste"]
+----
+curl $(oc get route inventory-quarkus -o jsonpath={% raw %}"{.spec.host}"{% endraw %})/health/ready | jq
+----
+
+You should the same JSON response:
+
+[source,json]
+----
+{
+  "status": "UP",
+  "checks": [
+    {
+      "name": "Success of Inventory Health Check!!!",
+      "status": "UP"
+    }
+  ]
+}
+----
+
+==== 13. Adjust probe timeout
+
+The various timeout values for the probes can be configured in many ways. Let’s tune the _readiness probe_ initial delay so that
+we have to wait 30 seconds for it to be activated. Use the _oc_ command to tune the probe to wait 30 seconds before starting to
+poll the probe:
+
+[source,sh,role="copypaste"]
+----
+oc set probe dc/inventory-quarkus --readiness --initial-delay-seconds=30
+----
+
+And verify it’s been changed (look at the _delay=_ value for the Readiness probe) via CodeReady Workspaces Terminal:
+
+[source,sh,role="copypaste"]
+----
+oc describe dc/inventory-quarkus | egrep 'Readiness|Liveness'
+----
+
+The result:
+
+[source,console]
+----
+    Readiness:          http-get http://:8080/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3....
+----
+
+In the next step, we’ll exercise the probe and watch as it fails and OpenShift recovers the application.
+
+==== 14. Exercise Health Check
+
+Open the http://inventory-quarkus-{{ USER_ID }}-inventory.{{ ROUTE_SUBDOMAIN}}[Inventory UI, window=_blank].
+
+This will open up the sample application UI in a new browser tab:
+
+image::app.png[App UI, 700]
+
+The app will begin polling the inventory as before and report success:
+
+image::inventory.png[Greeting, 400]
+
+Now you will corrupt the service and cause its health check to start failing. To simulate the app crashing, let’s kill the
+underlying service so it stops responding. Execute via CodeReady Workspaces Terminal:
+
+[source,sh,role="copypaste"]
+----
+oc rsh dc/inventory-quarkus pkill java
+----
+
+This will execute the Linux *pkill* command to stop the running Java process in the container.
+
+Check out the application sample UI page and notice it is now failing to access the inventory data, and the _Last Successful
+Fetch_ counter starts increasing, indicating that the UI cannot access inventory. This could have been caused by an overloaded
+server, a bug in the code, or any other reason that could make the application unhealthy.
+
+image::inventory-fail.png[Greeting, 400]
+
+Back in the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View, window=_blank], you will see the pod is failing (light blue or yellow warning circle):
+
+image::notready.png[Not Ready, 700]
+
+After too many healthcheck probe failures, OpenShift will forcibly kill the pod and container running the service, and spin up a
+new one to take its place. Once this occurs, the light blue or yellow warning circle should return to dark blue. This should take about 30 seconds.
+
+Return to the same sample app UI (without reloading the page) and notice that the UI has automatically re-connected to the new
+service and successfully accessed the inventory once again:
+
+image::inventory.png[Greeting, 700]
+
+=== Summary
+
+You learned a bit more about what Quarkus is, and how it can be used to create modern Java microservice-oriented applications.
+
+You created a new Inventory microservice representing functionality previously implmented in the monolithic CoolStore application.
+For now this new microservice is completely disconnected from our monolith and is not very useful on its own. In future steps you
+will link this and other microservices into the monolith to begin the process of
+https://www.martinfowler.com/bliki/StranglerApplication.html[strangling the monolith, window=_blank].
+
+In the next lab, you’ll use
+Spring Boot, another popular framework, to implement additional microservices. Let’s go!

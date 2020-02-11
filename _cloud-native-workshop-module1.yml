@@ -21,8 +21,7 @@ vars:
 modules:
   activate:
   - workshop-environment
-  - getting-started-cloud-native
-  - decide-which-appserver
+  - getting-started-rhamt
   - migrate-to-jboss-eap
   - break-monolith-apart1
   - break-monolith-apart2

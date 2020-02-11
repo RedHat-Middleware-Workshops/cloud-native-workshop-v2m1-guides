@@ -1,0 +1,639 @@
+= Lab 2 - Migrate your application to JBoss EAP
+:experimental:
+
+In this step you will migrate some Weblogic-specific code in the app to use standard (Jakarta EE) interfaces.
+
+=== 1. Access Your Development Environment
+
+You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipse
+Che, window=_blank]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
+
+To get started, {{ ECLIPSE_CHE_URL }}[access the Che instance, window=_blank] and log in using the username
+and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
+
+image::che-login.png[cdw, 700]
+
+Once you log in, you’ll be placed on your personal dashboard. Click on the name of
+the pre-created workspace on the left, as shown below (the name will be different depending on your assigned number). You can also
+click on the name of the workspace in the center, and then click on the green button that says _Open_ on the top right hand side
+of the screen.
+
+After a minute or two, you’ll be placed in the workspace:
+
+image::che-workspace.png[cdw, 900]
+
+This IDE is based on Eclipse Che (which is in turn based on MicroSoft VS Code editor).
+
+You can see icons on the left for navigating between project explorer, search, version control (e.g. Git), debugging, and other plugins.  You’ll use these during the course of this workshop. Feel free to click on them and see what they do:
+
+image::crw-icons.png[cdw, 400]
+
+[NOTE]
+====
+If things get weird or your browser appears, you can simply reload the browser tab to refresh the view.
+====
+
+Many features of CodeReady Workspaces are accessed via *Commands*. You can see a few of the commands listed with links on the home page (e.g. _New File.._, _Git Clone.._, and others).
+
+If you ever need to run commands that you don't see in a menu, you can press kbd:[F1] to open the command window, or the more traditional kbd:[Control+SHIFT+P] (or kbd:[Command+SHIFT+P] on Mac OS X).
+
+Let's import our first project. Click on **Git Clone..** (or type kbd:[F1], enter 'git' and click on the auto-completed _Git Clone.._ )
+
+image::che-workspace-gitclone.png[cdw, 900]
+
+Step through the prompts, using the following value for **Repository URL**:
+
+[source,none,role="copypaste"]
+----
+https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git
+----
+
+image::crw-clone-repo.png[crw,900]
+
+Next, select `/projects` in the drop-down menu for destination directory:
+
+image::crw-clone-dest.png[crw,900]
+
+And click *Select Repository Location*.
+
+Once imported, choose **Add to existing workspace** when prompted.
+
+The project is imported into your workspace and is visible in the project explorer:
+
+image::crw-clone-explorer.png[crw,900]
+
+[NOTE]
+====
+The Terminal window in CodeReady Workspaces. You can open a terminal window for any of the containers running in your Developer workspace. For the rest of these labs, anytime you need to run a command in a
+terminal, you can use the **>_ New Terminal** command on the right:
+
+image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
+====
+
+==== 2. Fix the issue with `ApplicationLifecycleListener`
+
+'''''
+
+Open the Issues report in the {{ RHAMT_URL }}[RHAMT Console, window=_blank]:
+
+image::rhamt_project_issues.png[rhamt_project_issues, 700]
+
+RHAMT provides helpful links to understand the issue deeper and offer guidance for the migration.
+
+The WebLogic `ApplicationLifecycleListener` abstract class is used to perform functions or schedule jobs in Oracle WebLogic, like server start and stop. In this case we have code in the `postStart` and `preStop` methods which are executed after Weblogic starts up and before it shuts down, respectively.
+
+In Jakarta EE, there is no equivalent to intercept these events, but you can get equivalent
+functionality using a _Singleton EJB_ with standard annotations, as suggested in the issue in the RHAMT report.
+
+We will use the `@Startup` annotation to tell the container to initialize the singleton session bean at application start. We
+will similarly use the `@PostConstruct` and `@PreDestroy` annotations to specify the methods to invoke at the start and end of
+the application lifecyle achieving the same result but without using proprietary interfaces.
+
+Using this method makes the code much more portable.
+
+==== 3. Fix the ApplicationLifecycleListener issues
+
+To begin we are fixing the issues under the Monolith application. Navigate to the `cloud-native-workshop-v2m1-labs` folder in the project tree, then open the file `monolith/src/main/java/com/redhat/coolstore/utils/StartupListener.java` by clicking on it.
+
+Replace the file content with:
+
+[source,java, role="copypaste"]
+----
+package com.redhat.coolstore.utils;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.Startup;
+import javax.inject.Singleton;
+import javax.inject.Inject;
+import java.util.logging.Logger;
+
+@Singleton
+@Startup
+public class StartupListener {
+
+    @Inject
+    Logger log;
+
+    @PostConstruct
+    public void postStart() {
+        log.info("AppListener(postStart)");
+    }
+
+    @PreDestroy
+    public void preStop() {
+        log.info("AppListener(preStop)");
+    }
+
+}
+----
+
+[NOTE]
+====
+Where is the Save button? CodeReady workspaces will autosave your changes, that is why you can’t find a SAVE button - no
+more losing code because you forgot to save. You can undo with kbd:[CTRL-Z] (or kbd:[CMD-Z] on a Mac) or by using the `Edit -> Undo` menu option.
+====
+
+
+==== 4. Test the build
+
+Open a new Terminal window under the `quarkus-tools` container (on the right). In the terminal, issue the following command to test the build:
+
+[source,sh,role="copypaste"]
+----
+mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith clean package
+----
+
+image::codeready-workspace-build.png[rhamt_project_issues, 700]
+
+If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the next issue! If it does not compile, verify
+you made all the changes correctly and try the build again.
+
+image::codeready-workspace-build-result.png[rhamt_project_issues, 700]
+
+===== View the diffs
+
+You can review the changes you've made. On the left, click on the _Version Control_ icon, which shows a list of the changed files. Double-click on `StartupListener.java` to view the differences you've made:
+
+image::codeready-workspace-diffs.png[diffs, 700]
+
+CodeReady keeps track (using Git) of the changes you make, and you can use version control to check in, update, and compare files as you change them.
+
+For now, go back to the _Explorer_ tree and lets fix the remaining issues.
+
+==== 5. Fix the logger issues
+
+Some of our application makes use of Weblogic-specific logging methods like the `NonCatalogLogger`, which offer features related to logging of
+internationalized content, and client-server logging.
+
+The WebLogic `NonCatalogLogger` is not supported on JBoss EAP (or any other Java EE platform), and should be migrated to a
+supported logging framework, such as the JDK Logger or JBoss Logging.
+
+We will use the standard Java Logging framework, a much more portable framework. The framework also
+https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html#a1.17[supports
+internationalization, window=_blank] if needed.
+
+In the same `monolith` directory, open the `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java` file and replace its contents with:
+
+[source,java, role="copypaste"]
+----
+package com.redhat.coolstore.service;
+
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.MessageDriven;
+import javax.inject.Inject;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+
+import com.redhat.coolstore.model.Order;
+import com.redhat.coolstore.utils.Transformers;
+
+import java.util.logging.Logger;
+
+@MessageDriven(name = "OrderServiceMDB", activationConfig = {
+    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "topic/orders"),
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
+    @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge")})
+public class OrderServiceMDB implements MessageListener {
+
+    @Inject
+    OrderService orderService;
+
+    @Inject
+    CatalogService catalogService;
+
+    private Logger log = Logger.getLogger(OrderServiceMDB.class.getName());
+
+    @Override
+    public void onMessage(Message rcvMessage) {
+        TextMessage msg = null;
+        try {
+                if (rcvMessage instanceof TextMessage) {
+                        msg = (TextMessage) rcvMessage;
+                        String orderStr = msg.getBody(String.class);
+                        log.info("Received order: " + orderStr);
+                        Order order = Transformers.jsonToOrder(orderStr);
+                        log.info("Order object is " + order);
+                        orderService.save(order);
+                        order.getItemList().forEach(orderItem -> {
+                            catalogService.updateInventoryItems(orderItem.getProductId(), orderItem.getQuantity());
+                        });
+                }
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+}
+----
+
+That one was pretty easy.
+
+==== 6. Test the build
+
+Build and package the app again just as before:
+
+[source,sh,role="copypaste"]
+----
+mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith clean package
+----
+
+If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to the next issue! If it does not compile, verify you
+made all the changes correctly and try the build again.
+
+==== Fix issues with MDBs
+
+In this final step we will again migrate some Weblogic-specific code in the app to use standard Java EE interfaces, and one
+JBoss-specific interface.
+
+Our application uses https://en.wikipedia.org/wiki/Java_Message_Service[JMS, window=_blank] to
+communicate. Each time an order is placed in the application, a JMS message is sent to a JMS Topic, which is then consumed by
+listeners (subscribers) to that topic to process the order using
+https://docs.oracle.com/javaee/6/tutorial/doc/gipko.html[Message-driven beans, window=_blank], a form of
+Enterprise JavaBeans (EJBs) that allow Java EE applications to process messages asynchronously.
+
+In this case, `InventoryNotificationMDB` is subscribed to and listening for messages from `ShoppingCartService`. When an order
+comes through the `ShoppingCartService`, a message is placed on the JMS Topic. At that point, the `InventoryNotificationMDB`
+receives a message and if the inventory service is below a pre-defined threshold, sends a message to the log indicating that the
+supplier of the product needs to be notified.
+
+Unfortunately this MDB was written a while ago and makes use of weblogic-proprietary interfaces to configure and operate the MDB.
+RHAMT has flagged this and reported it using a number of issues.
+
+JBoss EAP provides an even more efficient and declarative way to configure and manage the lifecycle of MDBs. In this case, we can
+use annotations to provide the necessary initialization and configuration logic and settings. We will use the `@MessageDriven`
+and `@ActivationConfigProperty` annotations, along with the `MessageListener` interfaces to provide the same functionality as
+from Weblogic.
+
+Much of Weblogic’s interfaces for EJB components like MDBs reside in Weblogic descriptor XML files. Open
+`src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` to see one of these descriptors. There are many different configuration
+possibilities for EJBs and MDBs in this file, but luckily our application only uses one of them, namely it configures
+`<trans-timeout-seconds>` to 30, which means that if a given transaction within an MDB operation takes too long to complete
+(over 30 seconds), then the transaction is rolled back and exceptions are thrown. This interface is Weblogic-specific so we’ll
+need to find an equivalent in JBoss.
+
+[NOTE]
+====
+You should be aware that this type of migration is more involved than the previous steps, and in real world applications it will
+rarely be as simple as changing one line at a time for a migration. Consult the
+https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit[RHAMT documentation, window=_blank] for more
+detail on Red Hat’s Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat
+can help you on your migration path.
+====
+
+==== 7. Review the issues
+
+From the RHAMT Issues report, we will fix the remaining issues:
+
+* `Call of JNDI lookup` - Our apps use a weblogic-specific
+https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface[JNDI, window=_blank] lookup scheme.
+* `Proprietary InitialContext initialization` - Weblogic has a very different lookup mechanism for InitialContext objects
+* `WebLogic InitialContextFactory` - This is related to the above, essentially a Weblogic proprietary mechanism
+* `WebLogic T3 JNDI binding` - The way EJBs communicate in Weblogic is over T2, a proprietary implementation of Weblogic.
+
+All of the above interfaces have equivalents in JBoss, however they are greatly simplified and overkill for our application which
+uses JBoss EAP’s internal message queue implementation provided by https://activemq.apache.org/artemis/[Apache ActiveMQ
+Artemis, window=_blank].
+
+==== 8. Remove the weblogic EJB Descriptors
+
+The first step is to remove the unneeded `weblogic-ejb-jar.xml` file. This file is proprietary to Weblogic and not recognized or
+processed by JBoss EAP. Delete the file by right-clicking on the `src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` file and choose **Delete**, and click **OK**.
+
+image::codeready-workspace-delete-jar.png[codeready-workspace-convert, 500]
+
+While we’re at it, let’s remove the stub weblogic implementation classes added as part of the scenario.
+
+Right-click on the `src/main/java/weblogic` folder and select *Delete* to delete the folder:
+
+image::codeready-workspace-delete-weblogic.png[codeready-workspace-convert, 500]
+
+==== 9. Fix the code
+
+Open the `monolith/src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java` file and replace its contents with:
+
+[source,java, role="copypaste"]
+----
+package com.redhat.coolstore.service;
+
+import com.redhat.coolstore.model.Order;
+import com.redhat.coolstore.utils.Transformers;
+
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.MessageDriven;
+import javax.inject.Inject;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+import java.util.logging.Logger;
+
+@MessageDriven(name = "InventoryNotificationMDB", activationConfig = {
+        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "topic/orders"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
+        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "30"),
+        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge")})
+public class InventoryNotificationMDB implements MessageListener {
+
+    private static final int LOW_THRESHOLD = 50;
+
+    @Inject
+    private CatalogService catalogService;
+
+    @Inject
+    private Logger log;
+
+    public void onMessage(Message rcvMessage) {
+        TextMessage msg;
+        {
+            try {
+                if (rcvMessage instanceof TextMessage) {
+                    msg = (TextMessage) rcvMessage;
+                    String orderStr = msg.getBody(String.class);
+                    Order order = Transformers.jsonToOrder(orderStr);
+                    order.getItemList().forEach(orderItem -> {
+                        int old_quantity = catalogService.getCatalogItemById(orderItem.getProductId()).getInventory().getQuantity();
+                        int new_quantity = old_quantity - orderItem.getQuantity();
+                        if (new_quantity < LOW_THRESHOLD) {
+                            log.warning("Inventory for item " + orderItem.getProductId() + " is below threshold (" + LOW_THRESHOLD + "), contact supplier!");
+                        }
+                    });
+                }
+
+
+            } catch (JMSException jmse) {
+                System.err.println("An exception occurred: " + jmse.getMessage());
+            }
+        }
+    }
+}
+----
+
+Remember the `<trans-timeout-seconds>` setting from the `weblogic-ejb-jar.xml` file? This is now set as an
+`@ActivationConfigProperty` in the new code. There are pros and cons to using annotations vs. XML descriptors and care should be
+taken to consider the needs of the application.
+
+Your MDB should now be properly migrated to JBoss EAP.
+
+==== 10. Test the build
+
+Build once again:
+
+[source,sh,role="copypaste"]
+----
+mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith clean package
+----
+
+image::codeready-workspace-build.png[rhamt_project_issues, 700]
+
+If builds successfully (you will see `BUILD SUCCESS`). If it does not compile, verify you
+made all the changes correctly and try the build again.
+
+==== 11. Re-run the RHAMT report
+
+In this step we will re-run the RHAMT report to verify our migration was successful.
+
+In the {{ RHAMT_URL }}[RHAMT Console, window=_blank], navigate to `Applications` on the left menu and click
+on `Add`. Enter the path to the fixed project at `/opt/solution` and click *Upload* to add the project:
+
+image::rhamt_rerun_analysis_report_solution.png[rhamt_rerun_analysis_report, 700]
+
+Be sure to delete the old `monolith.war` to avoid analyzing it again:
+
+image::rhamt_rerun_analysis_report_solution_del.png[rhamt_rerun_analysis_report, 700]
+
+and then click *Save and Run* to analyze the project:
+
+image::rhamt_rerun_analysis_report.png[rhamt_rerun_analysis_report, 700]
+
+Depending on how many other students are running reports, your analysis might be _queued_ for several minutes. If it is taking too
+long, feel free to skip the next section and proceed to step *13* and return back to the analysis later to confirm that you
+eliminated all the issues.
+
+==== 12. View the results
+
+Click on the lastet result to go to the report web page and verify that it now reports 0 Story Points:
+
+You have successfully migrated this app to JBoss EAP, congratulations!
+
+image::rhamt_project_issues_story.png[rhamt_project_issues_story, 700]
+
+Now that we’ve migrated the app, let’s deploy it and test it out and start to explore some of the features that JBoss EAP plus Red
+Hat OpenShift bring to the table.
+
+==== 13. Add an OpenShift profile
+
+'''''
+
+Open the `pom.xml` file.
+
+At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the following configuration to the pom.xml
+
+[source,xml,role="copypaste"]
+----
+        <profile>
+          <id>openshift</id>
+          <build>
+              <plugins>
+                  <plugin>
+                      <artifactId>maven-war-plugin</artifactId>
+                      <version>2.6</version>
+                      <configuration>
+                          <webResources>
+                              <resource>
+                                  <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                                  <filtering>true</filtering>
+                                  <targetPath>WEB-INF</targetPath>
+                              </resource>
+                          </webResources>
+                          <outputDirectory>${basedir}/deployments</outputDirectory>
+                          <warName>ROOT</warName>
+                      </configuration>
+                  </plugin>
+              </plugins>
+          </build>
+        </profile>
+----
+
+==== 14. Create the OpenShift project
+
+First, open a new brower with the {{ CONSOLE_URL }}[OpenShift web console, window=_blank]:
+
+image::openshift_login.png[openshift_login, 700]
+
+Login using your credentials:
+
+* Username: `{{ USER_ID }}`
+* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
+
+[NOTE]
+====
+When you access the OpenShift web console or other URLs via _HTTPS_ protocol, you will see browser warnings
+like `Your > Connection is not secure` since this workshop uses self-signed certificates (which you should not do in
+production!). For example, if you’re using *Chrome*, you will see the following screen.
+
+Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
+
+image::browser_warning.png[warning, 700]
+
+Other browsers have similar procedures to accept the security exception.
+====
+
+You will see a list of projects to which you have access:
+
+image::openshift_landing.png[openshift_landing, 700]
+
+[NOTE]
+====
+The project displayed in the landing page depends on which labs you will run today.
+====
+
+Click **Create Project**, fill in the fields, and click *Create*:
+
+* Name: `{{USER_ID }}-coolstore-dev`
+* Display Name: `{{ USER_ID }} Coolstore Monolith - Dev`
+* Description: _leave this field empty_
+
+[NOTE]
+====
+YOU *MUST* USE `{{ USER_ID }}-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later on and you will experience
+failures if you do not name it `{{ USER_ID }}-coolstore-dev`!
+====
+
+image::create_dialog.png[create_dialog, 700]
+
+This will take you to the project overview. There’s nothing there yet, but that’s about to change.
+
+image::project_overview.png[create_new, 700]
+
+==== Switch to Developer Perspective
+
+OpenShift 4 provides both an _Administrator_ and _Developer_ view in its console. Switch to the _Developer Perspective_ using the dropdown on the left:
+
+image::dev_perspective.png[create_new, 700]
+
+This provides a developer-centric view of applications deployed to the project. Since we have nothing deployed yet, you are presented with a set of ways to deploy applications.
+
+==== 15. Deploy the monolith
+
+We've pre-installed an application _template_ for use. Click the *From Catalog* item:
+
+image::from_catalog.png[create_new, 700]
+
+In the search box, type in `coolstore` and choose _Coolstore Monolith using binary build_ and then click *Instantiate Template*.
+
+image::from_catalog_bin.png[create_new, 700]
+
+Keep the default values and click **Create**.
+
+Go to the _Topology_ view to see the elements that were deployed.
+
+The *Topology* view in the _Developer_ perspective of the web console provides a visual representation of all the applications
+within a project, their build status, and the components and services associated with them.
+
+image::coolstore_topology.png[create_new, 700]
+
+You can see the _postgres_ database running (with a dark blue circle), and the coolstore monolith, which has not yet been deployed or started.
+
+==== Deploy monolith using CLI
+
+Although your Eclipse Che workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_
+that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but
+let’s login again: open a Terminal and issue the following command:
+
+[source,sh,role="copypaste"]
+----
+oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
+----
+
+Enter your username and password assigned to you:
+
+* Username: `{{ USER_ID }}`
+* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
+
+You should see something like this (the project names may be different):
+
+[source,none]
+----
+Login successful.
+
+You have access to the following projects and can switch between them with 'oc project <projectname>':
+
+  * istio-system
+    knative-serving
+    user6-bookinfo
+    user6-catalog
+    user6-cloudnative-pipeline
+    user6-cloudnativeapps
+    user6-inventory
+
+Using project "istio-system".
+Welcome! See 'oc help' to get started.
+----
+
+Switch to the developer project you created earlier via CodeReady Workspaces Terminal window:
+
+`oc project {{ USER_ID }}-coolstore-dev`
+
+You have not yet deployed the container image built in previous steps, but you’ll do that next.
+
+==== 16. Deploy application using Binary build
+
+In this development project we have selected to use a process called _binary builds_, which means that instead of pointing to a
+public Git Repository and have the S2I (Source-to-Image) build process download, build, and then create a container image for us
+we are going to build locally and just upload the artifact (e.g. the `.war` file). The binary deployment will speed up the build
+process significantly.
+
+First, build the project once more using the `openshift` Maven profile, which will create a suitable binary for use with
+OpenShift (this is not a container image yet, but just the `.war` file). We will do this with the `oc` command line.
+
+Build the project via CodeReady Workspaces Terminal window:
+
+[source,sh,role="copypaste"]
+----
+mvn clean package -Popenshift -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith
+----
+
+Wait for the build to finish and the `BUILD SUCCESS` message!
+
+And finally, start the build process that will take the `.war` file and combine it with JBoss EAP and produce a Linux container
+image which will be automatically deployed into the project, thanks to the _DeploymentConfig_ object created from the template:
+
+[source,sh,role="copypaste"]
+----
+oc start-build coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war
+----
+
+Back in the topology view, you should see the monolith being built:
+
+image::monolith_build.png[building]
+
+Click on the building icon to see the build log:
+
+image::monolith_log.png[building]
+
+Return to the Topology view, and click on the main icon and view the _Overview_:
+
+image::monolith_starting.png[building]
+
+Wait for the deployment to complete and the dark blue circle:
+
+image::monolith_wait.png[building]
+
+Test the application by clicking on the Route link:
+
+image::route_link.png[route_link]
+
+==== Congratulations!
+
+Now you are using the same application that we built locally on OpenShift. That wasn’t too hard right?
+
+image::coolstore_web.png[coolstore_web, 700]
+
+==== Summary
+
+Now that you have migrated an existing Java EE app to the cloud with JBoss and OpenShift, you are ready to start modernizing the
+application by breaking the monolith into smaller microservices in incremental steps, and employing modern techniques to ensure
+the application runs well in a distributed and containerized environment.
