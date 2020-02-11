@@ -437,6 +437,7 @@ Let’s add the following variables in _src/main/resources/application.propertie
 ----
 
 Repackage the inventory application:
+
 [source,sh,role="copypaste"]
 ----
 mvn package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests
@@ -466,6 +467,8 @@ Click on *Instantiate Template* and fill in the following fields, leaving the ot
 * **PostgreSQL Connection Username**: `inventory`
 * **PostgreSQL Connection Password**: `mysecretpassword`
 * **PostgreSQL Database Name**: `inventory`
+
+image::db-postgres-inventory-values.png[db, 700]
 
 This will deploy the database to our new project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View, window=_blank] to see it:
 

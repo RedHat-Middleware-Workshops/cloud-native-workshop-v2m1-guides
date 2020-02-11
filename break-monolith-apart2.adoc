@@ -38,7 +38,7 @@ In the project explorer, expand the _catalog_ project (ignore the red error icon
 
 image::catalog-project.png[catalog-setup, 700]
 
-####2. Examine the Maven project structure
+==== 2. Examine the Maven project structure
 
 The sample project shows the components of a basic Spring Boot project laid out in different subdirectories according to Maven
 best practices.
@@ -73,7 +73,7 @@ BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop, window=_bla
 
 We use this bill of material to make sure that we are using the version of for example Apache Tomcat that Red Hat supports.
 
-==== 3. Adding web (Apache Tomcat) to the application
+==== 3. Add web (Apache Tomcat) to the application
 
 '''''
 
@@ -154,8 +154,6 @@ We are now ready to implement the database repository.
 
 In the catalog project, right-click on the `src/main/java/com/redhat/coolstore/service` directory and select **New File**. Name the file `ProductRepository.java`:
 
-
-
 In the file, add this code:
 
 [source,java, role="copypaste"]
@@ -184,15 +182,16 @@ public class ProductRepository {
 }
 ----
 
-____
-NOTE: This class is annotated with `@Repository`. This is a feature of Spring that makes it possible to avoid a lot of boiler
+[NOTE]
+====
+This class is annotated with `@Repository`. This is a feature of Spring that makes it possible to avoid a lot of boiler
 plate code and only write the implementation details for this data repository. It also makes it very easy to switch to another
 data storage, like a NoSQL database.
-____
+====
 
 Spring Data provides a convenient way for us to access data without having to write a lot of boiler plate code. One way to do that
 is to use a _JdbcTemplate_. First we need to autowire that as a member to _ProductRepository_. Add these at the
-`<!-- TODO: Autowire the jdbcTemplate here -->` marker:
+`TODO: Autowire the jdbcTemplate here` marker:
 
 [source, java, role="copypaste"]
 ----
@@ -212,7 +211,7 @@ going to define the _RowMapper_ like this. Add these at the `<!-- TODO: Add row 
             rs.getDouble("price"));
 ----
 
-Now we are ready to create the methods that are used in the test. Let’s start with the `readAll()`. It should return a
+Now we are ready to create the business methods. Let’s start with the `readAll()`. It should return a
 `List<Product>` and then we can write the query as `SELECT * FROM catalog` and use the rowMapper to map that into `Product`
 objects. Add these at the `<!-- TODO: Create a method for returning all products -->` marker:
 
@@ -223,8 +222,7 @@ objects. Add these at the `<!-- TODO: Create a method for returning all products
     }
 ----
 
-The _ProductRepositoryTest_ also used another method called _findById(String id)_ that should return a Product. The implementation
-of that method using the _JdbcTemplate_ and _RowMapper_ looks like this. Add these at the
+We also need a way to find a single product element. Add these at the
 `<!-- TODO: Create a method for returning one product -->` marker:
 
 [source, java, role="copypaste"]
@@ -235,14 +233,14 @@ of that method using the _JdbcTemplate_ and _RowMapper_ looks like this. Add the
 ----
 
 The _ProductRepository_ should now have all the components, but we still need to tell spring how to connect to the database. For
-local development we will use the H2 in-memory database. When deploying this to OpenShift we are instead going to use the
+local development we will use the H2 in-memory database. Later, when deploying this to OpenShift we will use the
 PostgreSQL database, which matches what we are using in production.
 
 The Spring Framework has a lot of sane defaults that can always seem magical sometimes, but basically all we have to do to setup
-the database driver is to provide some configuration values. Open _src/main/resources/application-default.properties_ and add the
+the database driver is to provide some configuration values. Open `src/main/resources/application-default.properties` and add the
 following properties where the comment says `#TODO: Add database properties`.
 
-[source, java, role="copypaste"]
+[source, properties, role="copypaste"]
 ----
 spring.datasource.url=jdbc:h2:mem:catalog;DB_CLOSE_ON_EXIT=FALSE
 spring.datasource.username=sa
@@ -252,30 +250,17 @@ spring.datasource.driver-class-name=org.h2.Driver
 
 The Spring Data framework will automatically see if there is a `schema.sql` in the class path and run that when initializing.
 
-Now we are ready to run the test to verify that everything works. Right-click on the
-`src/test/java/com/redhat/coolstore/service` package and select _Run Test > Run JUnit Test_.
-
-image::catalog-test-run.png[catalog-test-run, 700]
-
-The test should be successful and you should see green color _test_realAll_, _test_realOne_ in Default Suite window.
-
-image::catalog-test-success.png[catalog-test-success, 700]
-
-You have now successfully executed the second step in this lab.
-
 Now you’ve seen how to use Spring Data to collect data from the database and how to use a local H2 database for development and
 testing.
 
 In next step of this lab, we will add the logic to expose the database content from REST endpoints using JSON format.
 
-####6. Create Catalog Service
-
-'''''
+==== 5. Create Catalog Service
 
 Now you are going to create a service class. Later on the service class will be the one that controls the interaction with the
 inventory service, but for now it’s basically just a wrapper of the repository class.
 
-Again, create a new class `CatalogService` in the `src/main/java/com/redhat/coolstore/service` package.
+Again, create a new class `CatalogService.java` in the `src/main/java/com/redhat/coolstore/service` package.
 
 Replace the empty class with this code:
 
@@ -321,85 +306,9 @@ public class CatalogService {
 As you can see there is a number of `TODO` in the code, and later we will use these placeholders to add logic for calling the
 Inventory Client to get the quantity.
 
-Now we are ready to create the endpoints that will expose REST service. Let’s again first start by creating a test case for our
-endpoint. We need two endpoints, one that exposes for GET calls to `/services/products` that will return all product in the
-catalog as JSON array, and the second one exposes GET calls to `/services/produc/{prodId}` which will return a single Product as
-a JSON Object. Let’s again start by creating a test case.
+Now we are ready to create the endpoints that will expose REST service.
 
-Create the test case by creating a new class file called `CatalogEndpointTest` in the
-`src/test/java/com/redhat/coolstore/service` package.
-
-Add the following code to the test case and make sure to _review_ it without any codes change so that you understand how it works.
-
-[source, java, role="copypaste"]
-----
-package com.redhat.coolstore.service;
-
-import com.redhat.coolstore.model.Product;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CatalogEndpointTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Test
-    public void test_retriving_one_proudct() {
-        ResponseEntity<Product> response
-                = restTemplate.getForEntity("/services/product/329199", Product.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody())
-                .returns("329199",Product::getItemId)
-                .returns("Forge Laptop Sticker",Product::getName)
-                //TODO: Add check for Quantity
-                .returns(8.50,Product::getPrice);
-    }
-
-
-    @Test
-    public void check_that_endpoint_returns_a_correct_list() {
-
-        ResponseEntity<List<Product>> rateResponse =
-                restTemplate.exchange("/services/products",
-                        HttpMethod.GET, null, new ParameterizedTypeReference<List<Product>>() {
-                        });
-
-        List<Product> productList = rateResponse.getBody();
-        assertThat(productList).isNotNull();
-        assertThat(productList).isNotEmpty();
-        List<String> names = productList.stream().map(Product::getName).collect(Collectors.toList());
-        assertThat(names).contains("Red Fedora","Forge Laptop Sticker","Oculus Rift");
-
-        Product fedora = productList.stream().filter( p -> p.getItemId().equals("329299")).findAny().get();
-        assertThat(fedora)
-                .returns("329299",Product::getItemId)
-                .returns("Red Fedora", Product::getName)
-                //TODO: Add check for Quantity
-                .returns(34.99,Product::getPrice);
-    }
-
-}
-----
-
-Now we are ready to implement the _CatalogEndpoint_.
-
-Start by creating a new class called `CatalogEndpoint` in the `src/main/java/com/redhat/coolstore/service` package.
+Start by creating a new class called `CatalogEndpoint.java` in the `src/main/java/com/redhat/coolstore/service` package.
 
 Replace the contents with this code:
 
@@ -434,37 +343,32 @@ public class CatalogEndpoint {
 }
 ----
 
-The Spring MVC Framework default uses Jackson to serialize or map Java objects to JSON and vice versa. Because Jackson extends
-upon JAX-B and does can automatically parse simple Java structures and parse them into JSON and vice verse and since our
-`Product.java` is very simple and only contains basic attributes we do not need to tell Jackson how to parse between Product and
+The Spring MVC Framework by default uses _Jackson_ to serialize or map Java objects to JSON and vice-versa.  Jackson extends
+upon JAX-B and can automatically parse simple Java structures and parse them into JSON and vice versa. Our
+`Product.java` pre-created class is very simple and only contains basic attributes we do not need to tell Jackson how to parse between Product and
 JSON.
-
-Now you can run the _CatalogEndpointTest_ and verify that it works via *Run Junit Test*. Right-click on the
-`CatalogEndpointTest` and select _Run Test > Run JUnit Test_.
-
-image::catalog-endpoint-test-run.png[catalog-endpoint-test-run, 700]
-
-The test should be successful and you should see green color _test_retriving_one_proudct_,
-_check_that_endpoint_returns_a_correct_list<> in Default Suite window.
-
-image::catalog-endpoint-test-success.png[catalog-endpoint-test-success, 700]
-
-You can also run the following command via `CodeReady Workspaces Terminal` to verify the test cases.
-
-`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
-
-`mvn verify -Dtest=CatalogEndpointTest`
 
 Since we now have endpoints that returns the catalog we can also start the service and load the default page again, which should
 now return the products.
 
-Start the application via CodeReady Workspaces *RUN* Menu:
+Start the application via CodeReady Workspaces Terminal using the following command:
 
-image::catalog-spring-run.png[catalog-spring-run, 700]
+[source,sh,role="copypaste"]
+----
+mvn clean spring-boot:run -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog
+----
 
-Wait for the application to start. Then we can verify the endpoint by running the following command in Eclipse Terminal:
+[NOTE]
+====
+If you get a popup about port `8081` being available, simply dismiss it with the `X` button.
+====
 
-`curl http://localhost:8081/services/products | jq`
+Wait for the application to start and get the `Started RestApplication in 4.025 seconds (JVM running for 4.361)` log message. Then, verify the endpoint by running the following command in a separate Terminal:
+
+[source,sh,role="copypaste"]
+----
+curl http://localhost:8081/services/products | jq
+----
 
 You should get a full JSON array consisting of all the products:
 
@@ -486,86 +390,43 @@ Now you’ve seen how to create REST application in Spring MVC and create a simp
 
 In the next step, we will also call another service to enrich the endpoint response with inventory status.
 
-____
-NOTE: Make sure to stop the service by closing `run spring-boot` tab window in CodeReady Workspace.
-____
+[WARNING]
+====
+Make sure to stop the service by clicking kbd:[CTRL-C] in the terminal that the app is running in!
+====
 
-####7. Get inventory data
-
-'''''
-
-So far our application has been kind of straight forward, but our monolith code for the catalog is also returning the inventory
-status. In the monolith since both the inventory data and catalog data are in the same database we used a `OneToOne` mapping in
-JPA like this:
-
-[source, java, role="copypaste"]
-----
-@OneToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
-@PrimaryKeyJoinColumn
-private InventoryEntity inventory;
-----
+==== 6. Get inventory data
 
 When redesigning our application to Microservices using domain driven design we have identified that Inventory and Product Catalog
 are two separate domains. However our current UI expects to retrieve data from both the Catalog Service and Inventory service in a
 singe request.
 
-####Service interaction
+===== Service interaction
 
 Our problem is that the user interface requires data from two services when calling the REST service on `/services/products`.
 There are multiple ways to solve this like:
 
-*I. Client Side integration* - We could extend our UI to first call `/services/products` and then for each product item call
+*1. Client Side integration* - We could extend our UI to first call `/services/products` and then for each product item call
 `/services/inventory/{prodId}` to get the inventory status and then combine the result in the web browser. This would be the
 least intrusive method, but it also means that if we have 100 of products the client will make 101 request to the server. If we
 have a slow internet connection this may cause issues.
 
-*II. Microservices Gateway* - Creating a gateway in-front of the `Catalog Service` that first calls the Catalog Service and then
+*2. Microservices Gateway* - Creating a gateway in front of the _Catalog Service_ that first calls the Catalog Service and then
 based on the response calls the inventory is another option. This way we can avoid lots of calls from the client to the server.
-http://camel.apache.org[Apache Camel]\{:target="_blank``} provides nice capabilities to do this and if you are interested to learn
+http://camel.apache.org[Apache Camel, window=_blank] provides nice capabilities to do this and if you are interested to learn
 more about this, please checkout the Coolstore Microservices example:
-http://github.com/jbossdemocentral/coolstore-microservice[Here]\{:target=''_blank"}
+http://github.com/jbossdemocentral/coolstore-microservice[Here, window=_blank]
 
-*III. Service-to-Service* - Depending on use-case and preferences another solution would be to do service-to-service calls
+*3. Service-to-Service* - Depending on use-case and preferences another solution would be to do service-to-service calls
 instead. In our case means that the Catalog Service would call the Inventory service using REST to retrieve the inventory status
 and include that in the response.
 
 There are no right or wrong answers here, but since this is a workshop on application modernization using Red Hat Runtimes we will
-not choose option I or II here. Instead we are going to use option III and extend our Catalog to call the Inventory service.
+not choose option 1 or 2 here. Instead we are going to use option 3 and extend our Catalog to call the Inventory service.
 
-####8. Extending the test
+==== 7. Implementing the Inventory Client
 
-'''''
-
-In the https://en.wikipedia.org/wiki/Test-driven_development[Test-Driven Development, window=_blank] style, let’s first extend
-our test to test the Inventory functionality (which doesn’t exist).
-
-Open _src/test/java/com/redhat/coolstore/service/CatalogEndpointTest.java_ again.
-
-Now at the markers *//TODO: Add check for Quantity* add the following line:
-
-`.returns(9999,Product::getQuantity)`
-
-And add it to the second test as well at the remaining _//TODO: Add check for Quantity_ marker:
-
-`.returns(9999,Product::getQuantity)`
-
-Now you can run the _CatalogEndpointTest_ and verify that it *fails* via _Run Junit Test_:
-
-image::catalog-endpoint-test-run.png[catalog-endpoint-test-run, 700]
-
-The test _should fail_ and you should see red color *test_retriving_one_proudct*, *check_that_endpoint_returns_a_correct_list* in
-Default Suite window.
-
-image::catalog-endpoint-test-failure.png[catalog-endpoint-test-failure, 700]
-
-The test fails because we are trying to call the Inventory service which is not runninng. Don’t worry, we will soon implement the
-code to call the inventory service.
-
-####9. Implementing the Inventory Client
-
-'''''
-
-Since we now have a nice way to test our service-to-service interaction we can now create the client that calls the Inventory.
+We can now create the client that calls the Inventory.
 Netflix has provided some nice extensions to the Spring Framework that are mostly captured in the Spring Cloud project, however
 Spring Cloud is mainly focused on Pivotal Cloud Foundry and because of that Red Hat and others have contributed Spring Cloud
 Kubernetes to the Spring Cloud project, which enables the same functionallity for Kubernetes based platforms like OpenShift.
@@ -576,7 +437,7 @@ more later, but let’s start with the implementation of the Inventory Client. U
 that details which parameters and return type we expect, annotate it with `@RequestMapping` and provide some details and then
 annotate the interface with `@Feign` and provide it with a name.
 
-Create the `InventoryClient` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
+Create the `InventoryClient.java` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
 
 Add the following code to the file:
 
@@ -603,20 +464,18 @@ public interface InventoryClient {
 }
 ----
 
-Open the `src/main/resources/application-default.properties file.
-
-Add these properties to it at the `#TODO: Configure netflix libraries` marker:
+Open the `src/main/resources/application-default.properties` file. Add these properties to it at the `#TODO: Configure netflix libraries` marker:
 
 [source, java, role="copypaste"]
 ----
-inventory.ribbon.listOfServers=inventory:8080
+inventory.ribbon.listOfServers=inventory-quarkus.{{ USER_ID }}-inventory.svc.cluster.local:8080
 feign.hystrix.enabled=true
 ----
 
-By setting _inventory.ribbon.listOfServers_ we are hard coding the actual URL of the service to *inventory:8080*. If we had
+By setting `inventory.ribbon.listOfServers` we are hard coding the actual URL of the service to `{{ USER_ID }}-inventory.svc.cluster.local:8080` (which will point to our inventory microservice we created in the last lab). If we had
 multiple servers we could also add those using a comma. However using Kubernetes there is no need to have multiple endpoints
 listed here since Kubernetes has a concept of _Services_ that will internally route between multiple instances of the same
-service. Later on we will update this value to reflect our URL when deploying to OpenShift.
+service.
 
 Now that we have a client we can make use of it in our _CatalogService_.
 
@@ -630,7 +489,7 @@ And autowire (e.g. inject) the client into it by inserting this at the `//TODO:
     private InventoryClient inventoryClient;
 ----
 
-Next, update the _read(String id)_ method at the comment
+Next, update the `read(String id)` method at the comment
 `//TODO: Update the quantity for the product by calling the Inventory service` add the following:
 
 [source, java, role="copypaste"]
@@ -642,10 +501,9 @@ Next, update the _read(String id)_ method at the comment
         product.setQuantity(Integer.parseInt(quantity.get(0)));
 ----
 
-Also, don’t forget to add the import statement by un-commenting the import statement *//import
-com.redhat.coolstore.client.InventoryClient* near the top
+Also, don’t forget to add the import statement by un-commenting the import statement for InventoryClient near the top
 
-[source, java, role="copypaste"]
+[source, java]
 ----
 import com.redhat.coolstore.client.InventoryClient;
 ----
@@ -664,15 +522,14 @@ Also in the _readAll()_ method replace the comment
         });
 ----
 
-____
-NOTE: Class `JSONArray` is an ordered sequence of values. Its external text form is a string wrapped in square brackets with
+[NOTE]
+====
+Class `JSONArray` is an ordered sequence of values. Its external text form is a string wrapped in square brackets with
 commas separating the values. The internal form is an object having get and opt methods for accessing the values by index, and
 element methods for adding or replacing values.
-____
+====
 
-####10. Create a fallback for inventory
-
-'''''
+==== 8. Create a fallback for inventory
 
 In the previous step we added a client to call the Inventory service. Services calling services is a common practice in
 Microservices Architecture, but as we add more and more services the likelihood of a problem increases dramatically. Even if each
@@ -683,9 +540,7 @@ In the previous step we used the Feign client from the Netflix cloud native libr
 for doing a REST call. However Feign also have another good property which is that we easily create fallback logic. In this case
 we will use static inner class since we want the logic for the fallback to be part of the Client and not in a separate class.
 
-Open: _src/main/java/com/redhat/coolstore/client/InventoryClient.java_
-
-And paste this into it at the `//TODO: Add Fallback factory here` marker:
+In the `InventoryClient`, add the following code at the `//TODO: Add Fallback factory here` marker:
 
 [source, java, role="copypaste"]
 ----
@@ -707,95 +562,88 @@ this line:
 @FeignClient(name="inventory",fallbackFactory = InventoryClient.InventoryClientFallbackFactory.class)
 ----
 
-####11. Slow running services
+=== 9. Slow running services
 
-'''''
 
 Having fallbacks is good but that also requires that we can correctly detect when a dependent services isn’t responding correctly.
 Besides from not responding a service can also respond slowly causing our services to also respond slow. This can lead to
 cascading issues that is hard to debug and pinpoint issues with. We should therefore also have sane defaults for our services. You
 can add defaults by adding it to the configuration.
 
-Open _src/main/resources/application-default.properties_
+Open `src/main/resources/application-default.properties`
 
-And add this line to it at the *#TODO: Set timeout to for inventory* marker:
+And add this line to it at the `#TODO: Set timeout to for inventory` marker:
 
 [source, java, role="copypaste"]
 ----
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
 ----
 
-#####Congratulations! You now have the framework for retrieving products from the product catalog and enriching the data with
+Let's re-test our app locally. Re-build and re-run the app:
+
+[source,sh,role="copypaste"]
+----
+mvn clean spring-boot:run -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog
+----
+
+Then, access the product catalog again in a separate terminal:
+
+[source,sh,role="copypaste"]
+----
+curl http://localhost:8081/services/products | jq
+----
+
+You will see:
+
+[source,json]
+----
+  {
+    "itemId": "444437",
+    "name": "Lytro Camera",
+    "desc": "Consumers who want to up their photography game are looking at newfangled cameras like the Lytro Field camera, designed to take photos with infinite focus, so you can decide later exactly where you want the focus of each image to be.",
+    "price": 44.3,
+    "quantity": 230
+  }
+----
+
+Notice the `"quantity": 230` - because CodeReady Workspaces runs in our OpenShift cluster, our value for `inventory.ribbon.listOfServers` we set earlier is completely valid!
+
+Congratulations! You now have the framework for retrieving products from the product catalog and enriching the data with
 inventory data from an external service. In next step of this lab we will deploy our application to OpenShift Container Platform
 and then start adding additional features to take care of various aspects of cloud native microservice development.
 
-####12. Create the OpenShift project
+==== 10. Add Database OpenShift
 
-'''''
+Our production catalog microservice will use an external database (PostgreSQL) to house inventory data. We've created an `{{ USER_ID}}-catalog` project for you. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View for {{ USER_ID }}-catalog project, window=_blank].
 
-We have already deployed our coolstore monolith and inventory to OpenShift. In this step we will deploy our new Catalog
-microservice for our CoolStore application, so let’s create a separate project to house it and keep it separate from our monolith
-and our other microservices.
+Click **+Add** on the left, on the _Database_ box on the project overview:
 
-Click on the name of the *userXX-catalog* project:
+image::db-catalog.png[db, 700]
 
-image::create_new_catalog.png[create_new, 700]
+Type in `postgres` in the search box, and click on the *PostgreSQL (ephemeral)*:
 
-This will take you to the project overview. There’s nothing there yet, but that’s about to change.
+image::db-catalog-postgres.png[db, 700]
 
-Next, we’ll deploy your new microservice to OpenShift.
+Click on *Instantiate Template* and fill in the following fields, leaving the others as their default values:
 
-####13. Deploy to OpenShift
+* **Namespace**: _choose `{{ USER_ID }}-catalog` for the first Namespace. Leave the second one as `openshift`_
+* **Database Service Name**: `catalog-database`
+* **PostgreSQL Connection Username**: `catalog`
+* **PostgreSQL Connection Password**: `mysecretpassword`
+* **PostgreSQL Database Name**: `catalog`
 
-'''''
+image::db-catalog-postgres-fields.png[db, 700]
 
-Now that you’ve logged into OpenShift, let’s deploy our new catalog microservice:
+This will deploy the database to our catalog project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View, window=_blank] to see it:
 
-Our production catalog microservice will use an external database (PostgreSQL) to house inventory data. First, deploy a new
-instance of PostgreSQL by executing via CodeReady Workspaces Terminal:
+==== 11. Add production configuration
 
-`oc project userXX-catalog`
+Create a new file in the `src/main/resources` called `application-openshift.properties` in CodeReady Workspace.
 
-[source,shell]
+Add the following content to this file:
+
+[source, properties, role="copypaste"]
 ----
-oc new-app -e POSTGRESQL_USER=catalog \
-    -e POSTGRESQL_PASSWORD=mysecretpassword \
-    -e POSTGRESQL_DATABASE=catalog \
-    openshift/postgresql:10 \
-    --name=catalog-database
-----
-
-This will deploy the database to our new project.
-
-image::catalog_posgresql.png[catalog_posgresql, 700]
-
-You can also check if the deployment is complete via CodeReady Workspaces Terminal:
-
-`oc rollout status -w dc/catalog-database`
-
-####14. Update configuration
-
-'''''
-
-Open the file _src/main/resources/application-default.properties_ in CodeReady Workspace.
-
-Comment the local variables and add a remote variables. You can replace the whole contents with the following variables to the
-file:
-
-* You have to replace *userXX* with your username in
-`inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080`.
-
-[source, java, role="copypaste"]
-----
-# Tomcat port - To avoid port conflict we set this to 8081 in the local environment
-#server.port=8081
-
-#TODO: Add database properties
-#spring.datasource.url=jdbc:h2:mem:catalog;DB_CLOSE_ON_EXIT=FALSE
-#spring.datasource.username=sa
-#spring.datasource.password=sa
-#spring.datasource.driver-class-name=org.h2.Driver
-
 # Production
 server.port=8080
 spring.datasource.url=jdbc:postgresql://catalog-database:5432/catalog
@@ -808,122 +656,81 @@ spring.datasource.continue-on-error=true
 
 feign.hystrix.enabled=true
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
-inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080
+inventory.ribbon.listOfServers=inventory-quarkus.{{ USER_ID }}-inventory.svc.cluster.local:8080
 ----
 
-image::catalog_changed_properties.png[catalog_posgresql, 700]
+We'll use this file by specifying a Spring _profile_ when we deploy to OpenShift.
 
-####15. Build and Deploy
+==== 12. Build and Deploy
 
-'''''
+If you still have the local app running, stop it by typing kbd:[CTRL-C] in its Terminal.
 
 Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces
 Terminal:
 
-`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
+[source,sh,role="copypaste"]
+----
+mvn clean install spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog
+----
 
-`mvn clean package spring-boot:repackage -DskipTests`
-
-The build and deploy may take a minute or two. Wait for it to complete. You should see a *BUILD SUCCESS* at the end of the build
+You should see a *BUILD SUCCESS* at the end of the build
 output.
 
 Then deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces Terminal:
 
-`oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=catalog-springboot -l app=catalog-springboot`
-
-This build uses the new
-https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index[Red
-Hat OpenJDK Container Image, window=_blank], providing foundational software needed to run Java applications, while staying at
-a reasonable size.
+[source,sh,role="copypaste"]
+----
+oc project {{ USER_ID }}-catalog
+oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=catalog-springboot -l app=catalog-springboot
+----
 
 And then start and watch the build, which will take about a minute to complete:
 
-`oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow`
+[source,sh,role="copypaste"]
+----
+oc start-build catalog-springboot --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
+----
 
-Once the build is done, we’ll deploy it as an OpenShift application:
+Once the build is done, we’ll deploy it as an OpenShift application and override the spring profile to use our _production_ values.
 
-`oc new-app catalog-springboot`
+[source,sh,role="copypaste"]
+----
+oc new-app catalog-springboot -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift'
+----
 
-and expose your service to the world:
+and run this to expose your service to the world:
 
-`oc expose service catalog-springboot`
+[source,sh,role="copypaste"]
+----
+oc expose service catalog-springboot
+----
 
-Finally, make sure it’s actually done rolling out:
+Finally, make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View, window=_blank] for the catalog, and ensure you get the blue circles!
 
-`oc rollout status -w dc/catalog-springboot`
+And then access the http://catalog-springboot-{{ USER_ID }}-catalog.{{ ROUTE_SUBDOMAIN}}[Catalog Web frontend, window=_blank] and ensure you get the expected inventory quantity (and not `-1`):
 
-Wait for that command to report replication controller ``catalog-springboot-1'' successfully rolled out before continuing.
-
-____
-NOTE: Even if the rollout command reports success the application may not be ready yet and the reason for that is that we
-currently don’t have any liveness check configured, but we will add that in the next steps.
-____
-
-And now we can access using curl once again to find a certain inventory:
-
-`export URL="http://$(oc get route | grep catalog | awk '{print $2}')"`
-
-`curl $URL/services/product/329299 ; echo`
-
-The expected result data is here:
-
-`{"itemId":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99,"quantity":736}`
-
-____
-*NOTE* if you do not get the expected output, make sure you replaced `userXX` in the `application-default.properties` file! If
-you forgot to do this, go back and make the change and re-build using the previous `mvn` command and re-deploy to OpenShift with
-the previous `oc start-build` command.
-____
-
-So now *Catalog* service is deployed to OpenShift. You can also see it in the Project Status in the OpenShift Console with running
-in 1 pod, along with the Postgres database pod.
-
-####16. Access the application running on OpenShift
-
-'''''
-
-This sample project includes a simple UI that allows you to access the Inventory API. This is the same UI that you previously
-accessed outside of OpenShift which shows the CoolStore inventory. Click on the route URL at *Networking > Routes* in
-link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web console, window=_blank] to access the sample UI.
-
-____
-You can also access the application through the link on Resources tab in the Project Status page.
-____
-
-image::catalog-route-link.png[catalog-route-link, 700]
-
-The UI will refresh the catalog table every 2 seconds, as before.
-
-image::catalog-sample-ui.png[catalog-sample-ui, 700]
-
-____
-NOTE: Since we previously have a inventory service running you should now see the actual quantity value and not the fallback value
-of -1.
-____
+image::catalog.png[catalog, 600]
 
 `Congratulations!` You have deployed the Catalog service as a microservice which in turn calls into the Inventory service to
 retrieve inventory data.
 
-####17. Strangling the monolith
+==== 13. Strangling the monolith
 
-'''''
-
-So far we haven’t started https://www.martinfowler.com/bliki/StranglerApplication.html[strangling the
-monolith, window=_blank]. To do this we are going to make use of routing capabilities in OpenShift. Each external request
+So far we haven’t started https://www.martinfowler.com/bliki/StranglerApplication.html[strangling the monolith, window=_blank]. Each external request
 coming into OpenShift (unless using ingress, which we are not) will pass through a route. In our monolith the web page uses client
 side REST calls to load different parts of pages.
 
-For the home page the product list is loaded via a REST call to _http:///services/products_. At the moment calls to that URL will
+For the home page the product list is loaded via a REST call to `/services/products`. At the moment calls to that URL will
 still hit product catalog in the monolith. Now we will route these calls to our newly created catalog services instead and end up
 with something like:
 
 image::catalog-goal.png[Greeting, 700]
 
-Follow the steps below to create *Cross-origin resource sharing (CORS)* based route. CORS is a mechanism that allows restricted
+Follow the steps below to create a *Cross-origin resource sharing (CORS)* based route. CORS is a mechanism that allows restricted
 resources on a web page to be requested from another domain outside the domain from which the first resource was served.
 
-Create *CORSProvider* class in _src/main/java/com/redhat/coolstore_ of *inventory* project to allow restricted resources on a
-_catalog_ service. Copy the following all codes in the class:
+Create a *CORSProvider.java* class in _src/main/java/com/redhat/coolstore_ of *inventory* project to allow restricted resources on a
+_catalog_ service. Copy the following code into the class file:
 
 [source, java, role="copypaste"]
 ----
@@ -949,116 +756,90 @@ public class CORSProvider implements Feature {
 }
 ----
 
-Repackage the *inventory* application via clicking on *Package for OpenShift* in Commands Palette:
+Rebuild and redeploy the *inventory* application using these commands:
 
-image::quarkus-dev-run-packageforOcp.png[codeready-workspace-maven, 700]
+[source,sh,role="copypaste"]
+----
+mvn clean package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests
+oc start-build -n {{ USER_ID }}-inventory inventory-quarkus --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/target/*-runner.jar --follow
+----
 
-Restart and watch the build, which will take about a minute to complete. Replace your username with *userXX*:
+This will take about a minute to complete. Once the build is done, the inventory pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
 
-`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n userXX-inventory`
-
-Once the build is done, the inventory pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
-
-Open *CatalogEndpoint* class in _src/main/java/com/redhat/coolstore/service_ of *catalog* project to allow restricted resources on
-a _product_ page of the monolith application. Add _@CrossOrigin_ annotation on _CatalogEndpoint_ class:
+Open `CatalogEndpoint` class in `src/main/java/com/redhat/coolstore/service` of `catalog` project to allow restricted resources on
+a _product_ page of the monolith application. Replace the class-level annotations with:
 
 [source, java, role="copypaste"]
 ----
-@Controller
 @CrossOrigin
+@RestController
 @RequestMapping("/services")
 ----
 
-Repackage the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces Terminal:
+We simply added the `@CrossOrigin` annotation.
 
-`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
+Rebuild and re-deploy the *catalog* service using the following commands:
 
-`mvn clean package spring-boot:repackage -DskipTests`
+[source,sh,role="copypaste"]
+----
+mvn clean install spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog
+oc start-build -n {{ USER_ID }}-catalog catalog-springboot --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
+----
 
-The build and deploy may take a minute or two. Wait for it to complete. You should see a *BUILD SUCCESS* at the end of the build
-output.
+This will take about a minute to complete. Once the build is done, the catalog pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
 
-Restart and watch the build, which will take about a minute to complete. Replace your username with *userXX*:
+Let’s update the catalog endpoint in monolith application. Show the URL to the catalog using this command:
 
-`cd /projects/cloud-native-workshop-v2m1-labs/catalog/`
-
-`oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow -n userXX-catalog`
-
-Once the build is done, the catalog pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
-
-Let’s update the catalog endpoint in monolith application. Copy the route URL of catalog service using following *oc* command in
-CodeReady Workspaces Terminal. Replace your username with *userXX*:
-
-`echo "http://$(oc get route -n userXX-catalog | grep catalog | awk '{print $2}')"`
+[source,sh,role="copypaste"]
+----
+echo; echo http://$(oc get route -n {{ USER_ID}}-catalog catalog-springboot -o jsonpath={% raw %}"{.spec.host}"{% endraw %})/services/products; echo
+----
 
 In the *monolith* project, open `catalog.js` in `src/main/webapp/app/services` and add a line as shown in the image to define
-the value of `baseUrl`.
+the value of `baseUrl`, just before the `factory.getProducts = function()` line:
 
-`baseUrl="YOUR_CATALOG_ROUTE_URL/services/products";`
-
-____
-Replace `YOUR_CATALOG_ROUTE_URL` with the URL emitted from the previous `echo` command
-____
+[source,javascript]
+----
+baseUrl=[YOUR_URL_FROM_ABOVE];
+----
 
 image::catalog_js_strangler.png[strangler, 700]
 
-Rebuild the project in CodeReady Workspaces Terminal:
+Rebuild and re-deploy the *monolith* project in CodeReady Workspaces Terminal:
 
-`cd /projects/cloud-native-workshop-v2m1-labs/monolith/`
-
-`mvn clean package -Popenshift`
-
-Wait for the build to finish and the `BUILD SUCCESS` message!
-
-Restart and watch the build, which will take about a minute to complete. Replace your username with *userXX*:
-
-`oc start-build coolstore --from-file=deployments/ROOT.war --follow -n userXX-coolstore-dev`
+[source,sh,role="copypaste"]
+----
+mvn clean package -DskipTests -Popenshift -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith
+oc start-build -n {{ USER_ID }}-coolstore-dev coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
+----
 
 Once the build is done, the coolstore pod will be deployed automatically via DeploymentConfig Trigger in OpenShift. Ensure it’s
-rolled out:
+rolled out by visiting the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-coolstore-dev[Monolith Topology, window=_blank] and wait for the blue circles!
 
-`oc rollout status -w dc/coolstore -n userXX-coolstore-dev` (replace `userXX` with your username)
+==== 14. Test the UI
 
-####18. Test the UI
-
-'''''
-
-Open the monolith UI at by selecting the `userXX-coolstore-dev` project in the link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web
-console, window=_blank], navigate to _Networking > Routes_ and click on the link to the monolith UI.
+Open the monolith UI by clicking the route URL icon (the arrow to the upper right of the blue circle for the coolstore monolith)
 
 Observe that the new catalog is being used along with the monolith:
 
 image::coolstore-web.png[Greeting, 700]
 
-The screen will look the same, but notice that the earlier product _Atari 2600 Joystick_ is now gone, as it has been removed in
+The screen will look the same, with proper inventory, but notice that the earlier product _Atari 2600 Joystick_ is now gone, as it has been removed in
 our new catalog microservice.
 
-____
-Note: If the web page is still same then you should clean cookies and caches in your web browser.
-____
+[NOTE]
+====
+If the web page is still same then you should clean cookies and caches in your web browser.
+====
 
-#####Congratulations! You have now successfully begun to _strangle_ the monolith. Part of the monolith’s functionality (Inventory
+==== Congratulations!
+
+You have now successfully begun to _strangle_ the monolith. Part of the monolith’s functionality (Inventory
 and Catalog) are now implemented as microservices.
-
-####19. Viewing the topology of Catalog application
-
-'''''
-
-The *Topology* view in the _Developer_ perspective of the web console provides a visual representation of all the applications
-within a project, their build status, and the components and services associated with them.
-
-You can navigate to the *Topology view* using the left navigation panel in the Developer perspective. After you create an
-application, you are directed automatically to the Topology view where you can see the status of the application Pods, quickly
-access the application on a public URL, access the source code to modify it, and see the status of your last build. You can zoom
-in and out to see more details for a particular application.
-
-image::catalog_topology.png[topology, 700]
 
 ==== Summary
 
-'''''
-
-In this lab you learned a bit more about what Spring Boot and how it can be used together with OpenShift and OpenShift Kubernetes.
+In this lab you learned a bit more about developing with Spring Boot and how it can be used together with OpenShift.
 
 You created a new product catalog microservice representing functionality previously implemented in the monolithic CoolStore
 application. This new service also communicates with the inventory service to retrieve the inventory status for each product.
