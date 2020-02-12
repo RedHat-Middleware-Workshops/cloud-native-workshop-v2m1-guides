@@ -66,13 +66,12 @@ image::crw-clone-explorer.png[crw,900]
 ====
 The Terminal window in CodeReady Workspaces. You can open a terminal window for any of the containers running in your Developer workspace. For the rest of these labs, anytime you need to run a command in a
 terminal, you can use the **>_ New Terminal** command on the right:
-
-image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 ====
 
-==== 2. Fix the issue with `ApplicationLifecycleListener`
+image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 
-'''''
+
+==== 2. Fix the issue with `ApplicationLifecycleListener`
 
 Open the Issues report in the {{ RHAMT_URL }}[RHAMT Console, window=_blank]:
 
