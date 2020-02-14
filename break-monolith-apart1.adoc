@@ -293,13 +293,13 @@ The output looks like:
 
 ==== 8. Add health probe
 
-==== What is MicroProfile Health?
+=== What is MicroProfile Health?
 
 *MicroProfile Health* allows applications to provide information about their state to external viewers which is typically useful
 in cloud environments like OpenShift where automated processes must be able to determine whether the application should be discarded or
 restarted.
 
-==== Run the health check
+=== Run the health check
 
 When you imported the _smallrye-health extension_ earlier, the `/health` endpoint is automatically exposed directly that can be used to
 run the health check procedures.
@@ -325,8 +325,6 @@ The general _outcome_ of the health check is computed as a logical AND of all th
 array is empty as we have not specified any health check procedure yet so let’s define some.
 
 ==== 9. Create your first health check
-
-'''''
 
 Next, let’s fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services. Open empty
 Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.java` and add the following code:
@@ -361,7 +359,7 @@ public class InventoryHealthCheck implements HealthCheck {
 }
 ----
 
-The `call()`` method exposes an HTTP GET endpoint which will return the status of the service. The logic of this check does a
+The `call()` method exposes an HTTP GET endpoint which will return the status of the service. The logic of this check does a
 simple query to the underlying database to ensure the connection to it is stable and available. The method is also annotated with
 MicroProfile's `@Readiness` annotation, which directs Quarkus to expose this endpoint as a health check at `/health/ready`.
 
