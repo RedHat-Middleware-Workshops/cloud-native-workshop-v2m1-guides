@@ -474,11 +474,11 @@ like `Your > Connection is not secure` since this workshop uses self-signed cert
 production!). For example, if you’re using *Chrome*, you will see the following screen.
 
 Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
+====
 
 image::browser_warning.png[warning, 700]
 
-Other browsers have similar procedures to accept the security exception.
-====
+Other browsers have similar procedures to accept the security exception.=
 
 You will see a list of projects to which you have access:
 

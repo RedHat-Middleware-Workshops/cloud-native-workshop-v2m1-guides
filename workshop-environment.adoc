@@ -39,7 +39,7 @@ echo "This is a bash shell command that you can copy/paste by clicking"
 Your workshop environment consists of several components which have been pre-installed and are ready to use. Depending on which
 parts of the workshop you’re doing, you will use one or more of:
 
-* https://www.openshift.com/[Red Hat OpenShift,window=_blank] - You’ll use one or more _projects_ (Kubernetes namespaces)
+* https://www.openshift.com/[Red Hat OpenShift,window=_blank] - You’ll use one or more **projects** (Kubernetes namespaces)
 that are your own and are isolated from other workshop students
 * https://developers.redhat.com/products/codeready-workspaces/overview[Red Hat CodeReady Workspaces, window=_blank] - based on
 *Eclipse Che*, it’s a cloud-based, in-browser IDE (similar to IntelliJ IDEA, VSCode, Eclipse IDE). You’ve been provisioned your

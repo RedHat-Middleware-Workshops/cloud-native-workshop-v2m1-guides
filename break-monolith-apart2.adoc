@@ -75,8 +75,6 @@ We use this bill of material to make sure that we are using the version of for e
 
 ==== 3. Add web (Apache Tomcat) to the application
 
-'''''
-
 Our application will be a web application, so we need to use a servlet container like Apache Tomcat or Undertow. Since Red Hat
 offers support for Apache Tomcat (e.g., security patches, bug fixes, etc.), we will use it.
 
@@ -709,7 +707,7 @@ Finally, make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}
 
 And then access the http://catalog-springboot-{{ USER_ID }}-catalog.{{ ROUTE_SUBDOMAIN}}[Catalog Web frontend, window=_blank] and ensure you get the expected inventory quantity (and not `-1`):
 
-image::catalog.png[catalog, 600]
+image::catalog.png[catalog, 700]
 
 `Congratulations!` You have deployed the Catalog service as a microservice which in turn calls into the Inventory service to
 retrieve inventory data.
