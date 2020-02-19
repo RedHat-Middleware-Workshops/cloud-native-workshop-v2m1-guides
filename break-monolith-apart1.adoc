@@ -317,12 +317,16 @@ The output shows:
 ----
 {
   "status": "UP",
-  "checks": []
+  "checks": [
+    {
+      "name": "Database connections health check",
+      "status": "UP"
+    }
+  ]
 }
 ----
 
-The general _outcome_ of the health check is computed as a logical AND of all the declared health check procedures. The _checks_
-array is empty as we have not specified any health check procedure yet so let’s define some.
+The general _outcome_ of the health check is computed as a logical AND of all the declared health check procedures. Quarkus extensions can also provide default health checks out of the box, which is why you see the `Database connections health check` above, since we are using a database extension.
 
 ==== 9. Create your first health check
 
@@ -385,10 +389,16 @@ The result should be:
     {
       "name": "Success of Inventory Health Check!!!",
       "status": "UP"
+    },
+    {
+      "name": "Database connections health check",
+      "status": "UP"
     }
   ]
 }
 ----
+
+You now see the default health check, along with your new Inventory health check.
 
 [NOTE]
 ====
@@ -468,6 +478,8 @@ Click on *Instantiate Template* and fill in the following fields, leaving the ot
 
 image::db-postgres-inventory-values.png[db, 700]
 
+Click *Create*.
+
 This will deploy the database to our new project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View, window=_blank] to see it:
 
 image::inventory-database-deployment.png[inventory_db_deployments, 700]
@@ -535,6 +547,10 @@ You should the same JSON response:
 {
   "status": "UP",
   "checks": [
+    {
+      "name": "Database connections health check",
+      "status": "UP"
+    },
     {
       "name": "Success of Inventory Health Check!!!",
       "status": "UP"
