@@ -56,8 +56,6 @@ image::rhamt_add_monolith_app1.png[RHAMT Add App, 900]
 
 === 4. Select _Migration to JBoss EAP 7_ in Transformation Path
 
-'''''
-
 Choose the `com` and `weblogic` checkboxes to include these packages during analysis and click the *Save & Run* button. You
 will be taken to Analysis Results dashboard page, wait until the analysis is complete (it will take a minute or two).
 
@@ -82,7 +80,6 @@ story points, number of incidents, and technologies encountered in that applicat
 image::rhamt_project_overview.png[RHAMT Project Overview, 900]
 
 === 7. Understanding the report
-
 
 The Dashboard gives an overview of the entire application migration effort. It summarizes:
 

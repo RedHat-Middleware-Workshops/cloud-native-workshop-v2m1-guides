@@ -293,13 +293,13 @@ The output looks like:
 
 ==== 8. Add health probe
 
-==== What is MicroProfile Health?
+=== What is MicroProfile Health?
 
 *MicroProfile Health* allows applications to provide information about their state to external viewers which is typically useful
 in cloud environments like OpenShift where automated processes must be able to determine whether the application should be discarded or
 restarted.
 
-==== Run the health check
+=== Run the health check
 
 When you imported the _smallrye-health extension_ earlier, the `/health` endpoint is automatically exposed directly that can be used to
 run the health check procedures.
@@ -326,12 +326,10 @@ array is empty as we have not specified any health check procedure yet so let’
 
 ==== 9. Create your first health check
 
-'''''
-
 Next, let’s fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services. Open empty
 Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.java` and add the following code:
 
-[source,java]
+[source,java,role="copypaste"]
 ----
 package com.redhat.coolstore;
 
@@ -361,7 +359,7 @@ public class InventoryHealthCheck implements HealthCheck {
 }
 ----
 
-The `call()`` method exposes an HTTP GET endpoint which will return the status of the service. The logic of this check does a
+The `call()` method exposes an HTTP GET endpoint which will return the status of the service. The logic of this check does a
 simple query to the underlying database to ensure the connection to it is stable and available. The method is also annotated with
 MicroProfile's `@Readiness` annotation, which directs Quarkus to expose this endpoint as a health check at `/health/ready`.
 
@@ -421,9 +419,9 @@ By default Quarkus has three profiles, although it is possible to use as many as
 * `test` - Activated when running tests
 * `prod` - The default profile when not running in development or test mode
 
-Let’s add the following variables in _src/main/resources/application.properties_:
+Let’s `add` the following variables in _src/main/resources/application.properties_:
 
-[source,shell]
+[source,shell,role="copypaste"]
 ----
 %prod.quarkus.datasource.url=jdbc:postgresql://inventory-database:5432/inventory
 %prod.quarkus.datasource.driver=org.postgresql.Driver
@@ -487,8 +485,7 @@ oc new-build -n {{ USER_ID }}-inventory registry.access.redhat.com/redhat-openjd
 [INFO]
 ====
 This build uses the new
-https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index[Red
-Hat OpenJDK Container Image, window=_blank], providing foundational software needed to run Java applications, while staying at
+https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index[Red Hat OpenJDK Container Image, window=_blank], providing foundational software needed to run Java applications, while staying at
 a reasonable size.
 ====
 
@@ -508,6 +505,7 @@ oc new-app inventory-quarkus; oc expose svc/inventory-quarkus
 ----
 
 And enable our new health check in OpenShift:
+
 [source,sh,role="copypaste"]
 ----
 oc set probe dc/inventory-quarkus --readiness --get-url=http://:8080/health/ready
@@ -582,7 +580,7 @@ image::app.png[App UI, 700]
 
 The app will begin polling the inventory as before and report success:
 
-image::inventory.png[Greeting, 400]
+image::inventory.png[Greeting, 700]
 
 Now you will corrupt the service and cause its health check to start failing. To simulate the app crashing, let’s kill the
 underlying service so it stops responding. Execute via CodeReady Workspaces Terminal:
@@ -598,7 +596,7 @@ Check out the application sample UI page and notice it is now failing to access 
 Fetch_ counter starts increasing, indicating that the UI cannot access inventory. This could have been caused by an overloaded
 server, a bug in the code, or any other reason that could make the application unhealthy.
 
-image::inventory-fail.png[Greeting, 400]
+image::inventory-fail.png[Greeting, 700]
 
 Back in the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View, window=_blank], you will see the pod is failing (light blue or yellow warning circle):
 
@@ -617,9 +615,7 @@ image::inventory.png[Greeting, 700]
 You learned a bit more about what Quarkus is, and how it can be used to create modern Java microservice-oriented applications.
 
 You created a new Inventory microservice representing functionality previously implmented in the monolithic CoolStore application.
-For now this new microservice is completely disconnected from our monolith and is not very useful on its own. In future steps you
-will link this and other microservices into the monolith to begin the process of
+For now this new microservice is completely disconnected from our monolith and is not very useful on its own. In future steps you will link this and other microservices into the monolith to begin the process of
 https://www.martinfowler.com/bliki/StranglerApplication.html[strangling the monolith, window=_blank].
 
-In the next lab, you’ll use
-Spring Boot, another popular framework, to implement additional microservices. Let’s go!
+In the next lab, you’ll use Spring Boot, another popular framework, to implement additional microservices. Let’s go!

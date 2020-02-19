@@ -66,13 +66,12 @@ image::crw-clone-explorer.png[crw,900]
 ====
 The Terminal window in CodeReady Workspaces. You can open a terminal window for any of the containers running in your Developer workspace. For the rest of these labs, anytime you need to run a command in a
 terminal, you can use the **>_ New Terminal** command on the right:
-
-image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 ====
 
-==== 2. Fix the issue with `ApplicationLifecycleListener`
+image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 
-'''''
+
+==== 2. Fix the issue with `ApplicationLifecycleListener`
 
 Open the Issues report in the {{ RHAMT_URL }}[RHAMT Console, window=_blank]:
 
@@ -475,11 +474,11 @@ like `Your > Connection is not secure` since this workshop uses self-signed cert
 production!). For example, if you’re using *Chrome*, you will see the following screen.
 
 Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
+====
 
 image::browser_warning.png[warning, 700]
 
-Other browsers have similar procedures to accept the security exception.
-====
+Other browsers have similar procedures to accept the security exception.=
 
 You will see a list of projects to which you have access:
 
