@@ -526,7 +526,14 @@ In the search box, type in `coolstore` and choose _Coolstore Monolith using bina
 
 image::from_catalog_bin.png[create_new, 700]
 
-Keep the default values and click **Create**.
+Fill in the following fields:
+
+* *Namespace*: `{{USER_ID}}-coolstore-dev` (this should already be selected)
+* *User ID*: `{{ USER_ID }}`
+
+image::from_catalog_bin_details.png[create_new, 700]
+
+Leave other values the same and click **Create**.
 
 Go to the _Topology_ view to see the elements that were deployed.
 
