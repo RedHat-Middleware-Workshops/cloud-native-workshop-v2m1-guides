@@ -88,7 +88,7 @@ Because of the Red Hat BOM and access to the Red Hat maven repositories all we n
 servlet container is to add the following dependency to your _pom.xml_. Add these lines at the
 `<!-- TODO: Add web (tomcat) dependency here -->` marker:
 
-[source,xml]
+[source,xml, role="copypaste"]
 ----
         <dependency>
           <groupId>org.springframework.boot</groupId>
@@ -99,7 +99,7 @@ servlet container is to add the following dependency to your _pom.xml_. Add thes
 We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the
 `<!-- TODO: Add jdbc dependency here -->` marker:
 
-[source,xml]
+[source,xml, role="copypaste"]
 ----
         <dependency>
           <groupId>org.springframework.boot</groupId>
@@ -110,7 +110,7 @@ We will also make use of Java Persistance API (JPA) so we need to add the follow
 We will go ahead and add a bunch of other dependencies while we have the pom.xml open. These will be explained later. Add these at
 the `<!-- TODO: Add actuator, feign and hystrix dependency here -->` marker:
 
-[source,xml]
+[source,xml, role="copypaste"]
 ----
        <dependency>
           <groupId>org.springframework.boot</groupId>
@@ -151,6 +151,10 @@ In next step of this lab, we will add the logic to be able to read a data from t
 We are now ready to implement the database repository.
 
 In the catalog project, right-click on the `src/main/java/com/redhat/coolstore/service` directory and select **New File**. Name the file `ProductRepository.java`:
+
+image::newfile.png[catalog-setup, 700]
+
+image::newfile-name.png[catalog-setup, 600]
 
 In the file, add this code:
 
@@ -663,8 +667,7 @@ We'll use this file by specifying a Spring _profile_ when we deploy to OpenShift
 
 If you still have the local app running, stop it by typing kbd:[CTRL-C] in its Terminal.
 
-Build and deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces
-Terminal:
+Build and deploy the project using the following command in a Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -678,7 +681,7 @@ Then deploy the project using the following command, which will use the maven pl
 
 [source,sh,role="copypaste"]
 ----
-oc project {{ USER_ID }}-catalog
+oc project {{ USER_ID }}-catalog && \
 oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=catalog-springboot -l app=catalog-springboot
 ----
 
@@ -758,7 +761,7 @@ Rebuild and redeploy the *inventory* application using these commands:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests
+mvn clean package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests && \
 oc start-build -n {{ USER_ID }}-inventory inventory-quarkus --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/target/*-runner.jar --follow
 ----
 
@@ -798,8 +801,13 @@ the value of `baseUrl`, just before the `factory.getProducts = function()` line:
 
 [source,javascript]
 ----
-baseUrl=[YOUR_URL_FROM_ABOVE];
+baseUrl='[YOUR_URL_FROM_ABOVE]';
 ----
+
+[WARNING]
+====
+Don't forget the quotes around the URL and the semi-colon at the end!
+====
 
 image::catalog_js_strangler.png[strangler, 700]
 
@@ -807,7 +815,7 @@ Rebuild and re-deploy the *monolith* project in CodeReady Workspaces Terminal:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean package -DskipTests -Popenshift -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith
+mvn clean package -DskipTests -Popenshift -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith && \
 oc start-build -n {{ USER_ID }}-coolstore-dev coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
 ----
 
