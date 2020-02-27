@@ -21,7 +21,7 @@ It is used by organizations for:
 * Rule extension and customizability
 * Ability to analyze source code or application archives
 
-Read more about it in the https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit[RHAMT documentation, window=blank]
+Read more about it in the https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit[RHAMT documentation, window=_blank]
 
 == Lab 1 - Login to RHAMT and analyze app
 
@@ -33,7 +33,7 @@ For this lab, we will use the RHAMT Web Console on top of OpenShift Container Pl
 
 === 1. Login to the RHAMT web console in OpenShift cluster
 
-To get started, {{ RHAMT_URL }}[access the Red Hat Application Migration Toolkit, window=blank] and log in
+To get started, {{ RHAMT_URL }}[access the Red Hat Application Migration Toolkit, window=_blank] and log in
 using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
 
 image::rhamt_login.png[RHAMT Login, 900]

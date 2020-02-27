@@ -8,7 +8,7 @@ services. In this lab, you will create the catalog service and the catalog servi
 ready, you will change the route to tie the UI calls to new service.
 
 To implement this, we are going to use the Spring Framework. The reason for using Spring for this service is to introduce you to
-Spring Development, and how https://www.redhat.com/en/products/runtimes[Red Hat Runtimes, window=blank] helps to make Spring
+Spring Development, and how https://www.redhat.com/en/products/runtimes[Red Hat Runtimes, window=_blank] helps to make Spring
 development on Kubernetes easy. In real life, the reason for choosing Spring vs. others mostly depends on personal preferences,
 like existing knowledge, etc. At the core Spring and Java EE are very similar.
 
@@ -45,7 +45,7 @@ best practices.
 
 As you can see, there are some files that we have prepared for you in the project. Under _src/main/resources/static/index.html_ we
 have for example prepared a simple html-based UI file for you. This matches very well what you would get if you generated an empty
-project from the https://start.spring.io[Spring Initializr, window=blank] web page.
+project from the https://start.spring.io[Spring Initializr, window=_blank] web page.
 
 One file that differs slightly is the `pom.xml`. Please open the and examine it a bit closer (but do not change anything at this
 time)
@@ -54,7 +54,7 @@ As you review the content, you will notice that there are a lot of _TODO_ commen
 as a marker and without them, you will not be able to finish this lab.
 
 Notice that we are not using the default BOM (Bill of material) that Spring Boot projects typically use. Instead, we are using a
-BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop, window=blank] project.
+BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop, window=_blank] project.
 
 [source,xml]
 ----
@@ -415,9 +415,9 @@ have a slow internet connection this may cause issues.
 
 *2. Microservices Gateway* - Creating a gateway in front of the _Catalog Service_ that first calls the Catalog Service and then
 based on the response calls the inventory is another option. This way we can avoid lots of calls from the client to the server.
-http://camel.apache.org[Apache Camel, window=blank] provides nice capabilities to do this and if you are interested to learn
+http://camel.apache.org[Apache Camel, window=_blank] provides nice capabilities to do this and if you are interested to learn
 more about this, please checkout the Coolstore Microservices example:
-http://github.com/jbossdemocentral/coolstore-microservice[Here, window=blank]
+http://github.com/jbossdemocentral/coolstore-microservice[Here, window=_blank]
 
 *3. Service-to-Service* - Depending on use-case and preferences another solution would be to do service-to-service calls
 instead. In our case means that the Catalog Service would call the Inventory service using REST to retrieve the inventory status
@@ -616,7 +616,7 @@ and then start adding additional features to take care of various aspects of clo
 
 ==== 10. Add Database OpenShift
 
-Our production catalog microservice will use an external database (PostgreSQL) to house inventory data. We've created an `{{ USER_ID}}-catalog` project for you. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View for {{ USER_ID }}-catalog project, window=blank].
+Our production catalog microservice will use an external database (PostgreSQL) to house inventory data. We've created an `{{ USER_ID}}-catalog` project for you. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View for {{ USER_ID }}-catalog project, window=_blank].
 
 Click **+Add** on the left, on the _Database_ box on the project overview:
 
@@ -636,7 +636,7 @@ Click on *Instantiate Template* and fill in the following fields, leaving the ot
 
 image::db-catalog-postgres-fields.png[db, 700]
 
-This will deploy the database to our catalog project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View, window=blank] to see it:
+This will deploy the database to our catalog project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View, window=_blank] to see it:
 
 ==== 11. Add production configuration
 
@@ -706,9 +706,9 @@ and run this to expose your service to the world:
 oc expose service catalog-springboot
 ----
 
-Finally, make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View, window=blank] for the catalog, and ensure you get the blue circles!
+Finally, make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View, window=_blank] for the catalog, and ensure you get the blue circles!
 
-And then access the http://catalog-springboot-{{ USER_ID }}-catalog.{{ ROUTE_SUBDOMAIN}}[Catalog Web frontend, window=blank] and ensure you get the expected inventory quantity (and not `-1`):
+And then access the http://catalog-springboot-{{ USER_ID }}-catalog.{{ ROUTE_SUBDOMAIN}}[Catalog Web frontend, window=_blank] and ensure you get the expected inventory quantity (and not `-1`):
 
 image::catalog.png[catalog, 700]
 
@@ -717,7 +717,7 @@ retrieve inventory data.
 
 ==== 13. Strangling the monolith
 
-So far we haven’t started https://www.martinfowler.com/bliki/StranglerApplication.html[strangling the monolith, window=blank]. Each external request
+So far we haven’t started https://www.martinfowler.com/bliki/StranglerApplication.html[strangling the monolith, window=_blank]. Each external request
 coming into OpenShift (unless using ingress, which we are not) will pass through a route. In our monolith the web page uses client
 side REST calls to load different parts of pages.
 
@@ -820,7 +820,7 @@ oc start-build -n {{ USER_ID }}-coolstore-dev coolstore --from-file $CHE_PROJECT
 ----
 
 Once the build is done, the coolstore pod will be deployed automatically via DeploymentConfig Trigger in OpenShift. Ensure it’s
-rolled out by visiting the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-coolstore-dev[Monolith Topology, window=blank] and wait for the blue circles!
+rolled out by visiting the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-coolstore-dev[Monolith Topology, window=_blank] and wait for the blue circles!
 
 ==== 14. Test the UI
 
