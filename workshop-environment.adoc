@@ -39,23 +39,23 @@ echo "This is a bash shell command that you can copy/paste by clicking"
 Your workshop environment consists of several components which have been pre-installed and are ready to use. Depending on which
 parts of the workshop you’re doing, you will use one or more of:
 
-* https://www.openshift.com/[Red Hat OpenShift,window=_blank] - You’ll use one or more **projects** (Kubernetes namespaces)
+* https://www.openshift.com/[Red Hat OpenShift,window=blank] - You’ll use one or more **projects** (Kubernetes namespaces)
 that are your own and are isolated from other workshop students
-* https://developers.redhat.com/products/codeready-workspaces/overview[Red Hat CodeReady Workspaces, window=_blank] - based on
+* https://developers.redhat.com/products/codeready-workspaces/overview[Red Hat CodeReady Workspaces, window=blank] - based on
 *Eclipse Che*, it’s a cloud-based, in-browser IDE (similar to IntelliJ IDEA, VSCode, Eclipse IDE). You’ve been provisioned your
 own personal workspace for use with this workshop. You’ll write, test, and deploy code from here.
-* https://developers.redhat.com/products/rhamt[Red Hat Application Migration Toolkit, window=_blank] - You’ll use this to
+* https://developers.redhat.com/products/rhamt[Red Hat Application Migration Toolkit, window=blank] - You’ll use this to
 migrate an existing application
-* https://www.redhat.com/en/products/runtimes[Red Hat Runtimes, window=_blank] - a collection of cloud-native runtimes like
-Spring Boot, Node.js, and https://quarkus.io[Quarkus, window=_blank]
-* https://www.redhat.com/en/technologies/jboss-middleware/amq[Red Hat AMQ Streams, window=_blank] - streaming data platform
+* https://www.redhat.com/en/products/runtimes[Red Hat Runtimes, window=blank] - a collection of cloud-native runtimes like
+Spring Boot, Node.js, and https://quarkus.io[Quarkus, window=blank]
+* https://www.redhat.com/en/technologies/jboss-middleware/amq[Red Hat AMQ Streams, window=blank] - streaming data platform
 based on *Apache Kafka*
-* https://access.redhat.com/products/red-hat-single-sign-on[Red Hat SSO, window=_blank] - For authentication / authorization -
+* https://access.redhat.com/products/red-hat-single-sign-on[Red Hat SSO, window=blank] - For authentication / authorization -
 based on *Keycloak*
-* Other open source projects like https://gogs.io/[Gogs, window=_blank] (Git server that holds application source code),
-https://knative.dev[Knative, window=_blank] (for serverless apps), https://jenkins.io/[Jenkins, window=_blank] and
-https://cloud.google.com/tekton/[Tekton, window=_blank] (CI/CD pipelines),
-https://prometheus.io[Prometheus, window=_blank] and https://grafana.com[Grafana, window=_blank] (monitoring apps), and
+* Other open source projects like https://gogs.io/[Gogs, window=blank] (Git server that holds application source code),
+https://knative.dev[Knative, window=blank] (for serverless apps), https://jenkins.io/[Jenkins, window=blank] and
+https://cloud.google.com/tekton/[Tekton, window=blank] (CI/CD pipelines),
+https://prometheus.io[Prometheus, window=blank] and https://grafana.com[Grafana, window=blank] (monitoring apps), and
 more.
 
 You’ll be provided clickable URLs throughout the workshop to access the services that have been installed for you.
