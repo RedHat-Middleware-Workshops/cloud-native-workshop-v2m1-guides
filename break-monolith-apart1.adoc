@@ -301,7 +301,7 @@ restarted.
 
 === Run the health check
 
-When you imported the _smallrye-health extension_ earlier, the `/health` endpoint is automatically exposed directly that can be used to
+When you imported the _health extension_ earlier, the `/health` endpoint is automatically exposed directly that can be used to
 run the health check procedures.
 
 Our application is still running, so you can exercise the default (no-op) health check with this command in a separate Terminal:
