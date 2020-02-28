@@ -6,9 +6,9 @@ In this step you will migrate some Weblogic-specific code in the app to use stan
 === 1. Access Your Development Environment
 
 You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipse
-Che, window=_blank]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
+Che^]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
 
-To get started, {{ ECLIPSE_CHE_URL }}[access the Che instance, window=_blank] and log in using the username
+To get started, {{ ECLIPSE_CHE_URL }}[access the Che instance^] and log in using the username
 and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
 
 image::che-login.png[cdw, 700]
@@ -77,7 +77,7 @@ image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 
 ==== 2. Fix the issue with `ApplicationLifecycleListener`
 
-Open the Issues report in the {{ RHAMT_URL }}[RHAMT Console, window=_blank]:
+Open the Issues report in the {{ RHAMT_URL }}[RHAMT Console^]:
 
 image::rhamt_project_issues.png[rhamt_project_issues, 700]
 
@@ -174,7 +174,7 @@ supported logging framework, such as the JDK Logger or JBoss Logging.
 
 We will use the standard Java Logging framework, a much more portable framework. The framework also
 https://docs.oracle.com/javase/8/docs/technotes/guides/logging/overview.html#a1.17[supports
-internationalization, window=_blank] if needed.
+internationalization^] if needed.
 
 In the same `monolith` directory, open the `src/main/java/com/redhat/coolstore/service/OrderServiceMDB.java` file and replace its contents with:
 
@@ -251,10 +251,10 @@ made all the changes correctly and try the build again.
 In this final step we will again migrate some Weblogic-specific code in the app to use standard Java EE interfaces, and one
 JBoss-specific interface.
 
-Our application uses https://en.wikipedia.org/wiki/Java_Message_Service[JMS, window=_blank] to
+Our application uses https://en.wikipedia.org/wiki/Java_Message_Service[JMS^] to
 communicate. Each time an order is placed in the application, a JMS message is sent to a JMS Topic, which is then consumed by
 listeners (subscribers) to that topic to process the order using
-https://docs.oracle.com/javaee/6/tutorial/doc/gipko.html[Message-driven beans, window=_blank], a form of
+https://docs.oracle.com/javaee/6/tutorial/doc/gipko.html[Message-driven beans^], a form of
 Enterprise JavaBeans (EJBs) that allow Java EE applications to process messages asynchronously.
 
 In this case, `InventoryNotificationMDB` is subscribed to and listening for messages from `ShoppingCartService`. When an order
@@ -281,7 +281,7 @@ need to find an equivalent in JBoss.
 ====
 You should be aware that this type of migration is more involved than the previous steps, and in real world applications it will
 rarely be as simple as changing one line at a time for a migration. Consult the
-https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit[RHAMT documentation, window=_blank] for more
+https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit[RHAMT documentation^] for more
 detail on Red Hat’s Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat
 can help you on your migration path.
 ====
@@ -291,14 +291,14 @@ can help you on your migration path.
 From the RHAMT Issues report, we will fix the remaining issues:
 
 * `Call of JNDI lookup` - Our apps use a weblogic-specific
-https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface[JNDI, window=_blank] lookup scheme.
+https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface[JNDI^] lookup scheme.
 * `Proprietary InitialContext initialization` - Weblogic has a very different lookup mechanism for InitialContext objects
 * `WebLogic InitialContextFactory` - This is related to the above, essentially a Weblogic proprietary mechanism
 * `WebLogic T3 JNDI binding` - The way EJBs communicate in Weblogic is over T2, a proprietary implementation of Weblogic.
 
 All of the above interfaces have equivalents in JBoss, however they are greatly simplified and overkill for our application which
 uses JBoss EAP’s internal message queue implementation provided by https://activemq.apache.org/artemis/[Apache ActiveMQ
-Artemis, window=_blank].
+Artemis^].
 
 ==== 8. Remove the weblogic EJB Descriptors
 
@@ -398,7 +398,7 @@ made all the changes correctly and try the build again.
 
 In this step we will re-run the RHAMT report to verify our migration was successful.
 
-In the {{ RHAMT_URL }}[RHAMT Console, window=_blank], navigate to `Applications` on the left menu and click
+In the {{ RHAMT_URL }}[RHAMT Console^], navigate to `Applications` on the left menu and click
 on `Add`. Enter the path to the fixed project at `/opt/solution` and click *Upload* to add the project:
 
 image::rhamt_rerun_analysis_report_solution.png[rhamt_rerun_analysis_report, 700]
@@ -462,7 +462,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
 
 ==== 14. Create the OpenShift project
 
-First, open a new brower with the {{ CONSOLE_URL }}[OpenShift web console, window=_blank]:
+First, open a new brower with the {{ CONSOLE_URL }}[OpenShift web console^]:
 
 image::openshift_login.png[openshift_login, 700]
 
