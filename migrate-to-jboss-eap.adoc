@@ -585,7 +585,10 @@ Welcome! See 'oc help' to get started.
 
 Switch to the developer project you created earlier via CodeReady Workspaces Terminal window:
 
-`oc project {{ USER_ID }}-coolstore-dev`
+[source,sh,role="copypaste"]
+----
+oc project {{ USER_ID }}-coolstore-dev
+----
 
 You have not yet deployed the container image built in previous steps, but you’ll do that next.
 

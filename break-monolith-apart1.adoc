@@ -1,31 +1,21 @@
 = Lab3 - Breaking the monolith apart - I
 :experimental:
 
-In the previous labs you learned how to take an existing monolithic Java EE application to the cloud with JBoss EAP and OpenShift,
-and you got a glimpse into the power of OpenShift for existing applications.
+In the previous labs you learned how to take an existing monolithic Java EE application to the cloud with JBoss EAP and OpenShift, and you got a glimpse into the power of OpenShift for existing applications.
 
-You will now begin the process of modernizing the application by breaking the application into multiple microservices using
-different technologies, with the eventual goal of re-architecting the entire application as a set of distributed microservices.
-Later on we’ll explore how you can better manage and monitor the application after it is re-architected.
+You will now begin the process of modernizing the application by breaking the application into multiple microservices using different technologies, with the eventual goal of re-architecting the entire application as a set of distributed microservices. Later on we’ll explore how you can better manage and monitor the application after it is re-architected.
 
-In this lab you will learn more about _Supersonic, Subatomic Java_ with https://quarkus.io/[Quarkus^], which is
-designed to be container and developer friendly.
+In this lab you will learn more about _Supersonic, Subatomic Java_ with https://quarkus.io/[Quarkus^], which is designed to be container and developer friendly.
 
-Quarkus is a _Kubernetes Native_ Java stack, crafted from the best of breed Java libraries and standards. Amazingly fast boot
-time, incredibly low RSS memory (not just heap size!) offering near instant scale up and high density memory utilization in
-container orchestration platforms like Kubernetes. Quarkus uses a technique called compile time boot.
-https://quarkus.io/vision/container-first[Learn more^].
+Quarkus is a _Kubernetes Native_ Java stack, crafted from the best of breed Java libraries and standards. Amazingly fast boot time, incredibly low RSS memory (not just heap size!) offering near instant scale up and high density memory utilization in container orchestration platforms like Kubernetes. Quarkus uses a technique called compile time boot. https://quarkus.io/vision/container-first[Learn more^].
 
 This will be one of the runtimes included in https://www.redhat.com/en/products/runtimes[Red Hat Runtimes^].
 
 === Goals of this lab
 
-You will implement one component of the monolith as a Quarkus microservice and modify it to address microservice concerns,
-understand its structure, deploy it to OpenShift and exercise the interfaces between Quarkus apps, microservices, and
-OpenShift/Kubernetes.
+You will implement one component of the monolith as a Quarkus microservice and modify it to address microservice concerns, understand its structure, deploy it to OpenShift and exercise the interfaces between Quarkus apps, microservices, and OpenShift/Kubernetes.
 
-The goal is to deploy this new microservice alongside the existing monolith, and then later on we’ll tie them together. But after
-this lab, you should end up with something like:
+The goal is to deploy this new microservice alongside the existing monolith, and then later on we’ll tie them together. But after this lab, you should end up with something like:
 
 image::goal.png[lab3_goal, 700]
 
@@ -39,8 +29,7 @@ image::codeready-workspace-inventory-project.png[inventory_setup, 700]
 
 ==== 2. Examine the Maven project structure
 
-The sample Quarkus project shows a minimal CRUD service exposing a couple of endpoints over REST, with a front-end based on
-Angular so you can play with it from your browser.
+The sample Quarkus project shows a minimal CRUD service exposing a couple of endpoints over REST, with a front-end based on Angular so you can play with it from your browser.
 
 While the code is surprisingly simple, under the hood this is using:
 
@@ -49,9 +38,7 @@ While the code is surprisingly simple, under the hood this is using:
 * A PostgreSQL database; see below to run one via Linux Container
 * Some example `Dockerfile`s to generate new images for JVM and Native mode compilation
 
-`Hibernate ORM` is the de facto JPA implementation and offers you the full breadth of an Object Relational Mapper. It makes
-complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with Panache focuses on making
-your entities trivial and fun to write in Quarkus.
+`Hibernate ORM` is the de facto JPA implementation and offers you the full breadth of an Object Relational Mapper. It makes complex mappings possible, but it does not make simple and common mappings trivial. Hibernate ORM with Panache focuses on making your entities trivial and fun to write in Quarkus.
 
 Now let’s write some code and create a domain model, service interface and a RESTful endpoint to access inventory:
 
@@ -59,23 +46,18 @@ image::inventory-arch.png[Inventory RESTful Service, 700]
 
 ==== 3. Add Quarkus Extensions
 
-We will add Quarkus extensions to the Inventory application for using _Panache_ (a simplified way to access data via Hibernate
-ORM), a database with Postgres (in production) and _H2_ (in-memory database for testing). We'll also add the ability to add health probes (which we'll use later on) using the MicroProfile Health extension.
-Run the following commands to add the extensions using CodeReady Terminal:
+We will add Quarkus extensions to the Inventory application for using _Panache_ (a simplified way to access data via Hibernate ORM), a database with Postgres (in production) and _H2_ (in-memory database for testing). We'll also add the ability to add health probes (which we'll use later on) using the MicroProfile Health extension. Run the following commands to add the extensions using CodeReady Terminal:
 
 [source,sh,role="copypaste"]
 ----
-cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/
-mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health"
+mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/
 ----
 
 This adds the extensions to `pom.xml`.
 
-[INFO]
+[NOTE]
 ====
-There are many https://quarkus.io/extensions/[more extensions^] for Quarkus for popular frameworks like
-https://vertx.io/[Vert.x^], http://camel.apache.org/[Apache Camel^],
-http://infinispan.org/[Infinispan^], Spring (e.g. `@Autowired`), and more.
+There are many https://quarkus.io/extensions/[more extensions^] for Quarkus for popular frameworks like https://vertx.io/[Vert.x^], http://camel.apache.org/[Apache Camel^], http://infinispan.org/[Infinispan^], Spring (e.g. `@Autowired`), and more.
 ====
 
 ==== 4. Create Inventory Entity
@@ -246,9 +228,10 @@ You should see a bunch of log output that ends with:
 
 [source,console,role="copypaste"]
 ----
-2019-12-01 10:40:03,944 INFO  [io.quarkus] (main) Quarkus 1.0.1.Final started in 2.969s. Listening on: http://0.0.0.0:8080
-2019-12-01 10:40:03,946 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
-2019-12-01 10:40:03,946 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb]
+2020-03-09 14:41:17,171 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
+2020-03-09 14:41:17,454 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus 1.2.1.Final) started in 3.353s. Listening on: http://0.0.0.0:8080
+2020-03-09 14:41:17,457 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
+2020-03-09 14:41:17,457 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb, smallrye-health]
 ----
 
 CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but when prompted, open the port `8080`, which opens a small web browser in CodeReady:
@@ -490,11 +473,11 @@ Create a new binary S2I build using the following command in a CodeReady Termina
 
 [source,sh,role="copypaste"]
 ----
-oc project {{ USER_ID }}-inventory
+oc project {{ USER_ID }}-inventory && \
 oc new-build -n {{ USER_ID }}-inventory registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=inventory-quarkus -l app=inventory-quarkus
 ----
 
-[INFO]
+[NOTE]
 ====
 This build uses the new
 https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index[Red Hat OpenJDK Container Image^], providing foundational software needed to run Java applications, while staying at
@@ -581,7 +564,7 @@ The result:
 
 [source,console]
 ----
-    Readiness:          http-get http://:8080/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3....
+    Readiness:          http-get http://:8080/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3
 ----
 
 In the next step, we’ll exercise the probe and watch as it fails and OpenShift recovers the application.
