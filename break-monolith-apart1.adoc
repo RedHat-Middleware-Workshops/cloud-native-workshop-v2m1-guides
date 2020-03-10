@@ -50,7 +50,7 @@ We will add Quarkus extensions to the Inventory application for using _Panache_ 
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/
+mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 This adds the extensions to `pom.xml`.
@@ -565,6 +565,13 @@ The result:
 [source,console]
 ----
     Readiness:          http-get http://:8080/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3
+----
+
+Updating the readiness probe caused another re-deployment of the app. Wait for this redeployment to complete by running the following command and waiting for `replication controller "inventory-quarkus-xxxx" successfully rolled out`:
+
+[source,sh,role="copypaste"]
+----
+oc rollout status -w dc/inventory-quarkus
 ----
 
 In the next step, we’ll exercise the probe and watch as it fails and OpenShift recovers the application.

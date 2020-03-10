@@ -7,9 +7,9 @@ because the inventory service is never called directly by the UI. It’s a backe
 services. In this lab, you will create the catalog service and the catalog service will call the inventory service. When you are
 ready, you will change the route to tie the UI calls to new service.
 
-To implement this, we are going to use the Spring Framework. The reason for using Spring for this service is to introduce you to
-Spring Development, and how https://www.redhat.com/en/products/runtimes[Red Hat Runtimes^] helps to make Spring
-development on Kubernetes easy. In real life, the reason for choosing Spring vs. others mostly depends on personal preferences,
+To implement this, we are going to use the Spring Framework and Spring Boot. The reason for using Spring for this service is to introduce you to
+Spring Boot development, and how https://www.redhat.com/en/products/runtimes[Red Hat Runtimes^] helps to make Spring
+development on Kubernetes easy. In real life, the reason for choosing Spring Boot vs. others mostly depends on personal preferences,
 like existing knowledge, etc. At the core Spring and Java EE are very similar.
 
 The goal is to produce something like:
@@ -640,7 +640,12 @@ This will deploy the database to our catalog project. Click on the {{ CONSOLE_UR
 
 ==== 11. Add production configuration
 
-Create a new file in the `src/main/resources` called `application-openshift.properties` in CodeReady Workspace.
+Create a new file in the `src/main/resources` called `application-openshift.properties` in CodeReady Workspaces.
+
+[WARNING]
+====
+Be sure your new file is in the same directory alongside the existing `application-default.properties`!
+====
 
 Add the following content to this file:
 
@@ -730,7 +735,7 @@ image::catalog-goal.png[Greeting, 700]
 Follow the steps below to create a *Cross-origin resource sharing (CORS)* based route. CORS is a mechanism that allows restricted
 resources on a web page to be requested from another domain outside the domain from which the first resource was served.
 
-Quarkus comes with a _CORS filter_ which implements the _javax.servlet.Filter_ interface and intercepts all incoming HTTP requests. It can be enabled in the Quarkus configuration file, `src/main/resources/application.properties`.
+Quarkus comes with a _CORS filter_ which implements the _javax.servlet.Filter_ interface and intercepts all incoming HTTP requests. It can be enabled in the Quarkus configuration file. Add the following line in the `inventory` project (our Quarkus app created earlier) in the `src/main/resources/application.properties` file:
 
 [source, properties, role="copypaste"]
 ----
@@ -773,7 +778,7 @@ Let’s update the catalog endpoint in monolith application. In the *monolith* p
 
 [source,javascript,role="copypaste"]
 ----
-baseUrl='http://catalog-springboot-{{ USERD_ID }}-catalog.{{ ROUTE_SUBDOMAIN }}/services/products';
+baseUrl='http://catalog-springboot-{{ USER_ID }}-catalog.{{ ROUTE_SUBDOMAIN }}/services/products';
 ----
 
 image::catalog_js_strangler.png[strangler, 700]

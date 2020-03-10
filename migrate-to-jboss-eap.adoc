@@ -399,7 +399,7 @@ made all the changes correctly and try the build again.
 In this step we will re-run the RHAMT report to verify our migration was successful.
 
 In the {{ RHAMT_URL }}[RHAMT Console^], navigate to `Applications` on the left menu and click
-on `Add`. Enter the path to the fixed project at `/opt/solution` and click *Upload* to add the project:
+on *Add*. Go the *Server Path* tab and enter the path to the fixed project at `/opt/solution` and click *Upload* to add the project:
 
 image::rhamt_rerun_analysis_report_solution.png[rhamt_rerun_analysis_report, 700]
 
@@ -430,7 +430,7 @@ Hat OpenShift bring to the table.
 
 '''''
 
-Open the `pom.xml` file.
+Open the `monolith/pom.xml` file.
 
 At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the following configuration to the pom.xml
 

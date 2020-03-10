@@ -64,6 +64,11 @@ image::rhamt_check_monolith_app.png[RHAMT Add App, 900]
 
 === 5. Go to the Active Analysis page and click on the latest when it’s completed
 
+[NOTE]
+====
+Your report may be _queued_ for a few seconds. Soon you will see a progress bar, then when the report is complete you can continue. If it seems to be queued for more than a minute, try refreshing the browser page.
+====
+
 Click the `#1` link (or `#2`) to see the report:
 
 image::rhamt_complete_analysis.png[RHAMT Complete, 900]
