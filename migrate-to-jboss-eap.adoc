@@ -45,7 +45,7 @@ Let's import our first project. Click on **Git Clone..** (or type kbd:[F1], ente
 
 image::che-workspace-gitclone.png[cdw, 900]
 
-Step through the prompts, using the following value for **Repository URL**:
+Step through the prompts, using the following value for **Repository URL**. If you use *FireFox*, press backspace after pasting one-liners:
 
 [source,none,role="copypaste"]
 ----
