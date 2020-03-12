@@ -45,7 +45,7 @@ Let's import our first project. Click on **Git Clone..** (or type kbd:[F1], ente
 
 image::che-workspace-gitclone.png[cdw, 900]
 
-Step through the prompts, using the following value for **Repository URL**. If you use *FireFox*, press backspace after pasting one-liners:
+Step through the prompts, using the following value for **Repository URL**. If you use *FireFox*, it may end up pasting extra spaces at the end, so just press backspace after pasting:
 
 [source,none,role="copypaste"]
 ----
@@ -65,6 +65,15 @@ Once imported, choose **Add to workspace** when prompted.
 The project is imported into your workspace and is visible in the project explorer:
 
 image::crw-clone-explorer.png[crw,900]
+
+==== IMPORTANT: Check out proper Git branch
+
+To make sure you're using the right version of the project files, run this command in a CodeReady Terminal:
+
+[source,sh,role="copypaste"]
+----
+cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs && git checkout ocp-4.3
+----
 
 [NOTE]
 ====
