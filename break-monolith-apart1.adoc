@@ -388,6 +388,10 @@ You now see the default health check, along with your new Inventory health check
 You can define separate readiness and liveness probes using `@Liveness` and `@Readiness` annotations and access them separately at `/health/live` and `/health/ready`.
 ====
 
+===== Cleanup
+
+Stop the Quarkus app by typing kbd:[CTRL-C] in the Terminal in which the app runs.
+
 ==== 10. Create OpenShift Project
 
 In this step, we will deploy our new Inventory microservice for our CoolStore application in a separate project to house
@@ -506,6 +510,15 @@ And enable our new health check in OpenShift:
 oc set probe dc/inventory-quarkus --readiness --get-url=http://:8080/health/ready
 ----
 
+And label the items with proper icons:
+
+[source,sh,role="copypaste"]
+----
+oc label dc/inventory-quarkus app.openshift.io/runtime=java --overwrite && \
+oc label dc/inventory-database app.openshift.io/runtime=postgresql --overwrite
+----
+
+
 Back on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View^], make sure it's done deploying (dark blue circle):
 
 image::inventory-rollout.png[inventory_db_deployments, 700]
@@ -615,6 +628,13 @@ Return to the same sample app UI (without reloading the page) and notice that th
 service and successfully accessed the inventory once again:
 
 image::inventory.png[Greeting, 700]
+
+Let's set the probe back to more appropriate values:
+
+[source,sh,role="copypaste"]
+----
+oc set probe dc/inventory-quarkus --readiness --initial-delay-seconds=5 --period-seconds=5 --failure-threshold=15
+----
 
 === Summary
 

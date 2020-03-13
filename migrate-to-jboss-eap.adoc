@@ -599,6 +599,17 @@ Switch to the developer project you created earlier via CodeReady Workspaces Ter
 oc project {{ USER_ID }}-coolstore-dev
 ----
 
+Next, label the components so that they get proper icons by running this command in the CodeReady Terminal:
+
+[source,sh,role="copypaste"]
+----
+oc label dc/coolstore-postgresql app.openshift.io/runtime=postgresql --overwrite && \
+oc label dc/coolstore app.openshift.io/runtime=jboss --overwrite
+----
+
+image::coolstore-labels.png[create_new, 600]
+
+
 You have not yet deployed the container image built in previous steps, but you’ll do that next.
 
 ==== 16. Deploy application using Binary build

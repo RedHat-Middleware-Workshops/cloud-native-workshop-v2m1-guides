@@ -682,7 +682,7 @@ mvn clean install spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/cloud-
 You should see a *BUILD SUCCESS* at the end of the build
 output.
 
-Then deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspaces Terminal:
+Then deploy the project using the following command in the CodeReady Workspaces Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -704,11 +704,12 @@ Once the build is done, we’ll deploy it as an OpenShift application and overri
 oc new-app catalog-springboot -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift'
 ----
 
-and run this to expose your service to the world:
+and run this to expose your service to the world and add a health check:
 
 [source,sh,role="copypaste"]
 ----
-oc expose service catalog-springboot
+oc expose service catalog-springboot && oc set probe dc/catalog-springboot  --readiness --get-url=http://:8080 --initial-delay-seconds=5 --period-seconds=5 --failure-threshold=15
+
 ----
 
 Finally, make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View^] for the catalog, and ensure you get the blue circles!
