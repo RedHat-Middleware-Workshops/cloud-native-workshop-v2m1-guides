@@ -1,9 +1,9 @@
 = Getting Started with Application Migration
 :experimental:
 
-In this module you’ll work with an existing Java EE application for a retail webshop and migrate it and modernize it. The current
-version of the webshop is a Java EE application built for Oracle Weblogic Application Server and as part of a modernization
-strategy and you've decided to move this application to JBoss EAP and run it on a container native environment from Red Hat called OpenShift.
+In this module you’ll work with an existing Java EE application designed for a retail webshop.  The current
+version of the webshop is a Java EE application built for Oracle Weblogic Application Server. As part of a modernization
+strategy you've decided to move this application to JBoss EAP, containerize it, and run it on a Kubernetes platform with OpenShift.
 
 === What is Red Hat Application Migration Toolkit?
 
