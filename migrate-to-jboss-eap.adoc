@@ -649,15 +649,15 @@ image::monolith_log.png[building]
 
 Return to the Topology view, and click on the main icon and view the _Overview_:
 
-image::monolith_starting.png[building]
+image::monolith_starting.png[building, 600]
 
 Wait for the deployment to complete and the dark blue circle:
 
-image::monolith_wait.png[building]
+image::monolith_wait.png[building, 500]
 
 Test the application by clicking on the Route link:
 
-image::route_link.png[route_link]
+image::route_link.png[route_link, 200]
 
 ==== Congratulations!
 
