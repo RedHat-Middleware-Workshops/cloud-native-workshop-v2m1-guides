@@ -653,11 +653,11 @@ image::monolith_starting.png[building, 700]
 
 Wait for the deployment to complete and the dark blue circle:
 
-image::monolith_wait.png[building, 600]
+image::monolith_wait.png[building, 700]
 
 Test the application by clicking on the Route link:
 
-image::route_link.png[route_link, 300]
+image::route_link.png[route_link, 400]
 
 ==== Congratulations!
 
