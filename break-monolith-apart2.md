@@ -284,7 +284,7 @@ The _ProductRepositoryTest_ also used another method called _findById(String id)
 
 ~~~java
     public Product findById(String id) {
-        return this.jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = '" + id + "'", rowMapper);
+        return this.jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = ?", new Object[]{id}, rowMapper);
     }
 ~~~
 
