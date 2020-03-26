@@ -63,7 +63,7 @@ BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop^] project.
             <dependency>
                 <groupId>me.snowdrop</groupId>
                 <artifactId>spring-boot-bom</artifactId>
-                <version>2.1.6.SP3-redhat-00001</version>
+                <version>2.1.13.Final-redhat-00001</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -230,7 +230,7 @@ We also need a way to find a single product element. Add these at the
 [source, java, role="copypaste"]
 ----
     public Product findById(String id) {
-        return this.jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = '" + id + "'", rowMapper);
+        return this.jdbcTemplate.queryForObject("SELECT * FROM catalog WHERE itemId = ?", new Object[]{id}, rowMapper);
     }
 ----
 
