@@ -230,7 +230,7 @@ You should see a bunch of log output that ends with:
 [source,console,role="copypaste"]
 ----
 2020-03-19 14:41:17,171 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
-2020-03-19 14:41:17,454 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus 1.3.0.Final) started in 3.353s. Listening on: http://0.0.0.0:8080
+2020-03-19 14:41:17,454 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus 1.3.1.Final) started in 3.353s. Listening on: http://0.0.0.0:8080
 2020-03-19 14:41:17,457 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
 2020-03-19 14:41:17,457 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb, smallrye-health]
 ----
