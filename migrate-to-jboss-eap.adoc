@@ -54,14 +54,6 @@ https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.g
 
 image::crw-clone-repo.png[crw,900]
 
-Next, select `/projects` in the drop-down menu for destination directory:
-
-image::crw-clone-dest.png[crw,900]
-
-And click *Select Repository Location*.
-
-Once imported, choose **Add to workspace** when prompted.
-
 The project is imported into your workspace and is visible in the project explorer:
 
 image::crw-clone-explorer.png[crw,900]
