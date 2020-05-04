@@ -53,7 +53,13 @@ We will add Quarkus extensions to the Inventory application for using _Panache_ 
 mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
-This adds the extensions to `pom.xml`.
+you will see:
+
+✅ Adding extension io.quarkus:quarkus-hibernate-orm-panache
+✅ Adding extension io.quarkus:quarkus-jdbc-h2
+✅ Adding extension io.quarkus:quarkus-smallrye-health
+
+And this adds the extensions to `pom.xml`.
 
 [NOTE]
 ====
@@ -206,14 +212,14 @@ In Development, we will configure to use local in-memory H2 database for local t
 
 [source,properties,role="copypaste"]
 ----
-quarkus.datasource.url=jdbc:h2:file://projects/database.db
-quarkus.datasource.driver=org.h2.Driver
-quarkus.datasource.username=inventory
-quarkus.datasource.password=mysecretpassword
-quarkus.datasource.max-size=8
-quarkus.datasource.min-size=2
-quarkus.hibernate-orm.database.generation=drop-and-create
-quarkus.hibernate-orm.log.sql=false
+%dev.quarkus.datasource.url=jdbc:h2:file://projects/database.db
+%dev.quarkus.datasource.driver=org.h2.Driver
+%dev.quarkus.datasource.username=inventory
+%dev.quarkus.datasource.password=mysecretpassword
+%dev.quarkus.datasource.max-size=8
+%dev.quarkus.datasource.min-size=2
+%dev.quarkus.hibernate-orm.database.generation=drop-and-create
+%dev.quarkus.hibernate-orm.log.sql=false
 ----
 
 ==== 7. Run Quarkus Inventory application
@@ -401,15 +407,31 @@ it and keep it separate from our monolith and our other microservices we will cr
 Before going to OpenShift console, we will repackage the Quarkus application for adding a PostgreSQL extension because our
 Inventory service will connect to PostgeSQL database in production on OpenShift.
 
-Add a _quarkus-jdbc-postgresql_ extension via CodeReady Workspaces Terminal:
+Quarkus also offers the ability to automatically generate OpenShift resources based on sane default and user supplied configuration. The OpenShift extension is actually a wrapper extension that brings together the [kubernetes](https://quarkus.io/guides/deploying-to-kubernetes) and [container-image-s2i](https://quarkus.io/guides/container-image#s2i) extensions with defaults so that it’s easier for the user to get started with Quarkus on OpenShift.
+
+Add _quarkus-jdbc-postgresql_ and _openshift_ extension via CodeReady Workspaces Terminal:
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="jdbc-postgresql" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
+
+you will see:
+
+✅ Adding extension io.quarkus:quarkus-openshift
+✅ Adding extension io.quarkus:quarkus-jdbc-postgresql
 
 Quarkus supports the notion of _configuration profiles_. These allows you to have multiple configurations in the same file and
 select between then via a _profile name_.
+
+For more details of the above options:
+
+* `quarkus.kubernetes-client.trust-certs=true` - We are using self-signed certs in this simple example, so this simply says to the extension to trust them.
+* `quarkus.container-image.build=true` - Instructs the extension to build a container image
+* `quarkus.kubernetes.deploy=true` - Instructs the extension to deploy to OpenShift after the container image is built
+* `quarkus.kubernetes.deployment-target=openshift` - Instructs the extension to generate and create the OpenShift resources (like `DeploymentConfig`s and `Service`s) after building the container
+* `quarkus.openshift.expose=true` - Instructs the extension to generate an OpenShift `Route`.
+* `quarkus.openshift.labels.app.openshift.io/runtime=java` - Adds a nice-looking icon to the app when viewing the OpenShift Developer Toplogy
 
 By default Quarkus has three profiles, although it is possible to use as many as you like. The default profiles are:
 
@@ -430,13 +452,13 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 %prod.quarkus.hibernate-orm.database.generation=drop-and-create
 %prod.quarkus.hibernate-orm.sql-load-script=import.sql
 %prod.quarkus.hibernate-orm.log.sql=true
-----
 
-Repackage the inventory application:
-
-[source,sh,role="copypaste"]
-----
-mvn package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests
+%prod.quarkus.kubernetes-client.trust-certs=true
+%prod.quarkus.container-image.build=true
+%prod.quarkus.kubernetes.deploy=true
+%prod.quarkus.kubernetes.deployment-target=openshift
+%prod.quarkus.openshift.expose=true
+%prod.quarkus.openshift.labels.app.openshift.io/runtime=quarkus 
 ----
 
 In OpenShift, ensure you're in the _Developer_ perspective and then choose the `{{ USER_ID }}-inventory` project which has already been created for you.
@@ -472,56 +494,37 @@ This will deploy the database to our new project. Click on the {{ CONSOLE_URL }}
 
 image::inventory-database-deployment.png[inventory_db_deployments, 700]
 
-==== 12. Build and Deploy
+==== 12. Deploy to OpenShift
 
-Create a new binary S2I build using the following command in a CodeReady Terminal:
+Now let's deploy the application itself. Run the following command which will build and deploy using the OpenShift extension:
 
 [source,sh,role="copypaste"]
 ----
 oc project {{ USER_ID }}-inventory && \
-oc new-build -n {{ USER_ID }}-inventory registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=inventory-quarkus -l app=inventory-quarkus
+mvn clean package -DskipTests -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
-[NOTE]
-====
-This build uses the new
-https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html/red_hat_java_s2i_for_openshift/index[Red Hat OpenJDK Container Image^], providing foundational software needed to run Java applications, while staying at
-a reasonable size.
-====
+The output should end with `BUILD SUCCESS`.
 
-Start and watch the build, which will take about a minute to complete:
+Finally, make sure it's actually done rolling out:
 
 [source,sh,role="copypaste"]
 ----
-oc start-build inventory-quarkus --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/target/*-runner.jar --follow
+oc rollout status -w dc/inventory
 ----
 
-Once the build is done, we’ll deploy it as an OpenShift application and override the Postgres URL to specify our production
-Postgres credentials:
-
-[source,sh,role="copypaste"]
-----
-oc new-app inventory-quarkus; oc expose svc/inventory-quarkus
-----
-
-And enable our new health check in OpenShift:
-
-[source,sh,role="copypaste"]
-----
-oc set probe dc/inventory-quarkus --readiness --get-url=http://:8080/health/ready
-----
+Wait for that command to report *replication controller _inventory-1_ successfully rolled out* before continuing.
 
 And label the items with proper icons:
 
 [source,sh,role="copypaste"]
 ----
-oc label dc/inventory-quarkus app.openshift.io/runtime=java --overwrite && \
 oc label dc/inventory-database app.openshift.io/runtime=postgresql --overwrite && \
-oc label dc/inventory-quarkus app.kubernetes.io/part-of=inventory --overwrite && \
+oc label dc/inventory app.kubernetes.io/part-of=inventory --overwrite && \
 oc label dc/inventory-database app.kubernetes.io/part-of=inventory --overwrite && \
-oc annotate dc/inventory-quarkus app.openshift.io/connects-to=inventory-database --overwrite && \
-oc annotate dc/inventory-quarkus app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git --overwrite && \
-oc annotate dc/inventory-quarkus app.openshift.io/vcs-ref=ocp-4.4 --overwrite
+oc annotate dc/inventory app.openshift.io/connects-to=inventory-database --overwrite && \
+oc annotate dc/inventory app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git --overwrite && \
+oc annotate dc/inventory app.openshift.io/vcs-ref=ocp-4.4 --overwrite
 ----
 
 Back on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View^], make sure it's done deploying (dark blue circle):
@@ -538,7 +541,7 @@ You should also be able to access the health check logic at the _inventory_ endp
 
 [source,sh,role="copypaste"]
 ----
-curl $(oc get route inventory-quarkus -o jsonpath={% raw %}"{.spec.host}"{% endraw %})/health/ready | jq
+curl $(oc get route inventory -o jsonpath={% raw %}"{.spec.host}"{% endraw %})/health/ready | jq
 ----
 
 You should the same JSON response:
@@ -568,14 +571,14 @@ poll the probe:
 
 [source,sh,role="copypaste"]
 ----
-oc set probe dc/inventory-quarkus --readiness --initial-delay-seconds=30
+oc set probe dc/inventory --readiness --initial-delay-seconds=30
 ----
 
 And verify it’s been changed (look at the _delay=_ value for the Readiness probe) via CodeReady Workspaces Terminal:
 
 [source,sh,role="copypaste"]
 ----
-oc describe dc/inventory-quarkus | egrep 'Readiness|Liveness'
+oc describe dc/inventory | egrep 'Readiness|Liveness'
 ----
 
 The result:
@@ -585,18 +588,11 @@ The result:
     Readiness:          http-get http://:8080/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3
 ----
 
-Updating the readiness probe caused another re-deployment of the app. Wait for this redeployment to complete by running the following command and waiting for `replication controller "inventory-quarkus-xxxx" successfully rolled out`:
-
-[source,sh,role="copypaste"]
-----
-oc rollout status -w dc/inventory-quarkus
-----
-
 In the next step, we’ll exercise the probe and watch as it fails and OpenShift recovers the application.
 
 ==== 14. Exercise Health Check
 
-Open the http://inventory-quarkus-{{ USER_ID }}-inventory.{{ ROUTE_SUBDOMAIN}}[Inventory UI^].
+Open the http://inventory-{{ USER_ID }}-inventory.{{ ROUTE_SUBDOMAIN}}[Inventory UI^].
 
 This will open up the sample application UI in a new browser tab:
 
@@ -611,7 +607,7 @@ underlying service so it stops responding. Execute via CodeReady Workspaces Term
 
 [source,sh,role="copypaste"]
 ----
-oc rsh dc/inventory-quarkus pkill java
+oc rsh dc/inventory pkill java
 ----
 
 This will execute the Linux *pkill* command to stop the running Java process in the container.
@@ -638,7 +634,7 @@ Let's set the probe back to more appropriate values:
 
 [source,sh,role="copypaste"]
 ----
-oc set probe dc/inventory-quarkus --readiness --initial-delay-seconds=5 --period-seconds=5 --failure-threshold=15
+oc set probe dc/inventory --readiness --initial-delay-seconds=5 --period-seconds=5 --failure-threshold=15
 ----
 
 === Summary

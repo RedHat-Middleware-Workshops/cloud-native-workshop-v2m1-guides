@@ -472,19 +472,6 @@ Login using your credentials:
 * Username: `{{ USER_ID }}`
 * Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
-[NOTE]
-====
-When you access the OpenShift web console or other URLs via _HTTPS_ protocol, you will see browser warnings
-like `Your > Connection is not secure` since this workshop uses self-signed certificates (which you should not do in
-production!). For example, if you’re using *Chrome*, you will see the following screen.
-
-Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
-====
-
-image::browser_warning.png[warning, 700]
-
-Other browsers have similar procedures to accept the security exception.=
-
 You will see a list of projects to which you have access:
 
 image::openshift_landing.png[openshift_landing, 700]
@@ -526,7 +513,7 @@ We've pre-installed an application _template_ for use. Click the *From Catalog* 
 
 image::from_catalog.png[create_new, 700]
 
-In the search box, type in `coolstore` and choose _Coolstore Monolith using binary build_ and then click *Instantiate Template*.
+In the search box, type in `coolstore` and choose _Coolstore Monolith using binary build_ and then click *Instantiate Template*. If you don't see the _coolstore_ template, make sure to uncheck *Operator Backed* in _Type_.
 
 image::from_catalog_bin.png[create_new, 700]
 
@@ -552,17 +539,12 @@ You can see the _postgres_ database running (with a dark blue circle), and the c
 
 Although your Eclipse Che workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_
 that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but
-let’s login again: open a Terminal and issue the following command:
-
-[source,sh,role="copypaste"]
-----
-oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
-----
-
-Enter your username and password assigned to you:
+let’s login again: Click on *Login to OpenShift*, and enter your given credentials:
 
 * Username: `{{ USER_ID }}`
 * Password: `{{ OPENSHIFT_USER_PASSWORD }}`
+
+image::cmd-login.png[login,700]
 
 You should see something like this (the project names may be different):
 
@@ -572,15 +554,15 @@ Login successful.
 
 You have access to the following projects and can switch between them with 'oc project <projectname>':
 
-  * istio-system
-    knative-serving
-    user6-bookinfo
-    user6-catalog
-    user6-cloudnative-pipeline
-    user6-cloudnativeapps
-    user6-inventory
+  * user1-bookinfo
+    user1-catalog
+    user1-cloudnative-pipeline
+    user1-cloudnativeapps
+    user1-coolstore-dev
+    user1-inventory
+    user1-istio-system
 
-Using project "istio-system".
+Using project "user1-bookinfo".
 Welcome! See 'oc help' to get started.
 ----
 
@@ -605,7 +587,6 @@ oc annotate dc/coolstore app.openshift.io/vcs-ref=ocp-4.4 --overwrite
 ----
 
 image::coolstore-labels.png[create_new, 600]
-
 
 You have not yet deployed the container image built in previous steps, but you’ll do that next.
 

@@ -470,7 +470,7 @@ Open the `src/main/resources/application-default.properties` file. Add these pro
 
 [source, java, role="copypaste"]
 ----
-inventory.ribbon.listOfServers=inventory-quarkus.{{ USER_ID }}-inventory.svc.cluster.local:8080
+inventory.ribbon.listOfServers=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
 feign.hystrix.enabled=true
 ----
 
@@ -663,7 +663,7 @@ spring.datasource.continue-on-error=true
 
 feign.hystrix.enabled=true
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
-inventory.ribbon.listOfServers=inventory-quarkus.{{ USER_ID }}-inventory.svc.cluster.local:8080
+inventory.ribbon.listOfServers=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
 ----
 
 We'll use this file by specifying a Spring _profile_ when we deploy to OpenShift.
@@ -748,7 +748,7 @@ Rebuild and redeploy the *inventory* application using these commands:
 [source,sh,role="copypaste"]
 ----
 mvn clean package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests && \
-oc start-build -n {{ USER_ID }}-inventory inventory-quarkus --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/target/*-runner.jar --follow
+oc start-build -n {{ USER_ID }}-inventory inventory --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/target/*-runner.jar --follow
 ----
 
 This will take about a minute to complete. Once the build is done, the inventory pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
