@@ -539,7 +539,7 @@ You can see the _postgres_ database running (with a dark blue circle), and the c
 
 Although your Eclipse Che workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_
 that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but
-let’s login again: Click on *Login to OpenShift*, and enter your given credentials:
+let’s login again: click on *Login to OpenShift*, and enter your given credentials:
 
 * Username: `{{ USER_ID }}`
 * Password: `{{ OPENSHIFT_USER_PASSWORD }}`
@@ -554,15 +554,14 @@ Login successful.
 
 You have access to the following projects and can switch between them with 'oc project <projectname>':
 
-  * user1-bookinfo
-    user1-catalog
-    user1-cloudnative-pipeline
-    user1-cloudnativeapps
-    user1-coolstore-dev
-    user1-inventory
-    user1-istio-system
+  * {{ USER_ID }}-bookinfo
+    {{ USER_ID }}-catalog
+    {{ USER_ID }}-cloudnative-pipeline
+    {{ USER_ID }}-cloudnativeapps
+    {{ USER_ID }}-inventory
+    {{ USER_ID }}-istio-system
 
-Using project "user1-bookinfo".
+Using project "{{ USER_ID }}-bookinfo".
 Welcome! See 'oc help' to get started.
 ----
 
