@@ -98,7 +98,7 @@ Because of the Red Hat BOM and access to the Red Hat maven repositories all we n
         </dependency>
 ~~~
 
-We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the `<!-- TODO: Add jdbc dependency here -->` marker:
+We will also make use of Java Persistence API (JPA) so we need to add the following to _pom.xml_ at the `<!-- TODO: Add jdbc dependency here -->` marker:
 
 ~~~xml
         <dependency>
@@ -137,7 +137,7 @@ If it builds successfully (you will see **BUILD SUCCESS**), you have now success
 
 Now you've seen how to get started with Spring Boot development on Red Hat Runtimes.
 
-In next step of this lab, we will add the logic to be able to read a data from the database.
+In next step of this lab, we will add the logic to be able to read data from the database.
 
 ####4. Create Domain Objects
 
@@ -182,7 +182,7 @@ public class ProductRepositoryTest {
 
 Next, inject a handle to the future repository class which will provide access to the underlying data repository. It is
 injected with Spring's **@Autowired** annotation which locates, instantiates, and injects runtime instances of classes automatically,
-and manages their lifecycle (much like Java EE and it's CDI feature). Add these at the `<!-- TODO: Insert Catalog Component here -->` marker:
+and manages their lifecycle (much like Java EE and its CDI feature). Add these at the `<!-- TODO: Insert Catalog Component here -->` marker:
 
 ~~~java
     @Autowired
@@ -363,7 +363,7 @@ public class CatalogService {
 }
 ~~~
 
-As you can see there is a number of `TODO` in the code, and later we will use these placeholders to add logic for calling the Inventory Client to get the quantity.
+As you can see there are a number of `TODO` in the code, and later we will use these placeholders to add logic for calling the Inventory Client to get the quantity.
 
 Now we are ready to create the endpoints that will expose REST service. Let's again first start by creating a test case for our endpoint. We need two endpoints, one that exposes for GET calls to `/services/products` that will return all product in the catalog as JSON array, and the second one exposes GET calls to `/services/produc/{prodId}` which will return a single Product as a JSON Object. Let's again start by creating a test case.
 
@@ -499,7 +499,7 @@ You can also run the following command via `CodeReady Workspaces Terminal` to ve
 
 `mvn verify -Dtest=CatalogEndpointTest`
 
-Since we now have endpoints that returns the catalog we can also start the service and load the default page again, which should now return the products.
+Since we now have endpoints that return the catalog we can also start the service and load the default page again, which should now return the products.
 
 Start the application via CodeReady Workspaces **RUN** Menu:
 
@@ -524,7 +524,7 @@ You should get a full JSON array consisting of all the products:
 
 You have now successfully executed the third step in this lab.
 
-Now you've seen how to create REST application in Spring MVC and create a simple application that returns product.
+Now you've seen how to create a REST application in Spring MVC and create a simple application that returns a product.
 
 In the next step, we will also call another service to enrich the endpoint response with inventory status.
 
@@ -548,7 +548,7 @@ When redesigning our application to Microservices using domain driven design we 
 
 Our problem is that the user interface requires data from two services when calling the REST service on `/services/products`. There are multiple ways to solve this like:
 
-**I. Client Side integration** - We could extend our UI to first call `/services/products` and then for each product item call `/services/inventory/{prodId}` to get the inventory status and then combine the result in the web browser. This would be the least intrusive method, but it also means that if we have 100 of products the client will make 101 request to the server. If we have a slow internet connection this may cause issues.
+**I. Client Side integration** - We could extend our UI to first call `/services/products` and then for each product item call `/services/inventory/{prodId}` to get the inventory status and then combine the result in the web browser. This would be the least intrusive method, but it also means that if we have 100 of products the client will make 101 requests to the server. If we have a slow internet connection this may cause issues.
 
 **II. Microservices Gateway** - Creating a gateway in-front of the `Catalog Service` that first calls the Catalog Service and then based on the response calls the inventory is another option. This way we can avoid lots of calls from the client to the server. [Apache Camel](http://camel.apache.org){:target="_blank"} provides nice capabilities to do this and if you are interested to learn more about this, please checkout the Coolstore Microservices example: [Here](http://github.com/jbossdemocentral/coolstore-microservice){:target="_blank"}
 
@@ -610,7 +610,7 @@ We will soon use the `// commented-out` lines, so keep them in there!
 
 Since we now have a nice way to test our service-to-service interaction we can now create the client that calls the Inventory. Netflix has provided some nice extensions to the Spring Framework that are mostly captured in the Spring Cloud project, however Spring Cloud is mainly focused on Pivotal Cloud Foundry and because of that Red Hat and others have contributed Spring Cloud Kubernetes to the Spring Cloud project, which enables the same functionallity for Kubernetes based platforms like OpenShift.
 
-The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circuit Break calls that don't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface that details which parameters and return type we expect, annotate it with    `@RequestMapping` and provide some details and then annotate the interface with `@Feign` and provide it with a name.
+The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate code. Feign also integrate with Hystrix which gives us capability to Circuit Break calls that don't work. We will discuss this more later, but let's start with the implementation of the Inventory Client. Using Feign all we have to do is to create a interface that details which parameters and return type we expect, annotate it with    `@RequestMapping` and provide some details and then annotate the interface with `@Feign` and provide it with a name.
 
 Create the `InventoryClient` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
 
@@ -712,7 +712,7 @@ an external service. But what if that external inventory service does not respon
 
 ---
 
-In the previous step we added a client to call the Inventory service. Services calling services is a common practice in Microservices Architecture, but as we add more and more services the likelihood of a problem increases dramatically. Even if each service has 99.9% update, if we have 100 of services our estimated up time will only be ~90%. We therefor need to plan for failures to happen and our application logic has to consider that dependent services are not responding.
+In the previous step we added a client to call the Inventory service. Services calling services is a common practice in Microservices Architecture, but as we add more and more services the likelihood of a problem increases dramatically. Even if each service has 99.9% update, if we have 100 of services our estimated up time will only be ~90%. We therefore need to plan for failures to happen and our application logic has to consider that dependent services are not responding.
 
 In the previous step we used the Feign client from the Netflix cloud native libraries to avoid having to write
 boilerplate code for doing a REST call. However Feign also have another good property which is that we easily create
@@ -734,7 +734,7 @@ And paste this into it at the `//TODO: Add Fallback factory here` marker:
     }
 ~~~
 
-After creating the fallback factory all we have todo is to tell Feign to use that fallback in case of an issue, by adding the fallbackFactory property to the `@FeignClient` annotation. and replace the existing `@FeignClient(name="inventory")` line with this line:
+After creating the fallback factory all we have to do is to tell Feign to use that fallback in case of an issue, by adding the fallbackFactory property to the `@FeignClient` annotation. and replace the existing `@FeignClient(name="inventory")` line with this line:
 
 ~~~java
 @FeignClient(name="inventory",fallbackFactory = InventoryClient.InventoryClientFallbackFactory.class)
