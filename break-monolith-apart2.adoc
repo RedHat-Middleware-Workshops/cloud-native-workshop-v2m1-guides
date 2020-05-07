@@ -96,7 +96,7 @@ servlet container is to add the following dependency to your _pom.xml_. Add thes
         </dependency>
 ----
 
-We will also make use of Java Persistance API (JPA) so we need to add the following to _pom.xml_ at the
+We will also make use of Java Persistence API (JPA) so we need to add the following to _pom.xml_ at the
 `<!-- TODO: Add jdbc dependency here -->` marker:
 
 [source,xml, role="copypaste"]
@@ -144,7 +144,7 @@ If it builds successfully (you will see *BUILD SUCCESS*), you have now successfu
 
 Now you’ve seen how to get started with Spring Boot development on Red Hat Runtimes.
 
-In next step of this lab, we will add the logic to be able to read a data from the database.
+In next step of this lab, we will add the logic to be able to read data from the database.
 
 ==== 4. Create Domain Objects
 
@@ -305,7 +305,7 @@ public class CatalogService {
 }
 ----
 
-As you can see there is a number of `TODO` in the code, and later we will use these placeholders to add logic for calling the
+As you can see there are a number of `TODO` in the code, and later we will use these placeholders to add logic for calling the
 Inventory Client to get the quantity.
 
 Now we are ready to create the endpoints that will expose REST service.
@@ -350,10 +350,10 @@ upon JAX-B and can automatically parse simple Java structures and parse them int
 `Product.java` pre-created class is very simple and only contains basic attributes we do not need to tell Jackson how to parse between Product and
 JSON.
 
-Since we now have endpoints that returns the catalog we can also start the service and load the default page again, which should
+Since we now have endpoints that return the catalog we can also start the service and load the default page again, which should
 now return the products.
 
-Start the application via CodeReady Workspaces Terminal using the following command:
+Start the application via the CodeReady Workspaces Terminal using the following command:
 
 [source,sh,role="copypaste"]
 ----
@@ -388,7 +388,7 @@ You should get a full JSON array consisting of all the products:
 
 You have now successfully executed the third step in this lab.
 
-Now you’ve seen how to create REST application in Spring MVC and create a simple application that returns product.
+Now you’ve seen how to create a REST application in Spring MVC and create a simple application that returns product.
 
 In the next step, we will also call another service to enrich the endpoint response with inventory status.
 
@@ -410,7 +410,7 @@ There are multiple ways to solve this like:
 
 *1. Client Side integration* - We could extend our UI to first call `/services/products` and then for each product item call
 `/services/inventory/{prodId}` to get the inventory status and then combine the result in the web browser. This would be the
-least intrusive method, but it also means that if we have 100 of products the client will make 101 request to the server. If we
+least intrusive method, but it also means that if we have 100 of products the client will make 101 requests to the server. If we
 have a slow internet connection this may cause issues.
 
 *2. Microservices Gateway* - Creating a gateway in front of the _Catalog Service_ that first calls the Catalog Service and then
@@ -434,8 +434,8 @@ Spring Cloud is mainly focused on Pivotal Cloud Foundry and because of that Red 
 Kubernetes to the Spring Cloud project, which enables the same functionallity for Kubernetes based platforms like OpenShift.
 
 The inventory client will use a Netflix project called _Feign_, which provides a nice way to avoid having to write boilerplate
-code. Feign also integrate with Hystrix which gives us capability to Circuit Break calls that don’t work. We will discuss this
-more later, but let’s start with the implementation of the Inventory Client. Using Feign all we have todo is to create a interface
+code. Feign also integrates with Hystrix which gives us the capability to Circuit Break calls that don’t work. We will discuss this
+more later, but let’s start with the implementation of the Inventory Client. Using Feign all we have to do is create a interface
 that details which parameters and return type we expect, annotate it with `@RequestMapping` and provide some details and then
 annotate the interface with `@Feign` and provide it with a name.
 
@@ -535,7 +535,7 @@ element methods for adding or replacing values.
 
 In the previous step we added a client to call the Inventory service. Services calling services is a common practice in
 Microservices Architecture, but as we add more and more services the likelihood of a problem increases dramatically. Even if each
-service has 99.9% update, if we have 100 of services our estimated up time will only be ~90%. We therefor need to plan for
+service has 99.9% update, if we have 100 of services our estimated up time will only be ~90%. We therefore need to plan for
 failures to happen and our application logic has to consider that dependent services are not responding.
 
 In the previous step we used the Feign client from the Netflix cloud native libraries to avoid having to write boilerplate code
@@ -569,8 +569,8 @@ this line:
 
 Having fallbacks is good but that also requires that we can correctly detect when a dependent services isn’t responding correctly.
 Besides from not responding a service can also respond slowly causing our services to also respond slow. This can lead to
-cascading issues that is hard to debug and pinpoint issues with. We should therefore also have sane defaults for our services. You
-can add defaults by adding it to the configuration.
+cascading issues that are hard to debug and pinpoint issues with. We should therefore also have sane defaults for our services. You
+can add defaults by adding them to the configuration.
 
 Open `src/main/resources/application-default.properties`
 
