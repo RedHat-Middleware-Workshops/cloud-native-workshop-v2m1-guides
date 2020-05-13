@@ -52,8 +52,7 @@ Spring Boot, Node.js, and https://quarkus.io[Quarkus^]
 based on *Apache Kafka*
 * https://access.redhat.com/products/red-hat-single-sign-on[Red Hat SSO^] - For authentication / authorization -
 based on *Keycloak*
-* Other open source projects like https://gogs.io/[Gogs^] (Git server that holds application source code),
-https://knative.dev[Knative^] (for serverless apps), https://jenkins.io/[Jenkins^] and
+* Other open source projects like https://knative.dev[Knative^] (for serverless apps), https://jenkins.io/[Jenkins^] and
 https://cloud.google.com/tekton/[Tekton^] (CI/CD pipelines),
 https://prometheus.io[Prometheus^] and https://grafana.com[Grafana^] (monitoring apps), and
 more.
