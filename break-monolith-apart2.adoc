@@ -7,7 +7,7 @@ because the inventory service is never called directly by the UI. It’s a backe
 services. In this lab, you will create the catalog service and the catalog service will call the inventory service. When you are
 ready, you will change the route to tie the UI calls to new service.
 
-To implement this, we are going to use the Spring Framework and Spring Boot. The reason for using Spring for this service is to introduce you to
+To implement this, we are going to use https://access.redhat.com/products/spring-boot[Red Hat support for Spring Boot^]. The reason for using Spring for this service is to introduce you to
 Spring Boot development, and how https://www.redhat.com/en/products/runtimes[Red Hat Runtimes^] helps to make Spring
 development on Kubernetes easy. In real life, the reason for choosing Spring Boot vs. others mostly depends on personal preferences,
 like existing knowledge, etc. At the core Spring and Java EE are very similar.
@@ -24,6 +24,8 @@ helps with organizing and using 3rd-party libraries together with Spring and als
 embeddable runtimes, like Apache Tomcat. Bootable applications (sometimes also called _fat jars_) fits the container model very
 well since in a container platform like OpenShift responsibilities like starting, stopping and monitoring applications are then
 handled by the container platform instead of an Application Server.
+
+*Red Hat& offers support and maintenance over stated time periods for the major versions of _Spring Boot_. https://access.redhat.com/documentation/en-us/red_hat_support_for_spring_boot[Learn more^].
 
 === Aggregate microservices calls
 
