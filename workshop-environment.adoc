@@ -62,6 +62,6 @@ You’ll be provided clickable URLs throughout the workshop to access the servic
 == How to complete this workshop
 
 
-Click the *Getting Started with Application Migration Toolkit->* button at the bottom to advance to the next topic. You can also use the menu on the left to move around the instructions at will.
+Click the "Next >" button at the bottom to advance to the next topic. You can also use the menu on the left to move around the instructions at will.
 
 Good luck, and let’s get started!
