@@ -745,12 +745,12 @@ Quarkus comes with a _CORS filter_ which implements the _javax.servlet.Filter_ i
 %prod.quarkus.http.cors=true
 ----
 
-Rebuild and redeploy the *inventory* application using these commands:
+Rebuild and redeploy the *inventory* application using this command (which will again use the OpenShift Quarkus extension to deploy):
 
 [source,sh,role="copypaste"]
 ----
-mvn clean package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests && \
-oc start-build -n {{ USER_ID }}-inventory inventory --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory/target/*-runner.jar --follow
+oc project {{USER_ID}}-inventory && \
+mvn clean package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests
 ----
 
 This will take about a minute to complete. Once the build is done, the inventory pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
