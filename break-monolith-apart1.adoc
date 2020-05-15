@@ -407,7 +407,7 @@ it and keep it separate from our monolith and our other microservices we will cr
 Before going to OpenShift console, we will repackage the Quarkus application for adding a PostgreSQL extension because our
 Inventory service will connect to PostgeSQL database in production on OpenShift.
 
-Quarkus also offers the ability to automatically generate OpenShift resources based on sane default and user supplied configuration. The OpenShift extension is actually a wrapper extension that brings together the [kubernetes](https://quarkus.io/guides/deploying-to-kubernetes) and [container-image-s2i](https://quarkus.io/guides/container-image#s2i) extensions with defaults so that it’s easier for the user to get started with Quarkus on OpenShift.
+Quarkus also offers the ability to automatically generate OpenShift resources based on sane default and user supplied configuration. The OpenShift extension is actually a wrapper extension that brings together the https://quarkus.io/guides/deploying-to-kubernetes[kubernetes^] and https://quarkus.io/guides/container-image#s2i[container-image-s2i^] extensions with defaults so that it’s easier for the user to get started with Quarkus on OpenShift.
 
 Add _quarkus-jdbc-postgresql_ and _openshift_ extension via CodeReady Workspaces Terminal:
 
