@@ -424,15 +424,6 @@ you will see:
 Quarkus supports the notion of _configuration profiles_. These allows you to have multiple configurations in the same file and
 select between then via a _profile name_.
 
-For more details of the above options:
-
-* `quarkus.kubernetes-client.trust-certs=true` - We are using self-signed certs in this simple example, so this simply says to the extension to trust them.
-* `quarkus.container-image.build=true` - Instructs the extension to build a container image
-* `quarkus.kubernetes.deploy=true` - Instructs the extension to deploy to OpenShift after the container image is built
-* `quarkus.kubernetes.deployment-target=openshift` - Instructs the extension to generate and create the OpenShift resources (like `DeploymentConfig`s and `Service`s) after building the container
-* `quarkus.openshift.expose=true` - Instructs the extension to generate an OpenShift `Route`.
-* `quarkus.openshift.labels.app.openshift.io/runtime=java` - Adds a nice-looking icon to the app when viewing the OpenShift Developer Toplogy
-
 By default Quarkus has three profiles, although it is possible to use as many as you like. The default profiles are:
 
 * `dev` - Activated when in development mode (i.e. *quarkus:dev*)
@@ -453,13 +444,20 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 %prod.quarkus.hibernate-orm.sql-load-script=import.sql
 %prod.quarkus.hibernate-orm.log.sql=true
 
-%prod.quarkus.kubernetes-client.trust-certs=true
-%prod.quarkus.container-image.build=true
-%prod.quarkus.kubernetes.deploy=true
-%prod.quarkus.kubernetes.deployment-target=openshift
-%prod.quarkus.openshift.expose=true
-%prod.quarkus.openshift.labels.app.openshift.io/runtime=quarkus 
+%prod.quarkus.kubernetes-client.trust-certs=true<1>
+%prod.quarkus.container-image.build=true<2>
+%prod.quarkus.kubernetes.deploy=true<3>
+%prod.quarkus.kubernetes.deployment-target=openshift<4>
+%prod.quarkus.openshift.expose=true<5>
+%prod.quarkus.openshift.labels.app.openshift.io/runtime=quarkus<6>
 ----
+
+<1> We are using self-signed certs in this simple example, so this simply says to the extension to trust them.
+<2> Instructs the extension to build a container image
+<3> Instructs the extension to deploy to OpenShift after the container image is built
+<4> Instructs the extension to generate and create the OpenShift resources (like `DeploymentConfig` and `Service`) after building the container
+<5> Instructs the extension to generate an OpenShift `Route`.
+<6> Adds a nice-looking icon to the app when viewing the OpenShift Developer Toplogy
 
 In OpenShift, ensure you're in the _Developer_ perspective and then choose the `{{ USER_ID }}-inventory` project which has already been created for you.
 
