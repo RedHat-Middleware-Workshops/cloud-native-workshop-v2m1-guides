@@ -404,13 +404,9 @@ on *Add*. Go the *Server Path* tab and enter the path to the fixed project at `/
 
 image::rhamt_rerun_analysis_report_solution.png[rhamt_rerun_analysis_report, 700]
 
-Be sure to delete the old `monolith.war` to avoid analyzing it again:
+Be sure to delete the old `monolith.war` to avoid analyzing it again and then click *Save and Run* to analyze the project:
 
 image::rhamt_rerun_analysis_report_solution_del.png[rhamt_rerun_analysis_report, 700]
-
-and then click *Save and Run* to analyze the project:
-
-image::rhamt_rerun_analysis_report.png[rhamt_rerun_analysis_report, 700]
 
 Depending on how many other students are running reports, your analysis might be _queued_ for several minutes. If it is taking too
 long, feel free to skip the next section and proceed to step *13* and return back to the analysis later to confirm that you
