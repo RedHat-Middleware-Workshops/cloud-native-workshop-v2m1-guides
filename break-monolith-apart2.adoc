@@ -689,7 +689,7 @@ Then deploy the project using the following command in the CodeReady Workspaces 
 [source,sh,role="copypaste"]
 ----
 oc project {{ USER_ID }}-catalog && \
-oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=catalog-springboot -l app=catalog-springboot
+oc new-build registry.access.redhat.com/ubi8/openjdk-11 --binary --name=catalog-springboot -l app=catalog-springboot
 ----
 
 And then start and watch the build, which will take about a minute to complete:

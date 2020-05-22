@@ -443,6 +443,7 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 %prod.quarkus.hibernate-orm.database.generation=drop-and-create
 %prod.quarkus.hibernate-orm.sql-load-script=import.sql
 %prod.quarkus.hibernate-orm.log.sql=true
+%prod.quarkus.s2i.base-jvm-image=registry.access.redhat.com/ubi8/openjdk-11
 
 %prod.quarkus.kubernetes-client.trust-certs=true<1>
 %prod.quarkus.container-image.build=true<2>
