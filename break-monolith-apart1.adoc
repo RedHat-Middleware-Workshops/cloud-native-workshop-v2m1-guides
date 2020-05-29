@@ -606,7 +606,7 @@ underlying service so it stops responding. Execute via CodeReady Workspaces Term
 
 [source,sh,role="copypaste"]
 ----
-oc rsh dc/inventory pkill java
+oc rsh dc/inventory kill 1
 ----
 
 This will execute the Linux *pkill* command to stop the running Java process in the container.
