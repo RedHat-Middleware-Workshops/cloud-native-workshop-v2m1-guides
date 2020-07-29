@@ -21,7 +21,7 @@ It is used by organizations for:
 * Rule extension and customizability
 * Ability to analyze source code or application archives
 
-Read more about it in the https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit[RHAMT documentation^]
+Read more about it in the https://access.redhat.com/documentation/en-us/red_hat_application_migration_toolkit/[RHAMT documentation^]
 
 == Lab 1 - Login to RHAMT and analyze app
 
