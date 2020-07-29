@@ -282,7 +282,7 @@ need to find an equivalent in JBoss.
 ====
 You should be aware that this type of migration is more involved than the previous steps, and in real world applications it will
 rarely be as simple as changing one line at a time for a migration. Consult the
-https://access.redhat.com/documentation/en/red-hat-application-migration-toolkit[RHAMT documentation^] for more
+https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications[RHAMT documentation^] for more
 detail on Red Hat’s Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat
 can help you on your migration path.
 ====
