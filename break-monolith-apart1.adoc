@@ -7,7 +7,7 @@ You will now begin the process of modernizing the application by breaking the ap
 
 In this lab you will learn more about _Supersonic, Subatomic Java_ with https://quarkus.io/[Quarkus^], which is designed to be container and developer friendly.
 
-Quarkus is a _Kubernetes Native_ Java stack, crafted from the best of breed Java libraries and standards. Amazingly fast boot time, incredibly low RSS memory (not just heap size!) offering near instant scale up and high density memory utilization in container orchestration platforms like Kubernetes. Quarkus uses a technique called compile time boot. 
+Quarkus is a _Kubernetes Native_ Java stack, crafted from the best of breed Java libraries and standards. Amazingly fast boot time, incredibly low RSS memory (not just heap size!) offering near instant scale up and high density memory utilization in container orchestration platforms like Kubernetes. Quarkus uses a technique called compile time boot.
 
 *Red Hat* offers the fully supported https://access.redhat.com/products/quarkus[Red Hat Build of Quarkus(RHBQ)^] with support and maintenance of Quarkus. In this workhop, you will use Quarkus to develop Kubernetes-native microservices and deploy them to OpenShift. Quarkus is one of the runtimes included in https://www.redhat.com/en/products/runtimes[Red Hat Runtimes^]. https://access.redhat.com/documentation/en-us/red_hat_build_of_quarkus[Learn more about RHBQ^].
 
@@ -55,11 +55,14 @@ mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" 
 
 you will see:
 
+[source,sh]
+----
 ✅ Adding extension io.quarkus:quarkus-hibernate-orm-panache
 ✅ Adding extension io.quarkus:quarkus-jdbc-h2
 ✅ Adding extension io.quarkus:quarkus-smallrye-health
+----
 
-And this adds the extensions to `pom.xml`.
+This adds the extensions to `pom.xml`.
 
 [NOTE]
 ====
@@ -233,7 +236,7 @@ mvn clean compile quarkus:dev -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-l
 
 You should see a bunch of log output that ends with:
 
-[source,console,role="copypaste"]
+[source,console]
 ----
 2020-03-19 14:41:17,171 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
 2020-03-19 14:41:17,454 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus xx.xx.xx) started in 3.353s. Listening on: http://0.0.0.0:8080
@@ -283,13 +286,13 @@ The output looks like:
 
 ==== 8. Add health probe
 
-=== What is MicroProfile Health?
+===== What is MicroProfile Health?
 
 *MicroProfile Health* allows applications to provide information about their state to external viewers which is typically useful
 in cloud environments like OpenShift where automated processes must be able to determine whether the application should be discarded or
 restarted.
 
-=== Run the health check
+===== Run the health check
 
 When you imported the _health extension_ earlier, the `/health` endpoint is automatically exposed directly that can be used to
 run the health check procedures.
@@ -418,8 +421,11 @@ mvn quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $CHE_PROJE
 
 you will see:
 
+[source,sh]
+----
 ✅ Adding extension io.quarkus:quarkus-openshift
 ✅ Adding extension io.quarkus:quarkus-jdbc-postgresql
+----
 
 Quarkus supports the notion of _configuration profiles_. These allows you to have multiple configurations in the same file and
 select between then via a _profile name_.
