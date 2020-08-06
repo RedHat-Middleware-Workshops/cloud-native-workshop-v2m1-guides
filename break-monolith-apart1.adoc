@@ -50,7 +50,7 @@ We will add Quarkus extensions to the Inventory application for using _Panache_ 
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn -q quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 you will see:
@@ -416,7 +416,7 @@ Add _quarkus-jdbc-postgresql_ and _openshift_ extension via CodeReady Workspaces
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn -q quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 you will see:
