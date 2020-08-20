@@ -33,7 +33,7 @@ For this lab, we will use the MTA Web Console on top of OpenShift Container Plat
 
 === 1. Login to the MTA web console in OpenShift cluster
 
-To get started, {{ RHAMT_URL }}[access the Migration Toolkit for Applications^] and log in using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
+To get started, {{ MTA_URL }}[access the Migration Toolkit for Applications^] and log in using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
 
 image::rhamt_login.png[MTA Login, 900]
 
