@@ -82,12 +82,12 @@ Open the Issues report in the {{ MTA_URL }}[MTA Console^]:
 
 image::rhamt_project_issues.png[rhamt_project_issues, 700]
 
-RHAMT provides helpful links to understand the issue deeper and offer guidance for the migration.
+MTA provides helpful links to understand the issue deeper and offer guidance for the migration.
 
 The WebLogic `ApplicationLifecycleListener` abstract class is used to perform functions or schedule jobs in Oracle WebLogic, like server start and stop. In this case we have code in the `postStart` and `preStop` methods which are executed after Weblogic starts up and before it shuts down, respectively.
 
 In Jakarta EE, there is no equivalent to intercept these events, but you can get equivalent
-functionality using a _Singleton EJB_ with standard annotations, as suggested in the issue in the RHAMT report.
+functionality using a _Singleton EJB_ with standard annotations, as suggested in the issue in the MTA report.
 
 We will use the `@Startup` annotation to tell the container to initialize the singleton session bean at application start. We
 will similarly use the `@PostConstruct` and `@PreDestroy` annotations to specify the methods to invoke at the start and end of
@@ -264,7 +264,7 @@ receives a message and if the inventory service is below a pre-defined threshold
 supplier of the product needs to be notified.
 
 Unfortunately this MDB was written a while ago and makes use of weblogic-proprietary interfaces to configure and operate the MDB.
-RHAMT has flagged this and reported it using a number of issues.
+MTA has flagged this and reported it using a number of issues.
 
 JBoss EAP provides an even more efficient and declarative way to configure and manage the lifecycle of MDBs. In this case, we can
 use annotations to provide the necessary initialization and configuration logic and settings. We will use the `@MessageDriven`
@@ -282,14 +282,14 @@ need to find an equivalent in JBoss.
 ====
 You should be aware that this type of migration is more involved than the previous steps, and in real world applications it will
 rarely be as simple as changing one line at a time for a migration. Consult the
-https://access.redhat.com/documentation/en-us/red_hat_application_migration_toolkit/[RHAMT documentation^] for more
+https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^] for more
 detail on Red Hat’s Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat
 can help you on your migration path.
 ====
 
 ==== 7. Review the issues
 
-From the RHAMT Issues report, we will fix the remaining issues:
+From the MTA Issues report, we will fix the remaining issues:
 
 * `Call of JNDI lookup` - Our apps use a weblogic-specific
 https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface[JNDI^] lookup scheme.
@@ -395,11 +395,11 @@ image::codeready-workspace-build.png[rhamt_project_issues, 700]
 If builds successfully (you will see `BUILD SUCCESS`). If it does not compile, verify you
 made all the changes correctly and try the build again.
 
-==== 11. Re-run the RHAMT report
+==== 11. Re-run the MTA report
 
-In this step we will re-run the RHAMT report to verify our migration was successful.
+In this step we will re-run the MTA report to verify our migration was successful.
 
-In the {{ MTA_URL }}[RHAMT Console^], navigate to `Applications` on the left menu and click
+In the {{ MTA_URL }}[MTA Console^], navigate to `Applications` on the left menu and click
 on *Add*. Go the *Server Path* tab and enter the path to the fixed project at `/opt/solution` and click *Upload* to add the project:
 
 image::rhamt_rerun_analysis_report_solution.png[rhamt_rerun_analysis_report, 700]
