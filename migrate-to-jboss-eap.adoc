@@ -78,7 +78,7 @@ image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 
 ==== 2. Fix the issue with `ApplicationLifecycleListener`
 
-Open the Issues report in the {{ RHAMT_URL }}[RHAMT Console^]:
+Open the Issues report in the {{ MTA_URL }}[MTA Console^]:
 
 image::rhamt_project_issues.png[rhamt_project_issues, 700]
 
@@ -399,7 +399,7 @@ made all the changes correctly and try the build again.
 
 In this step we will re-run the RHAMT report to verify our migration was successful.
 
-In the {{ RHAMT_URL }}[RHAMT Console^], navigate to `Applications` on the left menu and click
+In the {{ MTA_URL }}[RHAMT Console^], navigate to `Applications` on the left menu and click
 on *Add*. Go the *Server Path* tab and enter the path to the fixed project at `/opt/solution` and click *Upload* to add the project:
 
 image::rhamt_rerun_analysis_report_solution.png[rhamt_rerun_analysis_report, 700]
@@ -424,8 +424,6 @@ Now that we’ve migrated the app, let’s deploy it and test it out and start t
 Hat OpenShift bring to the table.
 
 ==== 13. Add an OpenShift profile
-
-'''''
 
 Open the `monolith/pom.xml` file.
 

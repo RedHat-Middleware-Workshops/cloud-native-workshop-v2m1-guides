@@ -5,11 +5,11 @@ In this module you’ll work with an existing Java EE application designed for a
 version of the webshop is a Java EE application built for Oracle Weblogic Application Server. As part of a modernization
 strategy you've decided to move this application to JBoss EAP, containerize it, and run it on a Kubernetes platform with OpenShift.
 
-=== What is Red Hat Application Migration Toolkit?
+=== What is Migration Toolkit for Applications?
 
-image::rhamt_logo.png[RHAMT Logo, 500]
+image::rhamt_logo.png[MTA Logo, 500]
 
-Red Hat Application Migration Toolkit (RHAMT) is an extensible and customizable rule-based tool that helps simplify migration of
+Migration Toolkit for Applications (MTA) is an extensible and customizable rule-based tool that helps simplify migration of
 Java applications.
 
 It is used by organizations for:
@@ -17,34 +17,34 @@ It is used by organizations for:
 * Planning and work estimation
 * Identifying migration issues and providing solutions
 * Detailed reporting
-* Using built-in rules and migration paths
-* Rule extension and customizability
+* Built-in rules and migration paths
+* Rule extensibility and customization
 * Ability to analyze source code or application archives
 
-Read more about it in the https://access.redhat.com/documentation/en-us/red_hat_application_migration_toolkit/[RHAMT documentation^]
+Read more about it in the https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^]
 
-== Lab 1 - Login to RHAMT and analyze app
+== Lab 1 - Login to MTA and analyze app
 
 In this step we will analyze a monolithic application built for use with Oracle® WebLogic Server (WLS). This application is a Java
 EE application using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and
 best practices.
 
-For this lab, we will use the RHAMT Web Console on top of OpenShift Container Platform.
+For this lab, we will use the MTA Web Console on top of OpenShift Container Platform.
 
-=== 1. Login to the RHAMT web console in OpenShift cluster
+=== 1. Login to the MTA web console in OpenShift cluster
 
-To get started, {{ RHAMT_URL }}[access the Red Hat Application Migration Toolkit^] and log in
+To get started, {{ MTA_URL }}[access the Red Hat Application Migration Toolkit^] and log in
 using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
 
-image::rhamt_login.png[RHAMT Login, 900]
+image::rhamt_login.png[MTA Login, 900]
 
 === 2. Create a new project
 
 Click **New Project**. Input a name and optional description to create a project. Name the project `{{USER_ID}}-eap-migration` to avoid conflicts with other attendees.
 
-image::rhamt_landing_page.png[RHAMT Landing Page, 900]
+image::rhamt_landing_page.png[MTA Landing Page, 900]
 
-image::rhamt_create_project.png[RHAMT Create Project, 900]
+image::rhamt_create_project.png[MTA Create Project, 900]
 
 === 3. Add the monolith application to the project
 
@@ -52,14 +52,14 @@ Select *Server Path* to analyze our monolithic application:
 
 * Server Path: `/opt/apps`
 
-image::rhamt_add_monolith_app1.png[RHAMT Add App, 900]
+image::rhamt_add_monolith_app1.png[MTA Add App, 900]
 
 === 4. Select _Migration to JBoss EAP 7_ in Transformation Path
 
 Choose the `com` and `weblogic` checkboxes to include these packages during analysis and click the *Save & Run* button. You
 will be taken to Analysis Results dashboard page, wait until the analysis is complete (it will take a minute or two).
 
-image::rhamt_check_monolith_app.png[RHAMT Add App, 900]
+image::rhamt_check_monolith_app.png[MTA Add App, 900]
 
 
 === 5. Go to the Active Analysis page and click on the latest when it’s completed
@@ -71,18 +71,18 @@ Your report may be _queued_ for a few seconds. Soon you will see a progress bar,
 
 Click the `#1` link (or `#2`) to see the report:
 
-image::rhamt_complete_analysis.png[RHAMT Complete, 900]
+image::rhamt_complete_analysis.png[MTA Complete, 900]
 
 === 6. Review the report
 
-image::rhamt_result_landing_page.png[RHAMT Langing Page, 900]
+image::rhamt_result_landing_page.png[MTA Langing Page, 900]
 
 The main landing page of the report lists the applications that were processed. Each row contains a high-level overview of the
 story points, number of incidents, and technologies encountered in that application.
 
 **Click on the `monolith.war` link** to access details for the project:
 
-image::rhamt_project_overview.png[RHAMT Project Overview, 900]
+image::rhamt_project_overview.png[MTA Project Overview, 900]
 
 === 7. Understanding the report
 
