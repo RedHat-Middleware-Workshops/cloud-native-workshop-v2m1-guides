@@ -1,4 +1,4 @@
-= Getting Started with Application Migration
+= Getting Started with Migration Toolkit for Applications?
 :experimental:
 
 In this module you’ll work with an existing Java EE application designed for a retail webshop.  The current
