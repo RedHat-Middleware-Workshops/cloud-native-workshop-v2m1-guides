@@ -799,9 +799,9 @@ Open the monolith UI by clicking the route URL icon (the arrow to the upper righ
 
 Observe that the new catalog is being used along with the monolith:
 
-image::coolstore-web.png[Greeting, 700]
+image::coolstore_web.png[Greeting, 700]
 
-The screen will look the same, with proper inventory, but notice that the earlier product _Atari 2600 Joystick_ is now gone, as it has been removed in
+The screen will look the same, with proper inventory, but notice that the earlier product _Women RHEL 8 t-shirt_ is now gone, as it has been removed in
 our new catalog microservice.
 
 [NOTE]
