@@ -23,67 +23,140 @@ It is used by organizations for:
 
 Read more about it in the https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^]
 
-== Lab 1 - Login to MTA and analyze app
+== Lab 1 - Analyze app using MTA IDE Plugin
 
 In this step we will analyze a monolithic application built for use with Oracle® WebLogic Server (WLS). This application is a Java
 EE application using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and
 best practices.
 
-For this lab, we will use the MTA Web Console on top of OpenShift Container Platform.
+For this lab, we will use the MTA https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/5.0/html-single/ide_plugin_guide/index[IDE Plugin^] based on CodeReady Workspaces.
 
-=== 1. Login to the MTA web console in OpenShift cluster
+The IDE Plugin for the Migration Toolkit for Applications provides assistance directly in Eclipse and Red Hat CodeReady Studio/Workspaces for developers making changes for a migration or modernization effort. It analyzes your projects using MTA, marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
 
-To get started, {{ MTA_URL }}[access the Migration Toolkit for Applications^] and log in using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
+=== 1. Access Your Development Environment
 
-image::rhamt_login.png[MTA Login, 900]
+You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipse
+Che^]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
 
-=== 2. Create a new project
+To get started, {{ ECLIPSE_CHE_URL }}[access the CodeReady Workspaces instance^] and log in using the username
+and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
 
-Click **New Project**. Input a name and optional description to create a project. Name the project `{{USER_ID}}-eap-migration` to avoid conflicts with other attendees.
+image::che-login.png[cdw, 700]
 
-image::rhamt_landing_page.png[MTA Landing Page, 900]
+Once you log in, you’ll be placed on your personal dashboard. Click on the name of
+the pre-created workspace on the left, as shown below (the name will be different depending on your assigned number).
 
-image::rhamt_create_project.png[MTA Create Project, 900]
+image::crw-landing.png[cdw, 700]
 
-=== 3. Add the monolith application to the project
+You can also click on the name of the workspace in the center, and then click on the green {{ USER_ID}}-namespace that says _Open_ on the top right hand side of the screen:
 
-Select *Server Path* to analyze our monolithic application:
+image::crw-landing-start.png[cdw, 700]
 
-* Server Path: `/opt/apps`
+After a minute or two, you’ll be placed in the workspace:
 
-image::rhamt_add_monolith_app1.png[MTA Add App, 900]
+image::che-workspace.png[cdw, 900]
 
-=== 4. Select _Migration to JBoss EAP 7_ in Transformation Path
+This IDE is based on Eclipse Che (which is in turn based on MicroSoft VS Code editor).
 
-Choose the `com` and `weblogic` checkboxes to include these packages during analysis and click the *Save & Run* button. You
-will be taken to Analysis Results dashboard page, wait until the analysis is complete (it will take a minute or two).
+You can see icons on the left for navigating between project explorer, search, version control (e.g. Git), debugging, and other plugins.  You’ll use these during the course of this workshop. Feel free to click on them and see what they do:
 
-image::rhamt_check_monolith_app.png[MTA Add App, 900]
-
-
-=== 5. Go to the Active Analysis page and click on the latest when it’s completed
+image::crw-icons.png[cdw, 400]
 
 [NOTE]
 ====
-Your report may be _queued_ for a few seconds. Soon you will see a progress bar, then when the report is complete you can continue. If it seems to be queued for more than a minute, try refreshing the browser page.
+If things get weird or your browser appears, you can simply reload the browser tab to refresh the view.
 ====
 
-Click the `#1` link (or `#2`) to see the report:
+Many features of CodeReady Workspaces are accessed via *Commands*. You can see a few of the commands listed with links on the home page (e.g. _New File.._, _Git Clone.._, and others).
 
-image::rhamt_complete_analysis.png[MTA Complete, 900]
+If you ever need to run commands that you don't see in a menu, you can press kbd:[F1] to open the command window, or the more traditional kbd:[Control+SHIFT+P] (or kbd:[Command+SHIFT+P] on Mac OS X).
 
-=== 6. Review the report
+Let's import our first project. Click on **Git Clone..** (or type kbd:[F1], enter 'git' and click on the auto-completed _Git Clone.._ )
+
+image::che-workspace-gitclone.png[cdw, 900]
+
+Step through the prompts, using the following value for **Repository URL**. If you use *FireFox*, it may end up pasting extra spaces at the end, so just press backspace after pasting:
+
+[source,none,role="copypaste"]
+----
+https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git
+----
+
+image::crw-clone-repo.png[crw,900]
+
+The project is imported into your workspace and is visible in the project explorer:
+
+image::crw-clone-explorer.png[crw,900]
+
+==== IMPORTANT: Check out proper Git branch
+
+To make sure you're using the right version of the project files, run this command in a CodeReady Terminal:
+
+[source,sh,role="copypaste"]
+----
+cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs && git checkout ocp-4.5
+----
+
+[NOTE]
+====
+The Terminal window in CodeReady Workspaces. You can open a terminal window for any of the containers running in your Developer workspace. For the rest of these labs, anytime you need to run a command in a
+terminal, you can use the **>_ New Terminal** command on the right:
+====
+
+image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
+
+
+=== 2. Use the configuration editor to setup the analysis
+
+Click on `MTA Explorer` icon on the left, click on `+` icon to add a new MTA configuration:
+
+image::mta_newconf.png[MTA Landing Page, 500]
+
+[NOTE]
+====
+If you don't see '+' icon, please try to `uncheck` *Explorer* via right-clicking on _MIGRATION TOOLKIT FOR APPLICATIONS_ menu then `check` it again.
+====
+
+To input source files and directories, click on `Add` then select `Open File Explorer`:
+
+image::mta-add-input.png.png[MTA Add App, 700]
+
+Span `projects > cloud-native-workshop-v2m1-labs` then select `monolith` directory. Click on `Choose...`:
+
+image::mta-add-opendir.png[MTA Add App, 700]
+
+Then you will see that */projects/cloud-native-workshop-v2m1-labs/monoilth* directory is added in _--input_ configuration.
+
+Select `eap7` in _--target_ server to migrate:
+
+image::mta-target.png[MTA Add App, 700]
+
+Click on `--source` to migrate from then select `weblogic`. Leave the other configurations:
+
+image::mta-source.png[MTA Add App, 700]
+
+=== 3. Run an analysis report
+
+Right-click on *mtaConfiguration* to analyze the WebLogic application. Click on `Run` in the popup menu:
+
+image::mta-run-report.png[MTA Add App, 700]
+
+Migration Toolkit for Applications (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
+
+image::mta-analysis-complete.png[MTA Add App, 700]
+
+=== 4. Review the report
 
 image::rhamt_result_landing_page.png[MTA Langing Page, 900]
 
 The main landing page of the report lists the applications that were processed. Each row contains a high-level overview of the
 story points, number of incidents, and technologies encountered in that application.
 
-**Click on the `monolith.war` link** to access details for the project:
+**Click on the `monolith` link** to access details for the project:
 
 image::rhamt_project_overview.png[MTA Project Overview, 900]
 
-=== 7. Understanding the report
+=== 5. Understanding the report
 
 The Dashboard gives an overview of the entire application migration effort. It summarizes:
 
@@ -94,7 +167,7 @@ The Dashboard gives an overview of the entire application migration effort. It s
 [NOTE]
 ====
 Story points are an abstract metric commonly used in Agile software development to estimate the relative level of effort needed to
-implement a feature or change. Red Hat Application Migration Toolkit uses story points to express the level of effort needed to
+implement a feature or change. Migration Toolkit for Application uses story points to express the level of effort needed to
 migrate particular application constructs, and the application as a whole. The level of effort will vary greatly depending on the
 size and complexity of the application(s) to migrate.
 ====
