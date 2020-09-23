@@ -5,7 +5,7 @@ In this step you will migrate some Weblogic-specific code in the app to use stan
 
 === 1. Jump to Code
 
-Let's jump to code containing identified migration issues. Expand the *monolith* source project in the MTA explorer:
+Let's jump to code containing identified migration issues. Expand the *monolith* source project in the MTA explorer and navigate to `monolith > src > main > java > com > redhat > coolstore > utils > StartupListener.java`. Be sure to click the arrow next to the actual class name `StartupListener.java` to expand and show the Hints:
 
 image::mta_project_issues.png[mta, 500]
 
