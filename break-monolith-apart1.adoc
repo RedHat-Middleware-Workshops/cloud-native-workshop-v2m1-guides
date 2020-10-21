@@ -50,16 +50,16 @@ We will add Quarkus extensions to the Inventory application for using _Panache_ 
 
 [source,sh,role="copypaste"]
 ----
-mvn -q quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn -q quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, smallrye-health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 you will see:
 
 [source,sh]
 ----
-✅ Adding extension io.quarkus:quarkus-hibernate-orm-panache
-✅ Adding extension io.quarkus:quarkus-jdbc-h2
-✅ Adding extension io.quarkus:quarkus-smallrye-health
+✅ Extension io.quarkus:quarkus-hibernate-orm-panache has been installed
+✅ Extension io.quarkus:quarkus-jdbc-h2 has been installed
+✅ Extension io.quarkus:quarkus-smallrye-health has been installed
 ----
 
 This adds the extensions to `pom.xml`.
@@ -423,8 +423,8 @@ you will see:
 
 [source,sh]
 ----
-✅ Adding extension io.quarkus:quarkus-openshift
-✅ Adding extension io.quarkus:quarkus-jdbc-postgresql
+✅ Extension io.quarkus:quarkus-openshift has been installed
+✅ Extension io.quarkus:quarkus-jdbc-postgresql has been installed
 ----
 
 Quarkus supports the notion of _configuration profiles_. These allows you to have multiple configurations in the same file and
