@@ -58,8 +58,8 @@ you will see:
 [source,sh]
 ----
 ✅ Extension io.quarkus:quarkus-hibernate-orm-panache has been installed
-✅ Extension io.quarkus:quarkus-jdbc-h2 has been installed
 ✅ Extension io.quarkus:quarkus-smallrye-health has been installed
+✅ Extension io.quarkus:quarkus-jdbc-h2 has been installed
 ----
 
 This adds the extensions to `pom.xml`.
@@ -231,7 +231,7 @@ In the Terminal, run the project in _Live Coding_ mode:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean compile quarkus:dev -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:dev -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 You should see a bunch of log output that ends with:
