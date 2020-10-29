@@ -94,7 +94,7 @@ To make sure you're using the right version of the project files, run this comma
 
 [source,sh,role="copypaste"]
 ----
-cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs && git checkout ocp-4.5
+cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs && git checkout ocp-4.6
 ----
 
 [NOTE]
