@@ -63,7 +63,7 @@ BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop^] project.
 <dependency>
     <groupId>dev.snowdrop</groupId>
     <artifactId>snowdrop-dependencies</artifactId>
-    <version>2.2.6.Final-redhat-00001</version>
+    <version>2.2.10.Final-redhat-00001</version>
     <type>pom</type>
     <scope>import</scope>
 </dependency>
@@ -154,7 +154,7 @@ image::newfile.png[catalog-setup, 700]
 
 image::newfile-name.png[catalog-setup, 600]
 
-In the file, add this code:
+In the file, replace this code:
 
 [source,java, role="copypaste"]
 ----
@@ -376,9 +376,9 @@ You should get a full JSON array consisting of all the products:
 ----
   {
     "itemId": "329299",
-    "name": "Red Fedora",
-    "desc": "Official Red Hat Fedora",
-    "price": 34.99,
+    "name": "Quarkus T-shirt",
+    "desc": "",
+    "price": 10,
     "quantity": 0
   },
   { ... }
@@ -439,7 +439,7 @@ annotate the interface with `@Feign` and provide it with a name.
 
 Create the `InventoryClient.java` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
 
-Add the following code to the file:
+Replace the following code to the file:
 
 [source, java, role="copypaste"]
 ----
@@ -599,9 +599,9 @@ You will see:
 ----
   {
     "itemId": "444437",
-    "name": "Lytro Camera",
-    "desc": "Consumers who want to up their photography game are looking at newfangled cameras like the Lytro Field camera, designed to take photos with infinite focus, so you can decide later exactly where you want the focus of each image to be.",
-    "price": 44.3,
+    "name": "Nanobloc Universal Webcam Cover",
+    "desc": "",
+    "price": 2.75,
     "quantity": 230
   }
 ----
@@ -699,7 +699,7 @@ Once the build is done, we’ll deploy it as an OpenShift application and overri
 
 [source,sh,role="copypaste"]
 ----
-oc new-app catalog-springboot --as-deployment-config -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift' 
+oc new-app catalog-springboot -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift' 
 ----
 
 and run this to expose your service to the world and add a health check:
