@@ -84,6 +84,10 @@ https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.g
 
 image::crw-clone-repo.png[crw,900]
 
+Click on *Select Repository Location* then click on *Add to Workpace*:
+
+image::crw-add-workspace.png[crw, 600, align="center"]
+
 The project is imported into your workspace and is visible in the project explorer:
 
 image::crw-clone-explorer.png[crw,900]
@@ -99,11 +103,10 @@ cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs && git checkout ocp-4.6
 
 [NOTE]
 ====
-The Terminal window in CodeReady Workspaces. You can open a terminal window for any of the containers running in your Developer workspace. For the rest of these labs, anytime you need to run a command in a
-terminal, you can use the **>_ New Terminal** command on the right:
-====
+The Terminal window in CodeReady Workspaces. You can open a terminal window for any of the containers running in your Developer workspace. For the rest of these labs, anytime you need to run a command in a terminal, you can use the **>_ New Terminal** command on the right:
 
 image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
+====
 
 
 === 2. Use the configuration editor to setup the analysis
