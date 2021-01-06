@@ -124,11 +124,6 @@ the `<!-- TODO: Add actuator, feign and hystrix dependency here -->` marker:
           <groupId>org.springframework.cloud</groupId>
           <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
-
-        <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
-        </dependency>
 ----
 
 This should also make the red error icons disappear! Now, build the project to make sure everything compiles so far:
@@ -453,7 +448,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name="inventory")
+@FeignClient(name = "inventory", url = "${inventory.url}")
 public interface InventoryClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/services/inventory/{itemId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -468,12 +463,11 @@ Open the `src/main/resources/application-default.properties` file. Add these pro
 
 [source, java, role="copypaste"]
 ----
-inventory.ribbon.listOfServers=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
+inventory.url=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
 feign.hystrix.enabled=true
 ----
 
-By setting `inventory.ribbon.listOfServers` we are hard coding the actual URL of the service to `{{ USER_ID }}-inventory.svc.cluster.local:8080` (which will point to our inventory microservice we created in the last lab). If we had
-multiple servers we could also add those using a comma. However using Kubernetes there is no need to have multiple endpoints
+By setting `inventory.url` we are hard coding the actual URL of the service to `{{ USER_ID }}-inventory.svc.cluster.local:8080` (which will point to our inventory microservice we created in the last lab). Using Kubernetes there is no need to have multiple endpoints
 listed here since Kubernetes has a concept of _Services_ that will internally route between multiple instances of the same
 service.
 
@@ -554,12 +548,12 @@ In the `InventoryClient`, add the following code at the `//TODO: Add Fallback fa
 ----
 
 After creating the fallback factory all we have todo is to tell Feign to use that fallback in case of an issue, by adding the
-fallbackFactory property to the `@FeignClient` annotation. and replace the existing `@FeignClient(name="inventory")` line with
+fallbackFactory property to the `@FeignClient` annotation. and replace the existing `@FeignClient(name = "inventory", url = "${inventory.url}")` line with
 this line:
 
 [source, java, role="copypaste"]
 ----
-@FeignClient(name="inventory",fallbackFactory = InventoryClient.InventoryClientFallbackFactory.class)
+@FeignClient(name = "inventory", url = "${inventory.url}", fallbackFactory = InventoryClient.InventoryClientFallbackFactory.class)
 ----
 
 === 9. Slow running services
@@ -593,7 +587,7 @@ Then, access the product catalog again in a separate terminal:
 curl http://localhost:8081/services/products | jq
 ----
 
-You will see:
+You will see something like:
 
 [source,json]
 ----
@@ -606,7 +600,7 @@ You will see:
   }
 ----
 
-Notice the `"quantity": 230` - because CodeReady Workspaces runs in our OpenShift cluster, our value for `inventory.ribbon.listOfServers` we set earlier is completely valid!
+Notice the `"quantity": 230` - because CodeReady Workspaces runs in our OpenShift cluster, our value for `inventory.url` we set earlier is completely valid!
 
 Congratulations! You now have the framework for retrieving products from the product catalog and enriching the data with
 inventory data from an external service. In next step of this lab we will deploy our application to OpenShift Container Platform
@@ -661,7 +655,7 @@ spring.datasource.continue-on-error=true
 
 feign.hystrix.enabled=true
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
-inventory.ribbon.listOfServers=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
+inventory.url=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
 ----
 
 We'll use this file by specifying a Spring _profile_ when we deploy to OpenShift.
