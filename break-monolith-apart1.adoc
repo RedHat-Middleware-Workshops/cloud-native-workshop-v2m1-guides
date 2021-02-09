@@ -215,7 +215,7 @@ In Development, we will configure to use local in-memory H2 database for local t
 
 [source,properties,role="copypaste"]
 ----
-%dev.quarkus.datasource.url=jdbc:h2:file://projects/database.db
+%dev.quarkus.datasource.url=jdbc:h2:mem:inventory
 %dev.quarkus.datasource.driver=org.h2.Driver
 %dev.quarkus.datasource.username=inventory
 %dev.quarkus.datasource.password=mysecretpassword
