@@ -29,7 +29,7 @@ public class CopyMeDirectly {
 }
 ----
 
-Simply click once and the whole block is copied to your clipboard, ready to be pasted with kbd:[CTRL+V].
+Simply click once and the whole block is copied to your clipboard, ready to be pasted with kbd:[CTRL+V] (or kbd:[Command+V] on Mac OS).
 
 There are also Linux shell commands that can also be copied and pasted into a Terminal in your Development Environment:
 
