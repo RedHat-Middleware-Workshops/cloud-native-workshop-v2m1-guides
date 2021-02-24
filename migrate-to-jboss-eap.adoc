@@ -565,7 +565,7 @@ oc start-build coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2
 
 Back in the topology view, you should see the monolith being built:
 
-image::monolith_build.png[building, 300]
+image::monolith_build.png[building, 500]
 
 Click on the building icon to see the build log:
 
