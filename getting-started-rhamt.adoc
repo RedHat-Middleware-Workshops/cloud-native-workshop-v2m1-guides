@@ -29,7 +29,7 @@ In this step we will analyze a monolithic application built for use with OracleÂ
 EE application using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and
 best practices.
 
-For this lab, we will use the MTA https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/5.0/html-single/ide_plugin_guide/index[IDE Plugin^] based on CodeReady Workspaces.
+For this lab, we will use the MTA https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/5.1/html-single/ide_plugin_guide/index[IDE Plugin^] based on CodeReady Workspaces.
 
 The IDE Plugin for the Migration Toolkit for Applications provides assistance directly in Eclipse and Red Hat CodeReady Studio/Workspaces for developers making changes for a migration or modernization effort. It analyzes your projects using MTA, marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
 
