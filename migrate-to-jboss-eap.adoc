@@ -481,10 +481,13 @@ You can see the _postgres_ database running (with a dark blue circle), and the c
 
 Although your Eclipse Che workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_
 that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but
-let’s login again: click on *Login to OpenShift*, and enter your given credentials:
+let’s login again: click on *Login to OpenShift*:
 
-* Username: `{{ USER_ID }}`
-* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
+[NOTE]
+====
+When you click on this, CodeReady Workspaces executes the following command:
+*oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true --username={{ USER_ID }} --password={{ OPENSHIFT_USER_PASSWORD }}*
+====
 
 image::cmd-login.png[login,700]
 
