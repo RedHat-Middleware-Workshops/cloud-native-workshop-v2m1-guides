@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Lab3 - Breaking the monolith apart - I
 :experimental:
 
@@ -19,7 +21,7 @@ The goal is to deploy this new microservice alongside the existing monolith, and
 
 image::goal.png[lab3_goal, 700]
 
-==== 1. Setup an Inventory proejct
+==== 1. Setup an Inventory project
 
 Run the following commands to set up your environment for this lab and start in the right directory:
 

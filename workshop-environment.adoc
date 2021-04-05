@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Workshop Environment
 :experimental:
 

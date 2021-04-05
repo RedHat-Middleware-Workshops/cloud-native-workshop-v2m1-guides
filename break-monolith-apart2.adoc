@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Lab4 - Breaking the monolith apart - II
 :experimental:
 
@@ -25,7 +27,7 @@ embeddable runtimes, like Apache Tomcat. Bootable applications (sometimes also c
 well since in a container platform like OpenShift responsibilities like starting, stopping and monitoring applications are then
 handled by the container platform instead of an Application Server.
 
-*Red Hat& offers support and maintenance over stated time periods for the major versions of _Spring Boot_. https://access.redhat.com/documentation/en-us/red_hat_support_for_spring_boot[Learn more^].
+*Red Hat* offers support and maintenance over stated time periods for the major versions of _Spring Boot_. https://access.redhat.com/documentation/en-us/red_hat_support_for_spring_boot[Learn more^].
 
 === Aggregate microservices calls
 
