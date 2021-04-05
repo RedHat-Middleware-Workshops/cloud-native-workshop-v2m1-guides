@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Lab4 - Breaking the monolith apart - II
 :experimental:
 
@@ -252,10 +254,10 @@ In next step of this lab, we will add the logic to expose the database content f
 
 ==== 5. Create Catalog Service
 
-Now you are going to create a service class. Later on the service class will be the one that controls the interaction with the
+Now you are going to create a service class, in a new file. Later on the service class will be the one that controls the interaction with the
 inventory service, but for now it’s basically just a wrapper of the repository class.
 
-Again, create a new class `CatalogService.java` in the `src/main/java/com/redhat/coolstore/service` package.
+Again, create a new file with the new class `CatalogService.java` in the `src/main/java/com/redhat/coolstore/service` package.
 
 Replace the empty class with this code:
 
@@ -303,7 +305,7 @@ Inventory Client to get the quantity.
 
 Now we are ready to create the endpoints that will expose REST service.
 
-Start by creating a new class called `CatalogEndpoint.java` in the `src/main/java/com/redhat/coolstore/service` package.
+Start by creating a new file, with a new class called `CatalogEndpoint.java` in the `src/main/java/com/redhat/coolstore/service` package.
 
 Replace the contents with this code:
 

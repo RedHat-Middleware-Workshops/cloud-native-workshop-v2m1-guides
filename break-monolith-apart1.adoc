@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Lab3 - Breaking the monolith apart - I
 :experimental:
 

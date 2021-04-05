@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Getting Started with Migration Toolkit for Applications?
 :experimental:
 
@@ -122,7 +124,7 @@ If you don't see '+' icon, please try to `uncheck` *Explorer* via right-clicking
 
 To input source files and directories, click on `Add` then select `Open File Explorer`:
 
-image::mta-add-input.png.png[MTA Add App, 700]
+image::mta-add-input.png[MTA Add App, 700]
 
 Span `projects > cloud-native-workshop-v2m1-labs` then select `monolith` directory. Click on `Choose...`:
 
