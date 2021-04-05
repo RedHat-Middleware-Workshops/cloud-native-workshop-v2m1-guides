@@ -1,7 +1,6 @@
-:imagesdir: images
-
 = Lab4 - Breaking the monolith apart - II
 :experimental:
+:imagesdir: images
 
 In the previous lab, you learned how to take an existing monolithic app and refactor a single _inventory_ service using Quarkus.
 The previous lab resulted in you creating an inventory service, but so far we haven’t started _strangling_ the monolith. That is

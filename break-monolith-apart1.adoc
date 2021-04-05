@@ -1,7 +1,6 @@
-:imagesdir: images
-
 = Lab3 - Breaking the monolith apart - I
 :experimental:
+:imagesdir: images
 
 In the previous labs you learned how to take an existing monolithic Java EE application to the cloud with JBoss EAP and OpenShift, and you got a glimpse into the power of OpenShift for existing applications.
 

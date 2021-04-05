@@ -1,7 +1,6 @@
-:imagesdir: images
-
 = Lab 2 - Migrate your application to JBoss EAP
 :experimental:
+:imagesdir: images
 
 In this step you will migrate some Weblogic-specific code in the app to use standard (Jakarta EE) interfaces.
 

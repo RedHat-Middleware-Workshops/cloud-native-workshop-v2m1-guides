@@ -1,7 +1,6 @@
-:imagesdir: images
-
 = Getting Started with Migration Toolkit for Applications?
 :experimental:
+:imagesdir: images
 
 In this module you’ll work with an existing Java EE application designed for a retail webshop.  The current
 version of the webshop is a Java EE application built for Oracle Weblogic Application Server. As part of a modernization
