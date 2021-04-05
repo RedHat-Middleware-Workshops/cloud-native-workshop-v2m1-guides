@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Getting Started with Migration Toolkit for Applications?
 :experimental:
 

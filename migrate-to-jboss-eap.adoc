@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Lab 2 - Migrate your application to JBoss EAP
 :experimental:
 
