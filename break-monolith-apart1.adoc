@@ -250,9 +250,13 @@ __  ____  __  _____   ___  __ ____  ______
 2021-02-24 17:58:19,900 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, mutiny, narayana-jta, resteasy, resteasy-jsonb, smallrye-context-propagation, smallrye-health]
 ----
 
-CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but when prompted, open the port `8080`, which opens a small web browser in CodeReady:
+CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but accept port `8080`:
 
-image::open-port.png[Inventory RESTful Service, 700]
+image::open-port-1.png[Inventory RESTful Service, 700]
+
+When prompted, open the link for port `8080`, which opens a small web browser in CodeReady:
+
+image::open-port-2.png[Inventory RESTful Service, 700]
 
 You should see the inventory web frontend directly in CodeReady (you may need to click the _reload_ icon):
 
