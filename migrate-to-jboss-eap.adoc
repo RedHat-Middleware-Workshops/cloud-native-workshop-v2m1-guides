@@ -438,7 +438,7 @@ failures if you do not name it `{{ USER_ID }}-coolstore-dev`!
 
 image::create_dialog.png[create_dialog, 700]
 
-This will take you to the project overview. There’s nothing there yet, but that’s about to change.
+This will take you to the Developer Console. There’s nothing there yet, but that’s about to change.
 
 image::project_overview.png[create_new, 700]
 

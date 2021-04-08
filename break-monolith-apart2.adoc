@@ -35,8 +35,6 @@ possible solutions would be to use a microservices gateway or combine services u
 
 ==== 1. Setup a Catalog project
 
-Run the following commands to set up your environment for this lab and start in the right directory:
-
 In the project explorer, expand the _catalog_ project (ignore the red error icons on some files - we'll get to those shortly)
 
 image::catalog-project.png[catalog-setup, 700]

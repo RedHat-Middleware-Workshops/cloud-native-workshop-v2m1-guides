@@ -26,7 +26,7 @@ Read more about it in the https://access.redhat.com/documentation/en-us/migratio
 
 == Lab 1 - Analyze app using MTA IDE Plugin
 
-In this step we will analyze a monolithic application built for use with Oracle® WebLogic Server (WLS). This application is a Java
+In this step we will analyze a monolithic application built for use with Oracle WebLogic Server (WLS). This application is a Java
 EE application using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and
 best practices.
 
@@ -57,7 +57,7 @@ After a minute or two, you’ll be placed in the workspace:
 
 image::che-workspace.png[cdw, 900]
 
-This IDE is based on Eclipse Che (which is in turn based on MicroSoft VS Code editor).
+This IDE is based on Eclipse Che (which is in turn based on Microsoft VS Code editor).
 
 You can see icons on the left for navigating between project explorer, search, version control (e.g. Git), debugging, and other plugins.  You’ll use these during the course of this workshop. Feel free to click on them and see what they do:
 
@@ -85,7 +85,7 @@ https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.g
 
 image::crw-clone-repo.png[crw,900]
 
-Click on *Select Repository Location* then click on *Open in New Window*. It will reload your web browser immediately:
+Click on *Select Repository Location* then click on *Open in New Window*. It will open a new web browser immediately:
 
 image::crw-add-workspace.png[crw, 900]
 
@@ -118,14 +118,14 @@ image::mta_newconf.png[MTA Landing Page, 500]
 
 [NOTE]
 ====
-If you don't see '+' icon, please try to `uncheck` *Explorer* via right-clicking on _MIGRATION TOOLKIT FOR APPLICATIONS_ menu then `check` it again.
+If you don't see '+' icon, please try to `uncheck` *Explorer* via right-clicking on _MIGRATION TOOLKIT FOR APPLICATIONS_ header then `check` it again.
 ====
 
 To input source files and directories, click on `Add` then select `Open File Explorer`:
 
 image::mta-add-input.png.png[MTA Add App, 700]
 
-Span `projects > cloud-native-workshop-v2m1-labs` then select `monolith` directory. Click on `Choose...`:
+Open `projects > cloud-native-workshop-v2m1-labs` then select `monolith` directory. Click on `Choose...`:
 
 image::mta-add-opendir.png[MTA Add App, 700]
 
