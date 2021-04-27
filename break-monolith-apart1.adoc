@@ -623,10 +623,10 @@ underlying service so it stops responding. Execute via CodeReady Workspaces Term
 
 [source,sh,role="copypaste"]
 ----
-oc rsh dc/inventory pkill java
+oc rsh dc/inventory /bin/bash -c 'kill 1'
 ----
 
-This will execute the Linux *pkill* command to stop the running Java process in the container.
+This will execute the Linux *kill* command to stop the running Java process in the container.
 
 Check out the application sample UI page and notice it is now failing to access the inventory data, and the _Last Successful
 Fetch_ counter starts increasing, indicating that the UI cannot access inventory. This could have been caused by an overloaded
