@@ -217,8 +217,9 @@ In Development, we will configure to use local in-memory H2 database for local t
 
 [source,properties,role="copypaste"]
 ----
-%dev.quarkus.datasource.url=jdbc:h2:mem:inventory
-%dev.quarkus.datasource.driver=org.h2.Driver
+%dev.quarkus.datasource.db-kind=h2
+%dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:inventory
+%dev.quarkus.datasource.jdbc.driver=org.h2.Driver
 %dev.quarkus.datasource.username=inventory
 %dev.quarkus.datasource.password=mysecretpassword
 %dev.quarkus.datasource.max-size=8
@@ -233,22 +234,30 @@ In the Terminal, run the project in _Live Coding_ mode:
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:dev -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:dev -Dquarkus.http.host=0.0.0.0 -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 You should see a bunch of log output that ends with:
 
 [source,console]
 ----
-2020-03-19 14:41:17,171 INFO  [io.agr.pool] (main) Datasource '<default>': Initial size smaller than min. Connections will be created when necessary
-2020-03-19 14:41:17,454 INFO  [io.quarkus] (main) inventory 1.0-SNAPSHOT (running on Quarkus xx.xx.xx) started in 3.353s. Listening on: http://0.0.0.0:8080
-2020-03-19 14:41:17,457 INFO  [io.quarkus] (main) Profile dev activated. Live Coding activated.
-2020-03-19 14:41:17,457 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb, smallrye-health]
+Listening for transport dt_socket at address: 5005
+__  ____  __  _____   ___  __ ____  ______
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/
+INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus xx.xx.xx) started in 8.380s. Listening on: http://0.0.0.0:8080
+INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, mutiny, narayana-jta, resteasy, resteasy-jsonb, smallrye-context-propagation, smallrye-health]
 ----
 
-CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but when prompted, open the port `8080`, which opens a small web browser in CodeReady:
+CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but accept port `8080`:
 
-image::open-port.png[Inventory RESTful Service, 700]
+image::open-port-1.png[Inventory RESTful Service, 700]
+
+When prompted, open the link for port `8080`, which opens a small web browser in CodeReady:
+
+image::open-port-2.png[Inventory RESTful Service, 700]
 
 You should see the inventory web frontend directly in CodeReady (you may need to click the _reload_ icon):
 
@@ -296,14 +305,14 @@ restarted.
 
 ===== Run the health check
 
-When you imported the _health extension_ earlier, the `/health` endpoint is automatically exposed directly that can be used to
+When you imported the _health extension_ earlier, the `/q/health` endpoint is automatically exposed directly that can be used to
 run the health check procedures.
 
 Our application is still running, so you can exercise the default (no-op) health check with this command in a separate Terminal:
 
 [source,sh,role="copypaste"]
 ----
-curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8080/q/health | jq
 ----
 
 The output shows:
@@ -360,7 +369,7 @@ public class InventoryHealthCheck implements HealthCheck {
 
 The `call()` method exposes an HTTP GET endpoint which will return the status of the service. The logic of this check does a
 simple query to the underlying database to ensure the connection to it is stable and available. The method is also annotated with
-MicroProfile's `@Readiness` annotation, which directs Quarkus to expose this endpoint as a health check at `/health/ready`.
+MicroProfile's `@Readiness` annotation, which directs Quarkus to expose this endpoint as a health check at `/q/health/ready`.
 
 [NOTE]
 ====
@@ -371,7 +380,7 @@ Access the health endpoint again using _curl_ and the result looks like:
 
 [source,sh,role="copypaste"]
 ----
-curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8080/q/health | jq
 ----
 
 The result should be:
@@ -397,7 +406,7 @@ You now see the default health check, along with your new Inventory health check
 
 [NOTE]
 ====
-You can define separate readiness and liveness probes using `@Liveness` and `@Readiness` annotations and access them separately at `/health/live` and `/health/ready`.
+You can define separate readiness and liveness probes using `@Liveness` and `@Readiness` annotations and access them separately at `/q/health/live` and `/q/health/ready`.
 ====
 
 ===== Cleanup
@@ -442,8 +451,9 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 
 [source,shell,role="copypaste"]
 ----
-%prod.quarkus.datasource.url=jdbc:postgresql://inventory-database:5432/inventory
-%prod.quarkus.datasource.driver=org.postgresql.Driver
+%prod.quarkus.datasource.db-kind=postgresql
+%prod.quarkus.datasource.jdbc.url=jdbc:postgresql://inventory-database:5432/inventory
+%prod.quarkus.datasource.jdbc.driver=org.postgresql.Driver
 %prod.quarkus.datasource.username=inventory
 %prod.quarkus.datasource.password=mysecretpassword
 %prod.quarkus.datasource.max-size=8
@@ -451,22 +461,21 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 %prod.quarkus.hibernate-orm.database.generation=drop-and-create
 %prod.quarkus.hibernate-orm.sql-load-script=import.sql
 %prod.quarkus.hibernate-orm.log.sql=true
-%prod.quarkus.s2i.base-jvm-image=registry.access.redhat.com/ubi8/openjdk-11
 
 %prod.quarkus.kubernetes-client.trust-certs=true<1>
-%prod.quarkus.container-image.build=true<2>
-%prod.quarkus.kubernetes.deploy=true<3>
-%prod.quarkus.kubernetes.deployment-target=openshift<4>
+%prod.quarkus.kubernetes.deploy=true<2>
+%prod.quarkus.kubernetes.deployment-target=openshift<3>
+%prod.quarkus.openshift.build-strategy=docker<4>
 %prod.quarkus.openshift.expose=true<5>
-%prod.quarkus.openshift.labels.app.openshift.io/runtime=quarkus<6>
 ----
 
 <1> We are using self-signed certs in this simple example, so this simply says to the extension to trust them.
-<2> Instructs the extension to build a container image
-<3> Instructs the extension to deploy to OpenShift after the container image is built
-<4> Instructs the extension to generate and create the OpenShift resources (like `DeploymentConfig` and `Service`) after building the container
-<5> Instructs the extension to generate an OpenShift `Route`.
-<6> Adds a nice-looking icon to the app when viewing the OpenShift Developer Toplogy
+<2> Instructs the extension to deploy to OpenShift after the container image is built
+<3> Instructs the extension to generate and create the OpenShift resources (like `DeploymentConfig` and `Service`) after building the container
+<4> Set the Docker build strategy
+<5> Instructs the extension to generate an OpenShift `Route`
+
+*Docker build* strategy builds the artifacts (JAR files or a native executable) outside the OpenShift cluster, either locally or in a CI environment, and then provides them to the OpenShift build system together with a Dockerfile. The container is built inside the OpenShift cluster and provided as an image stream.
 
 In OpenShift, ensure you're in the _Developer_ perspective and then choose the `{{ USER_ID }}-inventory` project which has already been created for you.
 
@@ -548,7 +557,7 @@ You should also be able to access the health check logic at the _inventory_ endp
 
 [source,sh,role="copypaste"]
 ----
-curl $(oc get route inventory -o jsonpath={% raw %}"{.spec.host}"{% endraw %})/health/ready | jq
+curl $(oc get route inventory -o jsonpath={% raw %}"{.spec.host}"{% endraw %})/q/health/ready | jq
 ----
 
 You should the same JSON response:
@@ -592,7 +601,7 @@ The result:
 
 [source,console]
 ----
-    Readiness:          http-get http://:8080/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3
+    Readiness:          http-get http://:8080/q/health/ready delay=30s timeout=1s period=10s #success=1 #failure=3
 ----
 
 In the next step, we’ll exercise the probe and watch as it fails and OpenShift recovers the application.
@@ -614,10 +623,10 @@ underlying service so it stops responding. Execute via CodeReady Workspaces Term
 
 [source,sh,role="copypaste"]
 ----
-oc rsh dc/inventory kill 1
+oc rsh dc/inventory /bin/bash -c 'kill 1'
 ----
 
-This will execute the Linux *pkill* command to stop the running Java process in the container.
+This will execute the Linux *kill* command to stop the running Java process in the container.
 
 Check out the application sample UI page and notice it is now failing to access the inventory data, and the _Last Successful
 Fetch_ counter starts increasing, indicating that the UI cannot access inventory. This could have been caused by an overloaded
