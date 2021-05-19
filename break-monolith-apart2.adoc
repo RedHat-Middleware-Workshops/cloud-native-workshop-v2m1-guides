@@ -68,7 +68,7 @@ BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop^] project.
 </dependency>
 ----
 
-We use this bill of material to make sure that we are using the version of for example Apache Tomcat that Red Hat supports.
+We use this bill of material to make sure that we are using a version of Apache Tomcat (at least in this example) that Red Hat supports.
 
 ==== 3. Add web (Apache Tomcat) to the application
 
@@ -83,7 +83,7 @@ Undertow shortly.
 
 Because of the Red Hat BOM and access to the Red Hat maven repositories all we need to do to enable the supported Apache Tomcat as
 servlet container is to add the following dependency to your _pom.xml_. Add these lines at the
-`<!-- TODO: Add web (tomcat) dependency here -->` marker:
+`<!-- TODO: Add web (tomcat) dependency here pass:[-->]` marker:
 
 [source,xml, role="copypaste"]
 ----
@@ -94,7 +94,7 @@ servlet container is to add the following dependency to your _pom.xml_. Add thes
 ----
 
 We will also make use of Java Persistence API (JPA) so we need to add the following to _pom.xml_ at the
-`<!-- TODO: Add jdbc dependency here -->` marker:
+`<!-- TODO: Add jdbc dependency here pass:[-->]` marker:
 
 [source,xml, role="copypaste"]
 ----
@@ -105,7 +105,7 @@ We will also make use of Java Persistence API (JPA) so we need to add the follow
 ----
 
 We will go ahead and add a bunch of other dependencies while we have the pom.xml open. These will be explained later. Add these at
-the `<!-- TODO: Add actuator, feign and hystrix dependency here -->` marker:
+the `<!-- TODO: Add actuator, feign and hystrix dependency here pass:[-->]` marker:
 
 [source,xml, role="copypaste"]
 ----
@@ -148,7 +148,7 @@ image::newfile.png[catalog-setup, 700]
 
 image::newfile-name.png[catalog-setup, 600]
 
-In the file, replace this code:
+In the file, paste this code:
 
 [source,java, role="copypaste"]
 ----
@@ -194,7 +194,7 @@ is to use a _JdbcTemplate_. First we need to autowire that as a member to _Produ
 ----
 
 The _JdbcTemplate_ require that we provide a _RowMapper_ so that it can map between rows in the query to Java Objects. We are
-going to define the _RowMapper_ like this. Add these at the `<!-- TODO: Add row mapper here -->` marker:
+going to define the _RowMapper_ like this. Add these at the `<!-- TODO: Add row mapper here pass:[-->]` marker:
 
 [source, java, role="copypaste"]
 ----
@@ -207,7 +207,7 @@ going to define the _RowMapper_ like this. Add these at the `<!-- TODO: Add row 
 
 Now we are ready to create the business methods. Let’s start with the `readAll()`. It should return a
 `List<Product>` and then we can write the query as `SELECT * FROM catalog` and use the rowMapper to map that into `Product`
-objects. Add these at the `<!-- TODO: Create a method for returning all products -->` marker:
+objects. Add these at the `<!-- TODO: Create a method for returning all products pass:[-->]` marker:
 
 [source, java, role="copypaste"]
 ----
@@ -217,7 +217,7 @@ objects. Add these at the `<!-- TODO: Create a method for returning all products
 ----
 
 We also need a way to find a single product element. Add these at the
-`<!-- TODO: Create a method for returning one product -->` marker:
+`<!-- TODO: Create a method for returning one product pass:[-->]` marker:
 
 [source, java, role="copypaste"]
 ----
@@ -304,7 +304,7 @@ Now we are ready to create the endpoints that will expose REST service.
 
 Start by creating a new class called `CatalogEndpoint.java` in the `src/main/java/com/redhat/coolstore/service` package.
 
-Replace the contents with this code:
+Paste the following code into that newly created file:
 
 [source, java, role="copypaste"]
 ----
@@ -386,14 +386,18 @@ In the next step, we will also call another service to enrich the endpoint respo
 
 [WARNING]
 ====
-Make sure to stop the service by clicking kbd:[CTRL-C] in the terminal that the app is running in!
+Make sure to stop the Spring Boot service by clicking kbd:[CTRL-C] in the CRW terminal you ran the `mvn spring-boot:run` command from.
+
+If you forget to do this, you will likely see the following error later on when you're asked to re-run Spring Boot: 
+
+image::spring_boot_port_issue.png[Spring Boot port issue, 300]
+
+This can be fixed by stopping the previous invocation of spring-boot in the manner described above.
 ====
 
 ==== 6. Get inventory data
 
-When redesigning our application to Microservices using domain driven design we have identified that Inventory and Product Catalog
-are two separate domains. However our current UI expects to retrieve data from both the Catalog Service and Inventory service in a
-singe request.
+When redesigning our application to Microservices using domain driven design we have identified that Inventory and Product Catalog are two separate domains. However our current UI expects to retrieve data from both the Catalog Service and Inventory service in a single request.
 
 ===== Service interaction
 
@@ -433,7 +437,7 @@ annotate the interface with `@Feign` and provide it with a name.
 
 Create the `InventoryClient.java` class in the `src/main/java/com/redhat/coolstore/client/` package in the project explorer.
 
-Replace the following code to the file:
+Paste the following content into that newly created file
 
 [source, java, role="copypaste"]
 ----
@@ -496,6 +500,8 @@ Next, update the `read(String id)` method at the comment
 
 Also, don’t forget to add the import statement by un-commenting the import statement for InventoryClient near the top
 
+TIP: With the line selected, you can use kbd:[CTRL+/] (or kbd:[CMD+/] on a Mac) to toggle the comment status of a line
+
 [source, java]
 ----
 import com.redhat.coolstore.client.InventoryClient;
@@ -529,9 +535,7 @@ Microservices Architecture, but as we add more and more services the likelihood 
 service has 99.9% update, if we have 100 of services our estimated up time will only be ~90%. We therefore need to plan for
 failures to happen and our application logic has to consider that dependent services are not responding.
 
-In the previous step we used the Feign client from the Netflix cloud native libraries to avoid having to write boilerplate code
-for doing a REST call. However Feign also have another good property which is that we easily create fallback logic. In this case
-we will use static inner class since we want the logic for the fallback to be part of the Client and not in a separate class.
+In the previous step we used the Feign client from the Netflix cloud native libraries to avoid having to write boilerplate code for doing a REST call. However Feign has another good feature which is the ability to easily create fallback logic for when the client cannot be reached. In this case we will use a static inner class since we want the logic for the fallback to be part of the Client and not in a separate class.
 
 In the `InventoryClient`, add the following code at the `//TODO: Add Fallback factory here` marker:
 
@@ -790,16 +794,15 @@ rolled out by visiting the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-coolstore
 
 Open the monolith UI by clicking the route URL icon (the arrow to the upper right of the blue circle for the coolstore monolith)
 
-Observe that the new catalog is being used along with the monolith:
+Observe that we are still using the old monolith, but leveraging the new catalog service:
 
 image::coolstore_web.png[Greeting, 700]
 
-The screen will look the same, with proper inventory, but notice that the earlier product _Women RHEL 8 t-shirt_ is now gone, as it has been removed in
-our new catalog microservice.
+Whilst the screen will look the similar, we can prove that our new catalog microservice is being used as the earlier shown product - _Women RHEL 8 t-shirt_ - is now gone.  It was a product that was removed from our catalog microservice's database.
 
 [NOTE]
 ====
-If the web page is still same then you should clean cookies and caches in your web browser.
+If the web page is still same then you should clear cookies and caches in your web browser.
 ====
 
 ==== Congratulations!
