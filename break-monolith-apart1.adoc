@@ -333,8 +333,7 @@ The general _outcome_ of the health check is computed as a logical AND of all th
 
 ==== 9. Create your first health check
 
-Next, let’s fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services. Open empty
-Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.java` and add the following code:
+Next, let’s fill in the class by creating a new RESTful endpoint which will be used by OpenShift to probe our services. Open the empty Java class: `src/main/java/com/redhat/coolstore/InventoryHealthCheck.java` and add the following code:
 
 [source,java,role="copypaste"]
 ----
@@ -410,7 +409,7 @@ You can define separate readiness and liveness probes using `@Liveness` and `@Re
 
 ===== Cleanup
 
-Stop the Quarkus app by typing kbd:[CTRL-C] in the Terminal in which the app runs.
+Stop the Quarkus app by typing kbd:[CTRL-C] in the CRW Terminal in which you ran the `mvn quarkus:dev` command.
 
 ==== 10. Create OpenShift Project
 

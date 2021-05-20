@@ -8,6 +8,8 @@ In this step you will migrate some Weblogic-specific code in the app to use stan
 
 Let's jump to code containing identified migration issues. Expand the *monolith* source project in the MTA explorer and navigate to `monolith > src > main > java > com > redhat > coolstore > utils > StartupListener.java`. Be sure to click the arrow next to the actual class name `StartupListener.java` to expand and show the Hints:
 
+TIP: You can use kbd:[CTRL+p] (or kbd:[CMD+p] on Mac OSX) to quickly open a file.  Simply start typing the name of the file in the text box that appears and select your file from the list that is produced.
+
 image::mta_project_issues.png[mta, 500]
 
 In the Explorer, MTA issues use an icon to indicate their severity level and status. The following table describes the meaning of the various icons:
@@ -36,6 +38,13 @@ the application lifecyle achieving the same result but without using proprietary
 Using this method makes the code much more portable.
 
 === 3. Fix the ApplicationLifecycleListener issues
+
+[INFO]
+====
+In this section we're going to deal with the following two issues from the report:
+
+image::report_applifecycle_issues.png[Lifecycle Issues]
+====
 
 To begin we are fixing the issues under the Monolith application. Right-click on `WebLogic ApplicationLifecycleListenerEvent[rule-id:xxx]` in _Hints_ of _StartupListener.java_ file. Click on `Open Code`:
 
@@ -110,6 +119,13 @@ CodeReady keeps track (using Git) of the changes you make, and you can use versi
 For now, go back to the _Explorer_ tree and lets fix the remaining issues.
 
 === 5. Fix the logger issues
+
+[INFO]
+====
+In this section we'll be looking to remediate this part of the migration report:
+
+image::report_logging_issues.png[Logging Issues]
+====
 
 Some of our application makes use of Weblogic-specific logging methods like the `NonCatalogLogger`, which offer features related to logging of
 internationalized content, and client-server logging.
@@ -188,13 +204,32 @@ Build and package the app again just as before:
 mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith clean package
 ----
 
-If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to the next issue! If it does not compile, verify you
-made all the changes correctly and try the build again.
+If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to the next issue! If it does not compile, verify you made all the changes correctly and try the build again.
 
-==== Fix issues with MDBs
+=== 7. Remove the Weblogic EJB Descriptors
 
-In this final step we will again migrate some Weblogic-specific code in the app to use standard Java EE interfaces, and one
-JBoss-specific interface.
+[INFO]
+====
+In this and the following few sections we'll be addressing this part of the report
+
+image::report_mdb_issues.png[MDB Issues, 900]
+
+To highlight in a little more detail:
+
+* `Call of JNDI lookup` - Our apps use a weblogic-specific
+https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface[JNDI^] lookup scheme.
+* `Proprietary InitialContext initialization` - Weblogic has a very different lookup mechanism for InitialContext objects
+* `WebLogic InitialContextFactory` - This is related to the above, essentially a Weblogic proprietary mechanism
+* `WebLogic T3 JNDI binding` - The way EJBs communicate in Weblogic is over T2, a proprietary implementation of Weblogic.
+
+====
+
+All of the above interfaces have equivalents in JBoss, however they are greatly simplified and overkill for our application which uses JBoss EAP’s internal message queue implementation provided by https://activemq.apache.org/artemis/[Apache ActiveMQ Artemis^].
+
+[NOTE]
+.A word about JMS
+====
+In this final step we will again migrate some Weblogic-specific code in the app to use standard Java EE interfaces, and one JBoss-specific interface.
 
 Our application uses https://en.wikipedia.org/wiki/Java_Message_Service[JMS^] to
 communicate. Each time an order is placed in the application, a JMS message is sent to a JMS Topic, which is then consumed by
@@ -215,40 +250,22 @@ use annotations to provide the necessary initialization and configuration logic 
 and `@ActivationConfigProperty` annotations, along with the `MessageListener` interfaces to provide the same functionality as
 from Weblogic.
 
-Much of Weblogic’s interfaces for EJB components like MDBs reside in Weblogic descriptor XML files. Open
+Much of Weblogic’s interfaces for EJB components like MDBs reside in Weblogic descriptor XML files. Use kbd:[CTRL+p] (or kbd:[CMD+p] on a Mac) to Quickly Open
 `src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` to see one of these descriptors. There are many different configuration
 possibilities for EJBs and MDBs in this file, but luckily our application only uses one of them, namely it configures
 `<trans-timeout-seconds>` to 30, which means that if a given transaction within an MDB operation takes too long to complete
 (over 30 seconds), then the transaction is rolled back and exceptions are thrown. This interface is Weblogic-specific so we’ll
 need to find an equivalent in JBoss.
-
-[NOTE]
-====
-You should be aware that this type of migration is more involved than the previous steps, and in real world applications it will
-rarely be as simple as changing one line at a time for a migration. Consult the
-https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^] for more
-detail on Red Hat’s Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat
-can help you on your migration path.
 ====
 
-=== 7. Review the issues
+The first step is to remove the unneeded `weblogic-ejb-jar.xml` file. This file is proprietary to Weblogic and not recognized or processed by JBoss EAP. Delete the file by right-clicking on the `src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` file and choose **Delete**, and click **OK**.
 
-From the MTA Issues report, we will fix the remaining issues:
+[TIP]
+====
+If you have the tab for the `weblogic-ejb-jar.xml` file open (or handy) you can quickly find it in the explorer by right-clicking on the tab and then selecting **Reveal in Explorer** as shown.  You can also use the kbd:[ALT+R] (or kbd:[Option+R] on Mac).
 
-* `Call of JNDI lookup` - Our apps use a weblogic-specific
-https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface[JNDI^] lookup scheme.
-* `Proprietary InitialContext initialization` - Weblogic has a very different lookup mechanism for InitialContext objects
-* `WebLogic InitialContextFactory` - This is related to the above, essentially a Weblogic proprietary mechanism
-* `WebLogic T3 JNDI binding` - The way EJBs communicate in Weblogic is over T2, a proprietary implementation of Weblogic.
-
-All of the above interfaces have equivalents in JBoss, however they are greatly simplified and overkill for our application which
-uses JBoss EAP’s internal message queue implementation provided by https://activemq.apache.org/artemis/[Apache ActiveMQ
-Artemis^].
-
-=== 8. Remove the weblogic EJB Descriptors
-
-The first step is to remove the unneeded `weblogic-ejb-jar.xml` file. This file is proprietary to Weblogic and not recognized or
-processed by JBoss EAP. Delete the file by right-clicking on the `src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` file and choose **Delete**, and click **OK**.
+image:reveal_in_explorer.png[reveal-in-explorer, 500]
+====
 
 image::codeready-workspace-delete-jar.png[codeready-workspace-convert, 500]
 
@@ -258,9 +275,9 @@ Right-click on the `src/main/java/weblogic` folder and select *Delete* to delete
 
 image::codeready-workspace-delete-weblogic.png[codeready-workspace-convert, 500]
 
-=== 9. Fix the code
+=== 8. Fix the code
 
-Open the `monolith/src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java` file and replace its contents with:
+Use kbd:[CTRL+p] (or kbd:[CMD+p] on a Mac) to Quickly Open the `monolith/src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java` file and replace its contents with:
 
 [source,java, role="copypaste"]
 ----
@@ -281,7 +298,7 @@ import java.util.logging.Logger;
 @MessageDriven(name = "InventoryNotificationMDB", activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "topic/orders"),
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
-        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "30"),
+        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "30"), #<.>
         @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge")})
 public class InventoryNotificationMDB implements MessageListener {
 
@@ -318,18 +335,16 @@ public class InventoryNotificationMDB implements MessageListener {
     }
 }
 ----
-
-Remember the `<trans-timeout-seconds>` setting from the `weblogic-ejb-jar.xml` file? This is now set as an
-`@ActivationConfigProperty` in the new code. There are pros and cons to using annotations vs. XML descriptors and care should be
-taken to consider the needs of the application.
+<.> Remember the `<trans-timeout-seconds>` setting from the `weblogic-ejb-jar.xml` file? This is now set as an
+`@ActivationConfigProperty` in the new code. There are pros and cons to using annotations vs. XML descriptors and care should be taken to consider the needs of the application.
 
 Your MDB should now be properly migrated to JBoss EAP.
 
-Lastly, remove Maven dependency on *org.jboss.spec.javax.rmi:jboss-rmi-api_1.0_spec*. In JBoss EAP 7.3(or later), artifact with groupId _org.jboss.spec.javax.rmi_ and artifactId _jboss-rmi-api_1.0_spec_ are unsupported dependencies. Remove the following dependency in `pom.xml`:
+Lastly, remove Maven dependency on *org.jboss.spec.javax.rmi:jboss-rmi-api_1.0_spec*. In JBoss EAP 7.3(or later), artifact with groupId _org.jboss.spec.javax.rmi_ and artifactId _jboss-rmi-api_1.0_spec_ are unsupported dependencies. Remove the following dependency in `monolith/pom.xml`:
 
 image::mta-remove-dependency.png[rhamt_rerun_analysis_report, 700]
 
-=== 10. Test the build
+=== 9. Test the build
 
 Build once again:
 
@@ -343,7 +358,7 @@ image::codeready-workspace-build.png[rhamt_project_issues, 700]
 If builds successfully (you will see `BUILD SUCCESS`). If it does not compile, verify you
 made all the changes correctly and try the build again.
 
-=== 11. Re-run the MTA report
+=== 10. Re-run the MTA report
 
 In this step we will re-run the MTA report to verify our migration was successful.
 
@@ -361,7 +376,7 @@ If it is taking too long, feel free to skip the next section and proceed to step
 eliminated all the issues.
 ====
 
-=== 12. View the results
+=== 11. View the results
 
 Click on the lastet result to go to the report web page and verify that it now reports 0 Story Points:
 
@@ -369,14 +384,22 @@ You have successfully migrated this app to JBoss EAP, congratulations!
 
 image::rhamt_project_issues_story.png[rhamt_project_issues_story, 700]
 
-Now that we’ve migrated the app, let’s deploy it and test it out and start to explore some of the features that JBoss EAP plus Red
-Hat OpenShift bring to the table.
+[NOTE]
+====
+You should be aware that this type of migration is more involved than the previous steps, and in real world applications it will
+rarely be as simple as changing one line at a time for a migration. Consult the
+https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^] for more
+detail on Red Hat’s Application Migration strategies or contact your local Red Hat representative to learn more about how Red Hat
+can help you on your migration path.
+====
 
-=== 13. Add an OpenShift profile
+=== 12. Add an OpenShift profile
 
-Open the `monolith/pom.xml` file.
+Now that we’ve migrated the app, let’s deploy it and test it out and start to explore some of the features that JBoss EAP plus Red Hat OpenShift bring to the table.
 
-At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the following configuration to the pom.xml
+Use kbd:[CTRL+p] (or kbd:[CMD+p] on a Mac) to Quickly Open the `monolith/pom.xml` file.
+
+At the `<!-- TODO: Add OpenShift profile here pass:[-->]` we are going to add a the following configuration to the pom.xml
 
 [source,xml,role="copypaste"]
 ----
@@ -404,7 +427,7 @@ At the `<!-- TODO: Add OpenShift profile here -->` we are going to add a the fol
         </profile>
 ----
 
-=== 14. Create the OpenShift project
+=== 13. Create the OpenShift project
 
 First, open a new brower with the {{ CONSOLE_URL }}[OpenShift web console^]:
 
@@ -424,13 +447,13 @@ image::openshift_landing.png[openshift_landing, 700]
 The project displayed in the landing page depends on which labs you will run today.
 ====
 
-Click **Create Project**, fill in the fields, and click *Create*:
+Click **create a Project** link, fill in the fields, and click *Create*:
 
 * Name: `{{USER_ID }}-coolstore-dev`
 * Display Name: `{{ USER_ID }} Coolstore Monolith - Dev`
 * Description: _leave this field empty_
 
-[NOTE]
+[WARNING]
 ====
 YOU *MUST* USE `{{ USER_ID }}-coolstore-dev` AS THE PROJECT NAME, as this name is referenced later on and you will experience
 failures if you do not name it `{{ USER_ID }}-coolstore-dev`!
@@ -444,13 +467,13 @@ image::project_overview.png[create_new, 700]
 
 ==== Switch to Developer Perspective
 
-OpenShift 4 provides both an _Administrator_ and _Developer_ view in its console. Switch to the _Developer Perspective_ using the dropdown on the left:
+OpenShift 4 provides both an _Administrator_ and _Developer_ view in its console. If you are not already in the _Developer Perspective_ you can switch to the _Developer Perspective_ using the dropdown on the left:
 
 image::dev_perspective.png[create_new, 700]
 
-This provides a developer-centric view of applications deployed to the project. Since we have nothing deployed yet, you are presented with a set of ways to deploy applications.
+The _Developer Perspective_ provides a developer-centric view of applications deployed to the project. Since we have nothing deployed yet, you are presented with a set of ways to deploy applications.
 
-=== 15. Deploy the monolith
+=== 14. Deploy the monolith
 
 We've pre-installed an application _template_ for use. Click the *From Catalog* item:
 
@@ -471,12 +494,25 @@ Leave other values the same and click **Create**.
 
 You will see the elements that were deployed in the _Topology_ view.
 
+[NOTE]
+====
+The template did a bit of work behind the scenes!  Using the information we entered above, it created the necessary Kubernetes (and OpenShift) "infrastructure" in which to deploy our newly migrated `.war` binary.  Here are some of the things that it created:
+
+* A postgres database _Deployment_
+* A coolstore monolith _DeploymentConfig_
+* All the necessary _Services_, _ConfigMaps_, and _Secrets_ for the previous _Deployments_
+* A _BuildConfig_ that is expecting a `.war` binary that it will package into a container that has been setup to run JBoss EAP (see image)
++
+image::coolstore_binary_build.png[Binary build, 200]
+
+====
+
 The *Topology* view in the _Developer_ perspective of the web console provides a visual representation of all the applications
 within a project, their build status, and the components and services associated with them.
 
 image::coolstore_topology.png[create_new, 700]
 
-You can see the _postgres_ database running (with a dark blue circle), and the coolstore monolith, which has not yet been deployed or started.
+You can see the _postgres_ database running (with a dark blue circle), and the coolstore monolith, which has not yet been deployed or started as it's waiting for the first container to be built that has JBoss EAP running our `.war` file.  We'll address that next.
 
 ==== Deploy monolith using CLI
 
@@ -540,7 +576,7 @@ image::coolstore-labels.png[create_new, 600]
 
 You have not yet deployed the container image built in previous steps, but you’ll do that next.
 
-=== 16. Deploy application using Binary build
+=== 15. Deploy application using Binary build
 
 In this development project we have selected to use a process called _binary builds_, which means that instead of pointing to a
 public Git Repository and have the S2I (Source-to-Image) build process download, build, and then create a container image for us
@@ -564,14 +600,16 @@ image which will be automatically deployed into the project, thanks to the _Depl
 
 [source,sh,role="copypaste"]
 ----
-oc start-build coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war
+oc start-build coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
 ----
 
-Back in the topology view, you should see the monolith being built:
+By adding the `--follow` flag to the command line, you will start seeing S2I build log output flowing into your CRW terminal.
+
+Meanwhile, back in the topology view, you should see the monolith being built:
 
 image::monolith_build.png[building, 400]
 
-Click on the building icon to see the build log:
+Click on the building icon to see the build log (which should mirror what's being sent to your terminal):
 
 image::monolith_log.png[building]
 
