@@ -378,7 +378,7 @@ eliminated all the issues.
 
 === 11. View the results
 
-Click on the lastet result to go to the report web page and verify that it now reports 0 Story Points:
+Click on the latest result to go to the report web page and verify that it now reports 0 Story Points:
 
 You have successfully migrated this app to JBoss EAP, congratulations!
 
