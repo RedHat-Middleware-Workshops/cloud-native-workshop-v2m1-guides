@@ -798,8 +798,10 @@ Observe that we are still using the old monolith, but leveraging the new catalog
 
 image::coolstore_web_microservice.png[Greeting, 700]
 
-image:coolstore_womans_t.png[Womans Tee, 50, float=right]
 Whilst the screen will look the similar, we can prove that our new catalog microservice is being used as the earlier shown product - _Women RHEL 8 t-shirt_ - is now gone.  It was a product that was removed from our catalog microservice's database.
+
+.The Woman's Tee that was removed
+image:coolstore_womans_t.png[Womans Tee, 200]
 
 [NOTE]
 ====
