@@ -390,7 +390,7 @@ Make sure to stop the Spring Boot service by clicking kbd:[CTRL-C] in the CRW te
 
 If you forget to do this, you will likely see the following error later on when you're asked to re-run Spring Boot: 
 
-image::spring_boot_port_issue.png[Spring Boot port issue, 300]
+image::spring_boot_port_issue.png[Spring Boot port issue, 700]
 
 This can be fixed by stopping the previous invocation of spring-boot in the manner described above.
 ====
@@ -796,13 +796,16 @@ Open the monolith UI by clicking the route URL icon (the arrow to the upper righ
 
 Observe that we are still using the old monolith, but leveraging the new catalog service:
 
-image::coolstore_web.png[Greeting, 700]
+image::coolstore_web_microservice.png[Greeting, 700]
 
 Whilst the screen will look the similar, we can prove that our new catalog microservice is being used as the earlier shown product - _Women RHEL 8 t-shirt_ - is now gone.  It was a product that was removed from our catalog microservice's database.
 
+.The Woman's Tee that was removed
+image:coolstore_womans_t.png[Womans Tee, 200]
+
 [NOTE]
 ====
-If the web page is still same then you should clear cookies and caches in your web browser.
+If the web page is still same then you should clear your web cache for this site in your web browser.
 ====
 
 ==== Congratulations!
