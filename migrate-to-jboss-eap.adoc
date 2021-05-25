@@ -264,7 +264,7 @@ The first step is to remove the unneeded `weblogic-ejb-jar.xml` file from the **
 ====
 If you have the tab for the `weblogic-ejb-jar.xml` file open (or handy) you can quickly find it in the Project Explorer by right-clicking on the tab and then selecting **Reveal in Explorer** as shown.  You can also use the kbd:[ALT+R] (or kbd:[Option+R] on Mac).
 
-image:reveal_in_explorer.png[reveal-in-explorer, 500]
+image:reveal_in_explorer.png[reveal-in-explorer, 600]
 ====
 
 image::codeready-workspace-delete-jar.png[codeready-workspace-convert, 500]
