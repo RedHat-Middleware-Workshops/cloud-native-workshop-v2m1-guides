@@ -258,11 +258,11 @@ possibilities for EJBs and MDBs in this file, but luckily our application only u
 need to find an equivalent in JBoss.
 ====
 
-The first step is to remove the unneeded `weblogic-ejb-jar.xml` file. This file is proprietary to Weblogic and not recognized or processed by JBoss EAP. Delete the file by right-clicking on the `src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` file and choose **Delete**, and click **OK**.
+The first step is to remove the unneeded `weblogic-ejb-jar.xml` file from the **Project Explorer** (not the **Migration Assistant**). This file is proprietary to Weblogic and not recognized or processed by JBoss EAP. Delete the file by right-clicking on the `src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` file from the **Project Explorer** and choosing **Delete**, and click **OK**.
 
 [TIP]
 ====
-If you have the tab for the `weblogic-ejb-jar.xml` file open (or handy) you can quickly find it in the explorer by right-clicking on the tab and then selecting **Reveal in Explorer** as shown.  You can also use the kbd:[ALT+R] (or kbd:[Option+R] on Mac).
+If you have the tab for the `weblogic-ejb-jar.xml` file open (or handy) you can quickly find it in the Project Explorer by right-clicking on the tab and then selecting **Reveal in Explorer** as shown.  You can also use the kbd:[ALT+R] (or kbd:[Option+R] on Mac).
 
 image:reveal_in_explorer.png[reveal-in-explorer, 500]
 ====
@@ -271,7 +271,7 @@ image::codeready-workspace-delete-jar.png[codeready-workspace-convert, 500]
 
 While we’re at it, let’s remove the stub weblogic implementation classes added as part of the scenario.
 
-Right-click on the `src/main/java/weblogic` folder and select *Delete* to delete the folder:
+Whilst still in the Project Explorer, right-click on the `src/main/java/weblogic` folder and select *Delete* to delete the folder:
 
 image::codeready-workspace-delete-weblogic.png[codeready-workspace-convert, 500]
 
@@ -503,7 +503,7 @@ The template did a bit of work behind the scenes!  Using the information we ente
 * All the necessary _Services_, _ConfigMaps_, and _Secrets_ for the previous _Deployments_
 * A _BuildConfig_ that is expecting a `.war` binary that it will package into a container that has been setup to run JBoss EAP (see image)
 +
-image::coolstore_binary_build.png[Binary build, 200]
+image::coolstore_binary_build.png[Binary build, 500]
 
 ====
 
