@@ -631,15 +631,15 @@ Click on *Instantiate Template* and fill in the following fields, leaving the ot
 
 image::db-catalog-postgres-fields.png[db, 700]
 
-This will deploy the database to our catalog project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View^] to see it:
+This will deploy the database to our catalog project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View^] to see it.
 
 ==== 11. Add production configuration
 
-Create a new file in the `src/main/resources` called `application-openshift.properties` in CodeReady Workspaces.
+Create a **new file** in the `src/main/resources` called `application-openshift.properties` in CodeReady Workspaces.
 
 [WARNING]
 ====
-Be sure your new file is in the same directory alongside the existing `application-default.properties`!
+Not only do you need to paste the properties below into a **new file**, you also need to be sure your new file is in the same directory alongside the existing `application-default.properties`!
 ====
 
 Add the following content to this file:
