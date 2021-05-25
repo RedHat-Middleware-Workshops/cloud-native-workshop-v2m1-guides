@@ -212,7 +212,7 @@ If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to t
 ====
 In this and the following few sections we'll be addressing this part of the report
 
-image::report_mdb_issues.png[MDB Issues, 900]
+image::report_mdb_issues.png[MDB Issues, 1100]
 
 To highlight in a little more detail:
 
