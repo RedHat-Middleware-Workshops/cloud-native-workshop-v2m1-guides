@@ -496,7 +496,9 @@ You will see the elements that were deployed in the _Topology_ view.
 
 [NOTE]
 ====
-The template did a bit of work behind the scenes!  Using the information we entered above, it created the necessary Kubernetes (and OpenShift) "infrastructure" in which to deploy our newly migrated `.war` binary.  Here are some of the things that it created:
+The template did a bit of work behind the scenes!  Using the information we entered above, it created the necessary Kubernetes (and OpenShift) "infrastructure" in which to deploy our newly migrated `.war` binary.  Here are some of the things that it created.
+
+EAP 7.4 templates for MySQL and PostgreSQL have been removed. You can provision these capabilities with Galleon provision layers:
 
 * A postgres database _Deployment_
 * A coolstore monolith _DeploymentConfig_
@@ -569,7 +571,7 @@ oc label dc/coolstore-postgresql app.kubernetes.io/part-of=coolstore --overwrite
 oc label dc/coolstore app.kubernetes.io/part-of=coolstore --overwrite && \
 oc annotate dc/coolstore app.openshift.io/connects-to=coolstore-postgresql --overwrite && \
 oc annotate dc/coolstore app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git --overwrite && \
-oc annotate dc/coolstore app.openshift.io/vcs-ref=ocp-4.7 --overwrite
+oc annotate dc/coolstore app.openshift.io/vcs-ref=ocp-4.8 --overwrite
 ----
 
 image::coolstore-labels.png[create_new, 600]

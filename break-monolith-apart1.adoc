@@ -221,8 +221,6 @@ In Development, we will configure to use local in-memory H2 database for local t
 %dev.quarkus.datasource.jdbc.driver=org.h2.Driver
 %dev.quarkus.datasource.username=inventory
 %dev.quarkus.datasource.password=mysecretpassword
-%dev.quarkus.datasource.max-size=8
-%dev.quarkus.datasource.min-size=2
 %dev.quarkus.hibernate-orm.database.generation=drop-and-create
 %dev.quarkus.hibernate-orm.log.sql=false
 ----
@@ -454,8 +452,6 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 %prod.quarkus.datasource.jdbc.driver=org.postgresql.Driver
 %prod.quarkus.datasource.username=inventory
 %prod.quarkus.datasource.password=mysecretpassword
-%prod.quarkus.datasource.max-size=8
-%prod.quarkus.datasource.min-size=2
 %prod.quarkus.hibernate-orm.database.generation=drop-and-create
 %prod.quarkus.hibernate-orm.sql-load-script=import.sql
 %prod.quarkus.hibernate-orm.log.sql=true
@@ -538,7 +534,7 @@ oc label dc/inventory app.kubernetes.io/part-of=inventory --overwrite && \
 oc label dc/inventory-database app.kubernetes.io/part-of=inventory --overwrite && \
 oc annotate dc/inventory app.openshift.io/connects-to=inventory-database --overwrite && \
 oc annotate dc/inventory app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git --overwrite && \
-oc annotate dc/inventory app.openshift.io/vcs-ref=ocp-4.7 --overwrite
+oc annotate dc/inventory app.openshift.io/vcs-ref=ocp-4.8 --overwrite
 ----
 
 Back on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View^], make sure it's done deploying (dark blue circle):

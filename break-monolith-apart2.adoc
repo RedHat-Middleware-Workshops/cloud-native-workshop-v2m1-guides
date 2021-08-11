@@ -615,7 +615,7 @@ Our production catalog microservice will use an external database (PostgreSQL) t
 
 Click **+Add** on the left, on the _Database_ box on the project overview:
 
-image::db-catalog.png[db, 700]
+image::db.png[db, 700]
 
 Type in `postgres` in the search box, and click on the *PostgreSQL (ephemeral)*:
 
