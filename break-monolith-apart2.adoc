@@ -613,7 +613,7 @@ and then start adding additional features to take care of various aspects of clo
 
 Our production catalog microservice will use an external database (PostgreSQL) to house inventory data. We've created an `{{ USER_ID}}-catalog` project for you. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-catalog[Topology View for {{ USER_ID }}-catalog project^].
 
-Click **+Add** on the left, on the _Database_ box on the project overview:
+*Right-Click* on the _Topology_ view. Then, click on _Database_ in the *Add to Project* popup menu:
 
 image::db.png[db, 700]
 

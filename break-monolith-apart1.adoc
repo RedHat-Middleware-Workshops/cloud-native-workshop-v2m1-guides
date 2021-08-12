@@ -480,7 +480,7 @@ There’s nothing there yet, but that’s about to change.
 Let’s deploy our new inventory microservice to OpenShift!
 
 Our production inventory microservice will use an external database (PostgreSQL) to house inventory data. First, deploy a new
-instance of PostgreSQL. Click **+Add** on the left, on the _Database_ box on the project overview:
+instance of PostgreSQL. *Right-Click* on the _Topology_ view. Then, click on _Database_ in the *Add to Project* popup menu:
 
 image::db.png[db, 700]
 

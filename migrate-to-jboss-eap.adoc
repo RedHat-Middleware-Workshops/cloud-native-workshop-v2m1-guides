@@ -475,11 +475,11 @@ The _Developer Perspective_ provides a developer-centric view of applications de
 
 === 14. Deploy the monolith
 
-We've pre-installed an application _template_ for use. Click the *From Catalog* item:
+We've pre-installed an application _template_ for use. Click the *Start building your application* in the _Topology_ view:
 
-image::from_catalog.png[create_new, 700]
+image::start_build_app.png[create_new, 700]
 
-In the search box, type in `coolstore` and choose _Coolstore Monolith using binary build_ and then click *Instantiate Template*. If you don't see the _coolstore_ template, make sure to uncheck *Operator Backed* in _Type_.
+In the search box, type in `coolstore` and choose _Coolstore Monolith using binary build_ and then click *Instantiate Template*. 
 
 image::from_catalog_bin.png[create_new, 700]
 
@@ -498,13 +498,13 @@ You will see the elements that were deployed in the _Topology_ view.
 ====
 The template did a bit of work behind the scenes!  Using the information we entered above, it created the necessary Kubernetes (and OpenShift) "infrastructure" in which to deploy our newly migrated `.war` binary.  Here are some of the things that it created.
 
-EAP 7.4 templates for MySQL and PostgreSQL have been removed. You can provision these capabilities with Galleon provision layers:
+PostgreSQL template has been removed since EAP 7.3. So you can provision these capabilities with Galleon provision layers:
 
-* A postgres database _Deployment_
-* A coolstore monolith _DeploymentConfig_
+* GALLEON_PROVISION_FEATURE_PACKS - _org.jboss.eap:eap-datasources-galleon-pack:7.4.0.GA-redhat-00003_
+* POSTGRESQL_DRIVER_VERSION - _42.2.19_
 * All the necessary _Services_, _ConfigMaps_, and _Secrets_ for the previous _Deployments_
-* A _BuildConfig_ that is expecting a `.war` binary that it will package into a container that has been setup to run JBoss EAP (see image)
-+
+* GALLEON_PROVISION_LAYERS - _cloud-server,ejb,postgresql-datasource_
+
 image::coolstore_binary_build.png[Binary build, 500]
 
 ====
