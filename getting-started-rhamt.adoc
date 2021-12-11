@@ -85,11 +85,13 @@ https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.g
 
 image::crw-clone-repo.png[crw,900]
 
-Click on *Select Repository Location* then click on *Open in New Window*. It will open a new web browser immediately:
+Ensure `projects/` is selected, then click on *Select Repository Location* then click on *Open*:
 
-image::crw-add-workspace.png[crw, 900]
+image::crw-add-workspace-2.png[crw, 900]
 
-The project is imported into your workspace and is visible in the project explorer:
+Note that you probably need to reload your web browser to load the new workspace.
+
+The project is imported into your workspace and is visible in the project explorer (collapse the *OPEN EDITORS*):
 
 image::crw-clone-explorer.png[crw,900]
 
@@ -112,18 +114,13 @@ image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 
 === 2. Use the configuration editor to setup the analysis
 
-Click on `MTA Explorer` icon on the left, click on `+` icon to add a new MTA configuration:
+Click on `MTA Explorer` icon on the left. Then, a new MTA configuration will be shown up:
 
 image::mta_newconf.png[MTA Landing Page, 500]
 
-[NOTE]
-====
-If you don't see '+' icon, please try to `uncheck` *Explorer* via right-clicking on _MIGRATION TOOLKIT FOR APPLICATIONS_ header then `check` it again.
-====
-
 To input source files and directories, click on `Add` then select `Open File Explorer`:
 
-image::mta-add-input.png.png[MTA Add App, 700]
+image::mta-add-input.png[MTA Add App, 700]
 
 Open `projects > cloud-native-workshop-v2m1-labs` then select `monolith` directory. Click on `Choose...`:
 
@@ -131,7 +128,7 @@ image::mta-add-opendir.png[MTA Add App, 700]
 
 Then you will see that */projects/cloud-native-workshop-v2m1-labs/monoilth* directory is added in _--input_ configuration.
 
-Select `eap7` in _--target_ server to migrate:
+Be sure that `eap7` is already selected in _--target_ server to migrate:
 
 image::mta-target.png[MTA Add App, 700]
 

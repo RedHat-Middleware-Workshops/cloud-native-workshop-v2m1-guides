@@ -51,16 +51,16 @@ We will add Quarkus extensions to the Inventory application for using _Panache_ 
 
 [source,sh,role="copypaste"]
 ----
-mvn -q quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, smallrye-health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, smallrye-health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 you will see:
 
 [source,sh]
 ----
-✅ Extension io.quarkus:quarkus-hibernate-orm-panache has been installed
-✅ Extension io.quarkus:quarkus-smallrye-health has been installed
-✅ Extension io.quarkus:quarkus-jdbc-h2 has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-hibernate-orm-panache has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-smallrye-health has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-jdbc-h2 has been installed
 ----
 
 This adds the extensions to `pom.xml`.
@@ -238,23 +238,25 @@ You should see a bunch of log output that ends with:
 
 [source,console]
 ----
-Listening for transport dt_socket at address: 5005
 __  ____  __  _____   ___  __ ____  ______ 
  --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
  -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
 --\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
-INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus xx.xx.xx) started in 8.380s. Listening on: http://0.0.0.0:8080
+Powered by Quarkus 2.2.3.Final-redhat-00013
+INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus 2.2.3.Final-redhat-00013) started in 14.001s. Listening on: http://0.0.0.0:8080
 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
-INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, mutiny, narayana-jta, resteasy, resteasy-jsonb, smallrye-context-propagation, smallrye-health]
+INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb, smallrye-context-propagation, smallrye-health]
+
+--
+Tests paused
+Press [r] to resume testing, [o] Toggle test output, [h] for more options>
 ----
 
-CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but accept port `8080`:
+You can see *Tests paused* by default when a Quarkus application gets started.
+
+CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but open in the new tab for port `8080`, which opens a small web browser in CodeReady:
 
 image::open-port-1.png[Inventory RESTful Service, 700]
-
-When prompted, open the link for port `8080`, which opens a small web browser in CodeReady:
-
-image::open-port-2.png[Inventory RESTful Service, 700]
 
 You should see the inventory web frontend directly in CodeReady (you may need to click the _reload_ icon):
 
@@ -262,7 +264,7 @@ image::inventory-codeready.png[Inventory RESTful Service, 700]
 
 Open a *new* CodeReady Workspaces Terminal:
 
-image::codeready-workspace-terminal.png[Inventory RESTful Service, 700]
+image::codeready-workspace-terminal-2.png[Inventory RESTful Service, 700]
 
 and invoke the RESTful endpoint using the following CURL commands.
 
@@ -291,6 +293,32 @@ The output looks like:
     "quantity": 230
   }
 ----
+
+== Controlling Continuous Testing
+
+There are various hotkeys you can use to control continuous testing. Pressing `h` will display the following list of commands in the terminal:
+
+[source, none]
+----
+== Continuous Testing
+
+[r] - Re-run all tests
+[f] - Re-run failed tests
+[b] - Toggle 'broken only' mode, where only failing tests are run (disabled)
+[v] - Print failures from the last test run
+[p] - Pause tests
+[o] - Toggle test output (disabled)
+----
+
+Quarkus also provides a new experimental Dev UI, which is available in dev mode (when you start quarkus with mvn quarkus:dev) at `/q/dev` by default. It allows you to quickly visualize all the extensions currently loaded, see their status and go directly to their documentation.
+
+Click on `quarkus-devui` endpoint:
+
+image::devui-endpoint.png[devui-endpoint, 700]
+
+A new web browser will open automatically then it will show you something like this:
+
+image::quarkus-devui.png[devui-endpoint, 800]
 
 ==== 8. Add health probe
 
@@ -423,15 +451,15 @@ Add _quarkus-jdbc-postgresql_ and _openshift_ extension via CodeReady Workspaces
 
 [source,sh,role="copypaste"]
 ----
-mvn -q quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 you will see:
 
 [source,sh]
 ----
-✅ Extension io.quarkus:quarkus-openshift has been installed
-✅ Extension io.quarkus:quarkus-jdbc-postgresql has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-openshift has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-jdbc-postgresql has been installed
 ----
 
 Quarkus supports the notion of _configuration profiles_. These allows you to have multiple configurations in the same file and

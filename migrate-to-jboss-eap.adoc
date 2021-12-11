@@ -46,7 +46,7 @@ In this section we're going to deal with the following two issues from the repor
 image::report_applifecycle_issues.png[Lifecycle Issues]
 ====
 
-To begin we are fixing the issues under the Monolith application. Right-click on `WebLogic ApplicationLifecycleListenerEvent[rule-id:xxx]` in _Hints_ of _StartupListener.java_ file. Click on `Open Code`:
+To begin we are fixing the issues under the Monolith application. Click on `WebLogic ApplicationLifecycleListenerEvent[rule-id:xxx]` in _Hints_ of _StartupListener.java_ file:
 
 image::mta-issue-open-code.png[rhamt_project_issues, 900]
 

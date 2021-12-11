@@ -62,7 +62,7 @@ BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop^] project.
 <dependency>
     <groupId>dev.snowdrop</groupId>
     <artifactId>snowdrop-dependencies</artifactId>
-    <version>2.3.6.Final-redhat-00001</version>
+    <version>2.4.9.Final-redhat-00001</version>
     <type>pom</type>
     <scope>import</scope>
 </dependency>
@@ -115,13 +115,15 @@ the `<!-- TODO: Add actuator, feign and hystrix dependency here pass:[-->]` mark
         </dependency>
 
         <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>3.0.4</version>
         </dependency>
 
         <dependency>
           <groupId>org.springframework.cloud</groupId>
           <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+          <version>2.2.10.RELEASE</version>
         </dependency>
 ----
 
@@ -443,7 +445,7 @@ Paste the following content into that newly created file
 ----
 package com.redhat.coolstore.client;
 
-import feign.hystrix.FallbackFactory;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -466,7 +468,7 @@ Open the `src/main/resources/application-default.properties` file. Add these pro
 
 [source, java, role="copypaste"]
 ----
-inventory.url=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
+inventory.url=inventory.{{ USER_ID }}-inventory.svc.cluster.local
 feign.hystrix.enabled=true
 ----
 
@@ -658,7 +660,7 @@ spring.datasource.continue-on-error=true
 
 feign.hystrix.enabled=true
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
-inventory.url=inventory.{{ USER_ID }}-inventory.svc.cluster.local:8080
+inventory.url=inventory.{{ USER_ID }}-inventory.svc.cluster.local
 ----
 
 We'll use this file by specifying a Spring _profile_ when we deploy to OpenShift.
