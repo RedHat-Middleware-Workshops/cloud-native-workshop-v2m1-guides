@@ -362,7 +362,7 @@ made all the changes correctly and try the build again.
 
 In this step we will re-run the MTA report to verify our migration was successful.
 
-In the MTA explorer, right-click on *mtaConfiguration* to analyze the WebLogic application once again. Click on `Run` in the popup menu:
+Click on `Run` icon to analyze the WebLogic application:
 
 image::mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 

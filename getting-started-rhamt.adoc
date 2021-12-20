@@ -138,7 +138,7 @@ image::mta-source.png[MTA Add App, 700]
 
 === 3. Run an analysis report
 
-Right-click on *mtaConfiguration* to analyze the WebLogic application. Click on `Run` in the popup menu:
+Click on `Run` icon to analyze the WebLogic application:
 
 image::mta-run-report.png[MTA Add App, 700]
 
