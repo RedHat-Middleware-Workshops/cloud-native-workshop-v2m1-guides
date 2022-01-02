@@ -111,12 +111,11 @@ The Terminal window in CodeReady Workspaces. You can open a terminal window for 
 image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
 ====
 
-
 === 2. Use the configuration editor to setup the analysis
 
 Click on `MTA Explorer` icon on the left. Then, a new MTA configuration will be shown up:
 
-image::mta_newconf.png[MTA Landing Page, 500]
+image::mta_newconf.png[MTA Landing Page, 700]
 
 To input source files and directories, click on `Add` then select `Open File Explorer`:
 
