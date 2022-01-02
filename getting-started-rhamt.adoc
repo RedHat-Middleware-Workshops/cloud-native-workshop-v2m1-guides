@@ -120,6 +120,8 @@ image::mta_newconf.png[MTA Landing Page, 500]
 
 To input source files and directories, click on `Add` then select `Open File Explorer`:
 
+Note that you might need to remove an existing input directory.
+
 image::mta-add-input.png[MTA Add App, 700]
 
 Open `projects > cloud-native-workshop-v2m1-labs` then select `monolith` directory. Click on `Choose...`:
