@@ -302,12 +302,22 @@ There are various hotkeys you can use to control continuous testing. Pressing `h
 ----
 == Continuous Testing
 
-[r] - Re-run all tests
-[f] - Re-run failed tests
-[b] - Toggle 'broken only' mode, where only failing tests are run (disabled)
-[v] - Print failures from the last test run
-[p] - Pause tests
+[r] - Resume testing
 [o] - Toggle test output (disabled)
+
+== HTTP
+
+[w] - Open the application in a browser
+[d] - Open the Dev UI in a browser
+
+== System
+
+[s] - Force restart
+[i] - Toggle instrumentation based reload (disabled)
+[l] - Toggle live reload (enabled)
+[j] - Toggle log levels (INFO)
+[h] - Shows this help
+[q] - Quits the application
 ----
 
 Quarkus also provides a new experimental Dev UI, which is available in dev mode (when you start quarkus with mvn quarkus:dev) at `/q/dev` by default. It allows you to quickly visualize all the extensions currently loaded, see their status and go directly to their documentation.

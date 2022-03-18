@@ -145,7 +145,7 @@ image::mta-run-report.png[MTA Add App, 700]
 
 Migration Toolkit for Applications (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::mta-analysis-complete.png[MTA Add App, 700]
+image::mta-analysis-complete.png[MTA Add App, 900]
 
 === 4. Review the report
 
