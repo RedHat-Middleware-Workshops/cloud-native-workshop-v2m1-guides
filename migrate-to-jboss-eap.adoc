@@ -98,7 +98,7 @@ Open a new Terminal window under the `quarkus-tools` container (on the right). I
 
 [source,sh,role="copypaste"]
 ----
-mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith clean package
+mvn -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith clean package
 ----
 
 image::codeready-workspace-build.png[rhamt_project_issues, 700]
@@ -201,7 +201,7 @@ Build and package the app again just as before:
 
 [source,sh,role="copypaste"]
 ----
-mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith clean package
+mvn -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith clean package
 ----
 
 If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to the next issue! If it does not compile, verify you made all the changes correctly and try the build again.
@@ -350,7 +350,7 @@ Build once again:
 
 [source,sh,role="copypaste"]
 ----
-mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith clean package
+mvn -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith clean package
 ----
 
 image::codeready-workspace-build.png[rhamt_project_issues, 700]
@@ -592,7 +592,7 @@ Build the project via CodeReady Workspaces Terminal window:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean package -Popenshift -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith
+mvn clean package -Popenshift -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith
 ----
 
 Wait for the build to finish and the `BUILD SUCCESS` message!
@@ -602,7 +602,7 @@ image which will be automatically deployed into the project, thanks to the _Depl
 
 [source,sh,role="copypaste"]
 ----
-oc start-build coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
+oc start-build coolstore --from-file $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
 ----
 
 By adding the `--follow` flag to the command line, you will start seeing S2I build log output flowing into your CRW terminal.

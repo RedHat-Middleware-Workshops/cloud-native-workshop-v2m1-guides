@@ -131,7 +131,7 @@ This should also make the red error icons disappear! Now, build the project to m
 
 [source,sh,role="copypaste"]
 ----
-mvn -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog clean package
+mvn -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/catalog clean package
 ----
 
 If it builds successfully (you will see *BUILD SUCCESS*), you have now successfully executed the first step in this lab.
@@ -351,7 +351,7 @@ Start the application via the CodeReady Workspaces Terminal using the following 
 
 [source,sh,role="copypaste"]
 ----
-mvn clean spring-boot:run -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog
+mvn clean spring-boot:run -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/catalog
 ----
 
 [NOTE]
@@ -582,7 +582,7 @@ Let's re-test our app locally. Re-build and re-run the app:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean spring-boot:run -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog
+mvn clean spring-boot:run -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/catalog
 ----
 
 Then, access the product catalog again in a separate terminal:
@@ -673,7 +673,7 @@ Build and deploy the project using the following command in a Terminal:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean install spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog
+mvn clean install spring-boot:repackage -DskipTests -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/catalog
 ----
 
 You should see a *BUILD SUCCESS* at the end of the build
@@ -691,7 +691,7 @@ And then start and watch the build, which will take about a minute to complete:
 
 [source,sh,role="copypaste"]
 ----
-oc start-build catalog-springboot --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
+oc start-build catalog-springboot --from-file $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
 ----
 
 Once the build is done, we’ll deploy it as an OpenShift application and override the spring profile to use our _production_ values.
@@ -745,7 +745,7 @@ Rebuild and redeploy the *inventory* application using this command (which will 
 [source,sh,role="copypaste"]
 ----
 oc project {{USER_ID}}-inventory && \
-mvn clean package -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory -DskipTests
+mvn clean package -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/inventory -DskipTests
 ----
 
 This will take about a minute to complete. Once the build is done, the inventory pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
@@ -766,8 +766,8 @@ Rebuild and re-deploy the *catalog* service using the following commands:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean install spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog && \
-oc start-build -n {{ USER_ID }}-catalog catalog-springboot --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
+mvn clean install spring-boot:repackage -DskipTests -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/catalog && \
+oc start-build -n {{ USER_ID }}-catalog catalog-springboot --from-file $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
 ----
 
 This will take about a minute to complete. Once the build is done, the catalog pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.
@@ -785,8 +785,8 @@ Rebuild and re-deploy the *monolith* project in CodeReady Workspaces Terminal:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean package -DskipTests -Popenshift -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith && \
-oc start-build -n {{ USER_ID }}-coolstore-dev coolstore --from-file $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
+mvn clean package -DskipTests -Popenshift -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith && \
+oc start-build -n {{ USER_ID }}-coolstore-dev coolstore --from-file $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
 ----
 
 Once the build is done, the coolstore pod will be deployed automatically via DeploymentConfig Trigger in OpenShift. Ensure it’s

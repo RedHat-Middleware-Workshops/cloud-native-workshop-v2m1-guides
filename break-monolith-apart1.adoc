@@ -51,7 +51,7 @@ We will add Quarkus extensions to the Inventory application for using _Panache_ 
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, smallrye-health" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, smallrye-health" -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 you will see:
@@ -231,7 +231,7 @@ In the Terminal, run the project in _Live Coding_ mode:
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:dev -Dquarkus.http.host=0.0.0.0 -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:dev -Dquarkus.http.host=0.0.0.0 -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 You should see a bunch of log output that ends with:
@@ -461,7 +461,7 @@ Add _quarkus-jdbc-postgresql_ and _openshift_ extension via CodeReady Workspaces
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 you will see:
@@ -549,7 +549,7 @@ Now let's deploy the application itself. Run the following command which will bu
 [source,sh,role="copypaste"]
 ----
 oc project {{ USER_ID }}-inventory && \
-mvn clean package -DskipTests -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs/inventory
+mvn clean package -DskipTests -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/inventory
 ----
 
 The output should end with `BUILD SUCCESS`.
