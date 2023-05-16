@@ -347,7 +347,7 @@ JSON.
 Since we now have endpoints that return the catalog we can also start the service and load the default page again, which should
 now return the products.
 
-Start the application via the CodeReady Workspaces Terminal using the following command:
+Start the application via the VS Code Terminal using the following command:
 
 [source,sh,role="copypaste"]
 ----
@@ -605,7 +605,7 @@ You will see something like:
   }
 ----
 
-Notice the `"quantity": 230` because CodeReady Workspaces runs in our OpenShift cluster, our value for `inventory.url` we set earlier is completely valid!
+Notice the `"quantity": 230` because VS Code runs in our OpenShift cluster, our value for `inventory.url` we set earlier is completely valid!
 
 Congratulations! You now have the framework for retrieving products from the product catalog and enriching the data with
 inventory data from an external service. In next step of this lab we will deploy our application to OpenShift Container Platform
@@ -637,7 +637,7 @@ This will deploy the database to our catalog project. Click on the {{ CONSOLE_UR
 
 ==== 11. Add production configuration
 
-Create a **new file** in the `src/main/resources` called `application-openshift.properties` in CodeReady Workspaces.
+Create a **new file** in the `src/main/resources` called `application-openshift.properties` in VS Code.
 
 [WARNING]
 ====
@@ -679,7 +679,7 @@ mvn clean install spring-boot:repackage -DskipTests -f $PROJECT_SOURCE/cloud-nat
 You should see a *BUILD SUCCESS* at the end of the build
 output.
 
-Then deploy the project using the following command in the CodeReady Workspaces Terminal:
+Then deploy the project using the following command in the VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -781,7 +781,7 @@ baseUrl='http://catalog-springboot-{{ USER_ID }}-catalog.{{ ROUTE_SUBDOMAIN }}/s
 
 image::catalog_js_strangler.png[strangler, 700]
 
-Rebuild and re-deploy the *monolith* project in CodeReady Workspaces Terminal:
+Rebuild and re-deploy the *monolith* project in VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----

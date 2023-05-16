@@ -87,7 +87,7 @@ public class StartupListener {
 
 [NOTE]
 ====
-Where is the Save button? CodeReady workspaces will autosave your changes, that is why you can’t find a SAVE button - no
+Where is the Save button? VS Code will autosave your changes, that is why you can’t find a SAVE button - no
 more losing code because you forgot to save. You can undo with kbd:[CTRL-Z] (or kbd:[CMD-Z] on a Mac) or by using the `Edit -> Undo` menu option.
 ====
 
@@ -114,7 +114,7 @@ You can review the changes you've made. On the left, click on the _Version Contr
 
 image::codeready-workspace-diffs.png[diffs, 700]
 
-CodeReady keeps track (using Git) of the changes you make, and you can use version control to check in, update, and compare files as you change them.
+VS Code keeps track (using Git) of the changes you make, and you can use version control to check in, update, and compare files as you change them.
 
 For now, go back to the _Explorer_ tree and lets fix the remaining issues.
 
@@ -518,17 +518,12 @@ You can see the _postgres_ database running (with a dark blue circle), and the c
 
 ==== Deploy monolith using CLI
 
-Although your Eclipse Che workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_
-that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but
-let’s login again: click on *Login to OpenShift*:
+Although your VS Code is running on the Kubernetes cluster, it's running with a default restricted _Service Account_ that prevents you from creating most resource types. So we'll log in with your workshop user. Execute the following command in the VS Code terminal:
 
-[NOTE]
-====
-When you click on this, CodeReady Workspaces executes the following command:
-*oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true --username={{ USER_ID }} --password={{ OPENSHIFT_USER_PASSWORD }}*
-====
-
-image::cmd-login.png[login,700]
+[source,sh,role="copypaste"]
+----
+oc login -u {{ USER_ID }} -p {{ OPENSHIFT_USER_PASSWORD }} https://openshift.default.svc:443
+----
 
 You should see something like this (the project names may be different):
 
@@ -549,19 +544,14 @@ Using project "{{ USER_ID }}-bookinfo".
 Welcome! See 'oc help' to get started.
 ----
 
-[NOTE]
-====
-After you log in using *Login to OpenShift*, the terminal is no longer usable as a regular terminal. You can close the terminal window. You will still be logged in when you open more terminals later!
-====
-
-Switch to the developer project you created earlier via CodeReady Workspaces Terminal window:
+Switch to the developer project you created earlier in the terminal:
 
 [source,sh,role="copypaste"]
 ----
 oc project {{ USER_ID }}-coolstore-dev
 ----
 
-Next, label the components so that they get proper icons by running this command in the CodeReady Terminal:
+Next, label the components so that they get proper icons by running this command in the VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -588,7 +578,7 @@ process significantly.
 First, build the project once more using the `openshift` Maven profile, which will create a suitable binary for use with
 OpenShift (this is not a container image yet, but just the `.war` file). We will do this with the `oc` command line.
 
-Build the project via CodeReady Workspaces Terminal window:
+Build the project via VS Code Terminal window:
 
 [source,sh,role="copypaste"]
 ----

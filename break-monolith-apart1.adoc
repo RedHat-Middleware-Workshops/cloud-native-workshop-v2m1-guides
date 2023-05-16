@@ -47,7 +47,7 @@ image::inventory-arch.png[Inventory RESTful Service, 700]
 
 ==== 3. Add Quarkus Extensions
 
-We will add Quarkus extensions to the Inventory application for using _Panache_ (a simplified way to access data via Hibernate ORM), a database with Postgres (in production) and _H2_ (in-memory database for testing). We'll also add the ability to add health probes (which we'll use later on) using the MicroProfile Health extension. Run the following commands to add the extensions using CodeReady Terminal:
+We will add Quarkus extensions to the Inventory application for using _Panache_ (a simplified way to access data via Hibernate ORM), a database with Postgres (in production) and _H2_ (in-memory database for testing). We'll also add the ability to add health probes (which we'll use later on) using the MicroProfile Health extension. Run the following commands to add the extensions using VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -254,15 +254,15 @@ Press [r] to resume testing, [o] Toggle test output, [h] for more options>
 
 You can see *Tests paused* by default when a Quarkus application gets started.
 
-CodeReady will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but open in the new tab for port `8080`, which opens a small web browser in CodeReady:
+VS Code will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but open in the new tab for port `8080`, which opens a small web browser in VS Code:
 
 image::open-port-1.png[Inventory RESTful Service, 700]
 
-You should see the inventory web frontend directly in CodeReady (you may need to click the _reload_ icon):
+You should see the inventory web frontend directly in VS Code (you may need to click the _reload_ icon):
 
 image::inventory-codeready.png[Inventory RESTful Service, 700]
 
-Open a *new* CodeReady Workspaces Terminal:
+Open a *new* VS Code Terminal:
 
 image::codeready-workspace-terminal-2.png[Inventory RESTful Service, 700]
 
@@ -457,7 +457,7 @@ Inventory service will connect to PostgeSQL database in production on OpenShift.
 
 Quarkus also offers the ability to automatically generate OpenShift resources based on sane default and user supplied configuration. The OpenShift extension is actually a wrapper extension that brings together the https://quarkus.io/guides/deploying-to-kubernetes[kubernetes^] and https://quarkus.io/guides/container-image#s2i[container-image-s2i^] extensions with defaults so that it’s easier for the user to get started with Quarkus on OpenShift.
 
-Add _quarkus-jdbc-postgresql_ and _openshift_ extension via CodeReady Workspaces Terminal:
+Add _quarkus-jdbc-postgresql_ and _openshift_ extension via VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -622,7 +622,7 @@ poll the probe:
 oc set probe dc/inventory --readiness --initial-delay-seconds=30
 ----
 
-And verify it’s been changed (look at the _delay=_ value for the Readiness probe) via CodeReady Workspaces Terminal:
+And verify it’s been changed (look at the _delay=_ value for the Readiness probe) via VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -652,7 +652,7 @@ The app will begin polling the inventory as before and report success:
 image::inventory.png[Greeting, 700]
 
 Now you will corrupt the service and cause its health check to start failing. To simulate the app crashing, let’s kill the
-underlying service so it stops responding. Execute via CodeReady Workspaces Terminal:
+underlying service so it stops responding. Execute via VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----

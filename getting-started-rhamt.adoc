@@ -8,10 +8,9 @@ strategy you've decided to move this application to JBoss EAP, containerize it, 
 
 === What is Migration Toolkit for Applications?
 
-image::rhamt_logo.png[MTA Logo, 500]
+image::mta_icon.png[MTA Logo, 500]
 
-Migration Toolkit for Applications (MTA) is an extensible and customizable rule-based tool that helps simplify migration of
-Java applications.
+Migration Toolkit for Applications (MTA) is an extensible and customizable rule-based tool that helps simplify migration of Java applications.
 
 It is used by organizations for:
 
@@ -30,86 +29,61 @@ In this step we will analyze a monolithic application built for use with Oracle 
 EE application using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and
 best practices.
 
-For this lab, we will use the MTA https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/5.1/html-single/ide_plugin_guide/index[IDE Plugin^] based on CodeReady Workspaces.
+For this lab, we will use the MTA https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/6.1/html-single/visual_studio_code_extension_guide/index[Visual Studio Code Extension^] based on Red Hat OpenShift Dev Spaces.
 
-The IDE Plugin for the Migration Toolkit for Applications provides assistance directly in Eclipse and Red Hat CodeReady Studio/Workspaces for developers making changes for a migration or modernization effort. It analyzes your projects using MTA, marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
+The IDE Plugin for the Migration Toolkit for Applications provides assistance directly in Eclipse and Red Hat OpenShift Dev Spaces for developers making changes for a migration or modernization effort. It analyzes your projects using MTA, marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
 
 === 1. Access Your Development Environment
 
-You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipse
-Che^]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
+You will be using Visual Studio Code (VS Code) based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^]. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
-To get started, {{ ECLIPSE_CHE_URL }}[access the CodeReady Workspaces instance^] and log in using the username
-and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
+To get started, {{ DS_URL }}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
 
-image::che-login.png[cdw, 700]
+image::login_with_openshift.png[login,800]
 
-Once you log in, you’ll be placed on your personal dashboard. Click on the name of
-the pre-created workspace on the left, as shown below (the name will be different depending on your assigned number).
+Type in the following credentail:
 
-image::crw-landing.png[cdw, 700]
+* *Username*: `{{ USER_ID }}`
+* *Password*: `{{ DS_USER_PASSWORD }}`
 
-You can also click on the name of the workspace in the center, and then click on the green {{ USER_ID}}-namespace that says _Open_ on the top right hand side of the screen:
-
-image::crw-landing-start.png[cdw, 700]
-
-After a minute or two, you’ll be placed in the workspace:
-
-image::che-workspace.png[cdw, 900]
-
-This IDE is based on Eclipse Che (which is in turn based on Microsoft VS Code editor).
-
-You can see icons on the left for navigating between project explorer, search, version control (e.g. Git), debugging, and other plugins.  You’ll use these during the course of this workshop. Feel free to click on them and see what they do:
-
-image::crw-icons.png[cdw, 400]
+image::che-login.png[login,800]
 
 [NOTE]
 ====
-If things get weird or your browser appears, you can simply reload the browser tab to refresh the view.
+In case you see the *Authorize Access* page as below, select *Allow selected permissions* button.
+
+image::auth-access.png[auth-access, 800]
 ====
 
-Many features of CodeReady Workspaces are accessed via *Commands*. You can see a few of the commands listed with links on the home page (e.g. _New File.._, _Git Clone.._, and others).
+Once you log in, you’ll be placed on the *Create Workspace* dashboard. Copy the following `Git Repo URL` and select `Create & Open`.
 
-If you ever need to run commands that you don't see in a menu, you can press kbd:[F1] to open the command window, or the more traditional kbd:[Control+SHIFT+P] (or kbd:[Command+SHIFT+P] on Mac OS X).
+* *Git Repo URL*: `https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs/tree/ocp-4.12`
 
-Let's import our first project. Click on **Git Clone..** (or type kbd:[F1], enter 'git' and click on the auto-completed _Git Clone.._ )
+image::ds-landing.png[ds, 800]
 
-image::che-workspace-gitclone.png[cdw, 900]
+A new window or tab in your web browser will open automatically to showcase the progess about *Starting workspace quarkus-workshop*. It takes about *60* seconds to finish the process.
 
-Step through the prompts, using the following value for **Repository URL**. If you use *FireFox*, it may end up pasting extra spaces at the end, so just press backspace after pasting:
-
-[source,none,role="copypaste"]
-----
-https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git
-----
-
-image::crw-clone-repo.png[crw,900]
-
-Ensure `projects/` is selected, then click on *Select Repository Location* then click on *Open*:
-
-image::crw-add-workspace-2.png[crw, 900]
-
-Note that you probably need to reload your web browser to load the new workspace.
-
-The project is imported into your workspace and is visible in the project explorer (collapse the *OPEN EDITORS*):
-
-image::crw-clone-explorer.png[crw,900]
-
-==== IMPORTANT: Check out proper Git branch
-
-To make sure you're using the right version of the project files, run this command in a CodeReady Terminal:
-
-[source,sh,role="copypaste"]
-----
-cd $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs && git checkout ocp-4.10
-----
+image::starting-workspace.png[ds, 800]
 
 [NOTE]
 ====
-The Terminal window in CodeReady Workspaces. You can open a terminal window for any of the containers running in your Developer workspace. For the rest of these labs, anytime you need to run a command in a terminal, you can use the **>_ New Terminal** command on the right:
+In case you see this information page, select `Start your workspace` to continue  using your workspace.
 
-image::codeready-workspace-terminal.png[codeready-workspace-terminal, 700]
+image::starting-workspace-info.png[ds, 800]
 ====
+
+After a few seconds, you’ll be placed in the workspace.
+
+image::ds-workspace.png[ds, 800]
+
+[NOTE]
+====
+In case you see this infomation page, check on `Trust the authors of all files in the parent folder 'projects'`. Then, select `Yes, I trust the authors. Trust folder and enable all features`.
+
+image::ds-trust-popup.png[ds, 800]
+====
+
+You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
 === 2. Use the configuration editor to setup the analysis
 
