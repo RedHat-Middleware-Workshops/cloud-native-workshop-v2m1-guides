@@ -39,7 +39,7 @@ You will be using Visual Studio Code (VS Code) based on https://developers.redha
 
 To get started, {{ DS_URL }}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
 
-image::login_with_openshift.png[login,800]
+image::login_with_openshift.png[login,500]
 
 Type in the following credentail:
 
