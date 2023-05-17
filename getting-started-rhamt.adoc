@@ -8,7 +8,7 @@ strategy you've decided to move this application to JBoss EAP, containerize it, 
 
 === What is Migration Toolkit for Applications?
 
-image::mta_icon.png[MTA Logo, 500]
+image::mta_icon.png[MTA Logo, 300]
 
 Migration Toolkit for Applications (MTA) is an extensible and customizable rule-based tool that helps simplify migration of Java applications.
 
@@ -39,7 +39,7 @@ You will be using Visual Studio Code (VS Code) based on https://developers.redha
 
 To get started, {{ DS_URL }}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
 
-image::login_with_openshift.png[login,500]
+image::login_with_openshift.png[login,800]
 
 Type in the following credentail:
 
