@@ -91,22 +91,37 @@ Where is the Save button? VS Code will autosave your changes, that is why you ca
 more losing code because you forgot to save. You can undo with kbd:[CTRL-Z] (or kbd:[CMD-Z] on a Mac) or by using the `Edit -> Undo` menu option.
 ====
 
-
 === 4. Test the build
 
-Open a new Terminal window under the `quarkus-tools` container (on the right). In the terminal, issue the following command to test the build:
+Open a new Terminal window. 
+
+image::new-terminal.png[new-terminal, 700]
+
+In the terminal, issue the following command to test the build:
 
 [source,sh,role="copypaste"]
 ----
-mvn -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith clean package
+mvn -f $PROJECT_SOURCE/monolith clean package
 ----
 
-image::codeready-workspace-build.png[rhamt_project_issues, 700]
+If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the next issue! If it does not compile, verify you made all the changes correctly and try the build again.
 
-If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the next issue! If it does not compile, verify
-you made all the changes correctly and try the build again.
-
-image::codeready-workspace-build-result.png[rhamt_project_issues, 700]
+[source,sh]
+----
+[INFO] --- maven-war-plugin:3.2.0:war (default-war) @ monolith ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [monolith] in [/projects/cloud-native-workshop-v2m1-labs/monolith/target/ROOT]
+[INFO] Processing war project
+[INFO] Copying webapp resources [/projects/cloud-native-workshop-v2m1-labs/monolith/src/main/webapp]
+[INFO] Webapp assembled in [841 msecs]
+[INFO] Building war: /projects/cloud-native-workshop-v2m1-labs/monolith/target/ROOT.war
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.174 s
+[INFO] Finished at: 2023-05-18T01:41:08Z
+[INFO] ------------------------------------------------------------------------
+----
 
 ==== View the diffs
 
@@ -201,7 +216,7 @@ Build and package the app again just as before:
 
 [source,sh,role="copypaste"]
 ----
-mvn -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith clean package
+mvn -f $PROJECT_SOURCE/monolith clean package
 ----
 
 If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to the next issue! If it does not compile, verify you made all the changes correctly and try the build again.
@@ -350,10 +365,8 @@ Build once again:
 
 [source,sh,role="copypaste"]
 ----
-mvn -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith clean package
+mvn -f $PROJECT_SOURCE/monolith clean package
 ----
-
-image::codeready-workspace-build.png[rhamt_project_issues, 700]
 
 If builds successfully (you will see `BUILD SUCCESS`). If it does not compile, verify you
 made all the changes correctly and try the build again.
@@ -409,7 +422,7 @@ At the `<!-- TODO: Add OpenShift profile here pass:[-->]` we are going to add a 
               <plugins>
                   <plugin>
                       <artifactId>maven-war-plugin</artifactId>
-                      <version>2.6</version>
+                      <version>3.3.2</version>
                       <configuration>
                           <webResources>
                               <resource>
@@ -533,15 +546,16 @@ Login successful.
 
 You have access to the following projects and can switch between them with 'oc project <projectname>':
 
-  * {{ USER_ID }}-bookinfo
-    {{ USER_ID }}-catalog
-    {{ USER_ID }}-cloudnative-pipeline
-    {{ USER_ID }}-cloudnativeapps
-    {{ USER_ID }}-inventory
-    {{ USER_ID }}-istio-system
+    user1-bookinfo
+    user1-catalog
+    user1-cloudnative-pipeline
+    user1-cloudnativeapps
+    user1-coolstore-dev
+  * user1-devspaces
+    user1-inventory
+    user1-istio-system
 
-Using project "{{ USER_ID }}-bookinfo".
-Welcome! See 'oc help' to get started.
+Using project "user1-devspaces".
 ----
 
 Switch to the developer project you created earlier in the terminal:
@@ -582,7 +596,7 @@ Build the project via VS Code Terminal window:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean package -Popenshift -f $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith
+mvn clean package -Popenshift -f $PROJECT_SOURCE/monolith
 ----
 
 Wait for the build to finish and the `BUILD SUCCESS` message!
@@ -592,7 +606,7 @@ image which will be automatically deployed into the project, thanks to the _Depl
 
 [source,sh,role="copypaste"]
 ----
-oc start-build coolstore --from-file $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs/monolith/deployments/ROOT.war --follow
+oc start-build coolstore --from-file $PROJECT_SOURCE/monolith/deployments/ROOT.war --follow
 ----
 
 By adding the `--follow` flag to the command line, you will start seeing S2I build log output flowing into your CRW terminal.
