@@ -639,6 +639,5 @@ image::coolstore_web.png[coolstore_web, 700]
 
 ==== Summary
 
-Now that you have migrated an existing Java EE app to the cloud with JBoss and OpenShift, you are ready to start modernizing the
-application by breaking the monolith into smaller microservices in incremental steps, and employing modern techniques to ensure
+Now that you have migrated an existing Java EE app to the cloud with JBoss and OpenShift, you are ready to start modernizing the application by breaking the monolith into smaller microservices in incremental steps, and employing modern techniques to ensure
 the application runs well in a distributed and containerized environment.
