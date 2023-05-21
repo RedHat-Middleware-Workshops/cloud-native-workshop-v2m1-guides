@@ -238,72 +238,59 @@ You should see a bunch of log output that ends with:
 
 [source,console]
 ----
+Listening for transport dt_socket at address: 5005
 __  ____  __  _____   ___  __ ____  ______ 
  --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
  -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
 --\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
-Powered by Quarkus 2.2.3.Final-redhat-00013
-INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus 2.2.3.Final-redhat-00013) started in 14.001s. Listening on: http://0.0.0.0:8080
+INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus 2.13.7.Final-redhat-00003) started in 4.496s. Listening on: http://0.0.0.0:8080
+
 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
-INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jsonb, smallrye-context-propagation, smallrye-health]
+INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jackson, smallrye-context-propagation, smallrye-health, vertx]
 
 --
 Tests paused
-Press [r] to resume testing, [o] Toggle test output, [h] for more options>
+Press [r] to resume testing, [o] Toggle test output, [:] for the terminal, [h] for more options>
 ----
 
 You can see *Tests paused* by default when a Quarkus application gets started.
 
-VS Code will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). Do not open port 5005, but open in the new tab for port `8080`, which opens a small web browser in VS Code:
+VS Code will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). *Close the popup not to add a port 5005*, but when prompted, *Open In New Tab* to open a port `8080`, which opens a new tab in your web browser:
 
-image::open-port-1.png[Inventory RESTful Service, 700]
+image::open-port.png[port, 700]
 
-You should see the inventory web frontend directly in VS Code (you may need to click the _reload_ icon):
+[NOTE]
+====
+In case you see the popup message below, select `Open`.
 
-image::inventory-codeready.png[Inventory RESTful Service, 700]
+image::open-external.png[port, 700]
+====
 
-Open a *new* VS Code Terminal:
+You should see the *Coolstore Inveotry* page:
 
-image::codeready-workspace-terminal-2.png[Inventory RESTful Service, 700]
+image::coolstore-inventory.png[port, 900]
+
+Open a *new* terminal by selecting `+` icon:
+
+image::cmd-terminal.png[livecoding, 900]
 
 and invoke the RESTful endpoint using the following CURL commands.
 
 [source,sh,role="copypaste"]
 ----
-curl http://localhost:8080/services/inventory | jq
-----
-
-The output looks like:
-
-[source,json]
-----
-  ...
-  {
-    "id": 7,
-    "itemId": "444435",
-    "link": "http://maps.google.com/?q=Paris",
-    "location": "Paris",
-    "quantity": 600
-  },
-  {
-    "id": 8,
-    "itemId": "444437",
-    "link": "http://maps.google.com/?q=Tokyo",
-    "location": "Tokyo",
-    "quantity": 230
-  }
-----
-
-== Controlling Continuous Testing
-
-There are various hotkeys you can use to control continuous testing. Pressing `h` will display the following list of commands in the terminal:
-
-[source, none]
-----
-== Continuous Testing
+curl http://localhost:8080/services/inventory | jq== Continuous Testing
 
 [r] - Resume testing
 [o] - Toggle test output (disabled)
+
+== Dev Services
+
+[c] - Show dev services containers
+[g] - Follow dev services logs to the console (disabled)
+
+== Exceptions
+
+[x] - Opens last exception in IDE (None)
 
 == HTTP
 
@@ -317,12 +304,13 @@ There are various hotkeys you can use to control continuous testing. Pressing `h
 [l] - Toggle live reload (enabled)
 [j] - Toggle log levels (INFO)
 [h] - Shows this help
+[:] - Enters terminal mode
 [q] - Quits the application
 ----
 
 Quarkus also provides a new experimental Dev UI, which is available in dev mode (when you start quarkus with mvn quarkus:dev) at `/q/dev` by default. It allows you to quickly visualize all the extensions currently loaded, see their status and go directly to their documentation.
 
-Click on `quarkus-devui` endpoint:
+Unfold the `ENDPOINTS > Public` and select the clipboard icon to copy the *Dev UI* URL.
 
 image::devui-endpoint.png[devui-endpoint, 700]
 
