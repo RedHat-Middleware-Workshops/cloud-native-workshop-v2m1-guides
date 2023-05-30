@@ -54,18 +54,28 @@ time)
 As you review the content, you will notice that there are a lot of _TODO_ comments. *Do not remove them!* These comments are used
 as a marker and without them, you will not be able to finish this lab.
 
-Notice that we are not using the default BOM (Bill of material) that Spring Boot projects typically use. Instead, we are using a
-BOM provided by Red Hat as part of the http://snowdrop.me/[Snowdrop^] project.
+Notice that we are using the Dekorate Maven dependency to deploy your Spring Boot applications to OpenShift. The Fabric8 Maven plugin is no longer supported. For information about deploying your application to OpenShift, see https://access.redhat.com/documentation/en-us/red_hat_support_for_spring_boot/2.7/html-single/dekorate_guide_for_spring_boot_developers/[Dekorate Guide for Spring Boot Developers^].
 
 [source,xml]
 ----
-<dependency>
-    <groupId>dev.snowdrop</groupId>
-    <artifactId>snowdrop-dependencies</artifactId>
-    <version>2.4.9.Final-redhat-00001</version>
-    <type>pom</type>
-    <scope>import</scope>
-</dependency>
+    <dependencyManagement>
+        <dependencies>
+        <dependency>
+            <groupId>io.dekorate</groupId>
+            <artifactId>dekorate-spring-bom</artifactId>
+            <version>${dekorate.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring-boot.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        </dependencies>
+    </dependencyManagement>
 ----
 
 We use this bill of material to make sure that we are using a version of Apache Tomcat (at least in this example) that Red Hat supports.
