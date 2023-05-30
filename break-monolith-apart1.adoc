@@ -278,39 +278,76 @@ and invoke the RESTful endpoint using the following CURL commands.
 
 [source,sh,role="copypaste"]
 ----
-curl http://localhost:8080/services/inventory | jq== Continuous Testing
+curl http://localhost:8080/services/inventory | jq
+----
 
-[r] - Resume testing
-[o] - Toggle test output (disabled)
+The output should look like this.
 
-== Dev Services
-
-[c] - Show dev services containers
-[g] - Follow dev services logs to the console (disabled)
-
-== Exceptions
-
-[x] - Opens last exception in IDE (None)
-
-== HTTP
-
-[w] - Open the application in a browser
-[d] - Open the Dev UI in a browser
-
-== System
-
-[s] - Force restart
-[i] - Toggle instrumentation based reload (disabled)
-[l] - Toggle live reload (enabled)
-[j] - Toggle log levels (INFO)
-[h] - Shows this help
-[:] - Enters terminal mode
-[q] - Quits the application
+[source,sh]
+----
+[
+  {
+    "id": 1,
+    "itemId": "329299",
+    "location": "Raleigh",
+    "quantity": 736,
+    "link": "http://maps.google.com/?q=Raleigh"
+  },
+  {
+    "id": 2,
+    "itemId": "329199",
+    "location": "Boston",
+    "quantity": 512,
+    "link": "http://maps.google.com/?q=Boston"
+  },
+  {
+    "id": 3,
+    "itemId": "165613",
+    "location": "Seoul",
+    "quantity": 256,
+    "link": "http://maps.google.com/?q=Seoul"
+  },
+  {
+    "id": 4,
+    "itemId": "165614",
+    "location": "Singapore",
+    "quantity": 54,
+    "link": "http://maps.google.com/?q=Singapore"
+  },
+  {
+    "id": 5,
+    "itemId": "165954",
+    "location": "London",
+    "quantity": 87,
+    "link": "http://maps.google.com/?q=London"
+  },
+  {
+    "id": 6,
+    "itemId": "444434",
+    "location": "NewYork",
+    "quantity": 443,
+    "link": "http://maps.google.com/?q=NewYork"
+  },
+  {
+    "id": 7,
+    "itemId": "444435",
+    "location": "Paris",
+    "quantity": 600,
+    "link": "http://maps.google.com/?q=Paris"
+  },
+  {
+    "id": 8,
+    "itemId": "444437",
+    "location": "Tokyo",
+    "quantity": 230,
+    "link": "http://maps.google.com/?q=Tokyo"
+  }
+]
 ----
 
 Quarkus also provides a new experimental Dev UI, which is available in dev mode (when you start quarkus with mvn quarkus:dev) at `/q/dev` by default. It allows you to quickly visualize all the extensions currently loaded, see their status and go directly to their documentation.
 
-Unfold the `ENDPOINTS > Public` and select the clipboard icon to copy the *Dev UI* URL.
+To show up the public endpoints, select `Show plug-in endpoints`. Then, unfold the `ENDPOINTS > Public` and select the clipboard icon to copy the *Dev UI* URL.
 
 image::devui-endpoint.png[devui-endpoint, 700]
 
@@ -560,7 +597,7 @@ oc label dc/inventory app.kubernetes.io/part-of=inventory --overwrite && \
 oc label dc/inventory-database app.kubernetes.io/part-of=inventory --overwrite && \
 oc annotate dc/inventory app.openshift.io/connects-to=inventory-database --overwrite && \
 oc annotate dc/inventory app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git --overwrite && \
-oc annotate dc/inventory app.openshift.io/vcs-ref=ocp-4.10 --overwrite
+oc annotate dc/inventory app.openshift.io/vcs-ref=ocp-4.13 --overwrite
 ----
 
 Back on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View^], make sure it's done deploying (dark blue circle):
