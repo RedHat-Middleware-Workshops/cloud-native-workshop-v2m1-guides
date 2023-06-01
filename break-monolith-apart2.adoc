@@ -54,26 +54,26 @@ time)
 As you review the content, you will notice that there are a lot of _TODO_ comments. *Do not remove them!* These comments are used
 as a marker and without them, you will not be able to finish this lab.
 
-Notice that we are using the Dekorate Maven dependency to deploy your Spring Boot applications to OpenShift. The Fabric8 Maven plugin is no longer supported. For information about deploying your application to OpenShift, see https://access.redhat.com/documentation/en-us/red_hat_support_for_spring_boot/2.7/html-single/dekorate_guide_for_spring_boot_developers/[Dekorate Guide for Spring Boot Developers^].
+Notice that we are using the Dekorate Maven dependency to deploy your Spring Boot applications to OpenShift. The Fabric8 Maven plugin is no longer supported. For information about deploying your application to OpenShift. Dekorate is a collection of compile-time annotation processors and application resource generators that are provided with Red Hat build of Spring Boot. It works by parsing annotations in your code when you build your application, and extracting configuration properties. Dekorate then uses the extracted values of properties to generate application configuration resources that you can use to deploy your application to a Kubernetes or OpenShift cluster. Find more information here, https://access.redhat.com/documentation/en-us/red_hat_support_for_spring_boot/2.7/html-single/dekorate_guide_for_spring_boot_developers/[Dekorate Guide for Spring Boot Developers^].
 
 [source,xml]
 ----
     <dependencyManagement>
         <dependencies>
-        <dependency>
-            <groupId>io.dekorate</groupId>
-            <artifactId>dekorate-spring-bom</artifactId>
-            <version>${dekorate.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring-boot.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
+            <dependency>
+                <groupId>io.dekorate</groupId>
+                <artifactId>dekorate-spring-bom</artifactId>
+                <version>${dekorate.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 ----
@@ -127,7 +127,7 @@ the `<!-- TODO: Add actuator, feign and hystrix dependency here pass:[-->]` mark
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>3.0.4</version>
+            <version>3.1.3</version>
         </dependency>
 
         <dependency>
@@ -154,7 +154,7 @@ In next step of this lab, we will add the logic to be able to read data from the
 
 We are now ready to implement the database repository.
 
-In the catalog project, right-click on the `src/main/java/com/redhat/coolstore/service` directory and select **New File**. Name the file `ProductRepository.java`:
+In the catalog project, right-click on the `src/main/java/com/redhat/coolstore/service` directory and select **New File**. Name the file `ProductRepository.java`.
 
 image::newfile.png[catalog-setup, 700]
 
@@ -243,7 +243,7 @@ local development we will use the H2 in-memory database. Later, when deploying t
 PostgreSQL database, which matches what we are using in production.
 
 The Spring Framework has a lot of sane defaults that can always seem magical sometimes, but basically all we have to do to setup
-the database driver is to provide some configuration values. Open `src/main/resources/application-default.properties` and add the
+the database driver is to provide some configuration values. Open `src/main/resources/application.properties` and add the
 following properties where the comment says `#TODO: Add database properties`.
 
 [source, properties, role="copypaste"]
@@ -369,7 +369,7 @@ mvn clean spring-boot:run -f $PROJECT_SOURCE/catalog
 If you get a popup about port `8081` being available, simply dismiss it with the `X` button.
 ====
 
-Wait for the application to start and get the `Started RestApplication in 4.025 seconds (JVM running for 4.361)` log message. Then, verify the endpoint by running the following command in a separate Terminal:
+Wait for the application to start and get the `Started RestApplication in 3.43 seconds (JVM running for 3.824)` log message. Then, verify the endpoint by running the following command in a separate Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -398,7 +398,7 @@ In the next step, we will also call another service to enrich the endpoint respo
 
 [WARNING]
 ====
-Make sure to stop the Spring Boot service by clicking kbd:[CTRL-C] in the CRW terminal you ran the `mvn spring-boot:run` command from.
+Make sure to stop the Spring Boot service by clicking kbd:[CTRL-C] in the VS Code terminal you ran the `mvn spring-boot:run` command from.
 
 If you forget to do this, you will likely see the following error later on when you're asked to re-run Spring Boot: 
 
@@ -474,7 +474,7 @@ public interface InventoryClient {
 }
 ----
 
-Open the `src/main/resources/application-default.properties` file. Add these properties to it at the `#TODO: Configure netflix libraries` marker:
+Open the `src/main/resources/application.properties` file. Add these properties to it at the `#TODO: Configure netflix libraries` marker:
 
 [source, java, role="copypaste"]
 ----
@@ -579,7 +579,7 @@ Besides from not responding a service can also respond slowly causing our servic
 cascading issues that are hard to debug and pinpoint issues with. We should therefore also have sane defaults for our services. You
 can add defaults by adding them to the configuration.
 
-Open `src/main/resources/application-default.properties`
+Open `src/main/resources/application.properties`
 
 And add this line to it at the `#TODO: Set timeout to for inventory` marker:
 
@@ -647,14 +647,7 @@ This will deploy the database to our catalog project. Click on the {{ CONSOLE_UR
 
 ==== 11. Add production configuration
 
-Create a **new file** in the `src/main/resources` called `application-openshift.properties` in VS Code.
-
-[WARNING]
-====
-Not only do you need to paste the properties below into a **new file**, you also need to be sure your new file is in the same directory alongside the existing `application-default.properties`!
-====
-
-Add the following content to this file:
+Replace the following properties in the `src/main/resources/application.properties`.
 
 [source, properties, role="copypaste"]
 ----
@@ -667,13 +660,21 @@ spring.datasource.initialization-mode=always
 spring.datasource.initialize=true
 spring.datasource.schema=classpath:/schema.sql
 spring.datasource.continue-on-error=true
+spring.sql.init.mode=always
 
+# Spring Cloud
 feign.hystrix.enabled=true
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=20000
-inventory.url=inventory.{{ USER_ID }}-inventory.svc.cluster.local
-----
+inventory.url=inventory.user1-inventory.svc.cluster.local
 
-We'll use this file by specifying a Spring _profile_ when we deploy to OpenShift.
+# Dekorate
+dekorate.openshift.expose=true
+dekorate.s2i.builder-image=registry.access.redhat.com/ubi8/openjdk-17:1.15
+dekorate.openshift.ports[0].name=http
+dekorate.openshift.ports[0].path=/
+dekorate.openshift.ports[0].containerPort=8080
+dekorate.openshift.ports[0].hostPort=8080
+----
 
 ==== 12. Build and Deploy
 
@@ -683,35 +684,17 @@ Build and deploy the project using the following command in a Terminal:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean install spring-boot:repackage -DskipTests -f $PROJECT_SOURCE/catalog
-----
-
-You should see a *BUILD SUCCESS* at the end of the build
-output.
-
-Then deploy the project using the following command in the VS Code Terminal:
-
-[source,sh,role="copypaste"]
-----
 oc project {{ USER_ID }}-catalog && \
-oc new-build registry.access.redhat.com/ubi8/openjdk-17:latest --binary --name=catalog-springboot -l app=catalog-springboot
+mvn clean install -Ddekorate.deploy=true -DskipTests -f $PROJECT_SOURCE/catalog
 ----
 
-And then start and watch the build, which will take about a minute to complete:
+You should see a *route.route.openshift.io/catalog-springboot configured* at the end of the deployment output.
 
-[source,sh,role="copypaste"]
-----
-oc start-build catalog-springboot --from-file $PROJECT_SOURCE/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
-----
+Navigate to the `target/classes/META-INF/dekorate` directory that contains the generated OpenShift manifests.
 
-Once the build is done, we’ll deploy it as an OpenShift application and override the spring profile to use our _production_ values.
+image::dekorate-openshift.png[dekorate-openshift, 700]
 
-[source,sh,role="copypaste"]
-----
-oc new-app catalog-springboot --as-deployment-config -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift'
-----
-
-and run this to expose your service to the world and add a health check:
+Then run this to expose your service to the world and add a health check:
 
 [source,sh,role="copypaste"]
 ----
@@ -776,8 +759,8 @@ Rebuild and re-deploy the *catalog* service using the following commands:
 
 [source,sh,role="copypaste"]
 ----
-mvn clean install spring-boot:repackage -DskipTests -f $PROJECT_SOURCE/catalog && \
-oc start-build -n {{ USER_ID }}-catalog catalog-springboot --from-file $PROJECT_SOURCE/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow
+oc project {{ USER_ID }}-catalog && \
+mvn clean install -Ddekorate.deploy=true -DskipTests -f $PROJECT_SOURCE/catalog
 ----
 
 This will take about a minute to complete. Once the build is done, the catalog pod will be deployed automatically via DeploymentConfig Trigger in OpenShift.

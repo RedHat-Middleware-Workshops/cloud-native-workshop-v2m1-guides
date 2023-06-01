@@ -164,7 +164,7 @@ public class InventoryResource {
 
     @GET
     @Path("/{itemId}")
-    public List<Inventory> getAvailability(@PathParam String itemId) {
+    public List<Inventory> getAvailability(@PathParam("itemId") String itemId) {
         return Inventory.<Inventory>streamAll()
         .filter(p -> p.itemId.equals(itemId))
         .collect(Collectors.toList());
