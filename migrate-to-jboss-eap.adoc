@@ -546,16 +546,16 @@ Login successful.
 
 You have access to the following projects and can switch between them with 'oc project <projectname>':
 
-    user1-bookinfo
-    user1-catalog
-    user1-cloudnative-pipeline
-    user1-cloudnativeapps
-    user1-coolstore-dev
-  * user1-devspaces
-    user1-inventory
-    user1-istio-system
+    {{ USER_ID }}-bookinfo
+    {{ USER_ID }}-catalog
+    {{ USER_ID }}-cloudnative-pipeline
+    {{ USER_ID }}-cloudnativeapps
+    {{ USER_ID }}-coolstore-dev
+  * {{ USER_ID }}-devspaces
+    {{ USER_ID }}-inventory
+    {{ USER_ID }}-istio-system
 
-Using project "user1-devspaces".
+Using project "{{ USER_ID }}-devspaces".
 ----
 
 Switch to the developer project you created earlier in the terminal:
