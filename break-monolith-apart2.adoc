@@ -698,7 +698,7 @@ Then run this to expose your service to the world and add a health check:
 
 [source,sh,role="copypaste"]
 ----
-oc expose service catalog-springboot && oc set probe dc/catalog-springboot  --readiness --get-url=http://:8080 --initial-delay-seconds=5 --period-seconds=5 --failure-threshold=15
+oc set probe dc/catalog-springboot  --readiness --get-url=http://:8080 --initial-delay-seconds=5 --period-seconds=5 --failure-threshold=15
 
 ----
 
