@@ -688,7 +688,7 @@ oc project {{ USER_ID }}-catalog && \
 mvn clean install -Ddekorate.deploy=true -DskipTests -f $PROJECT_SOURCE/catalog
 ----
 
-You should see a *route.route.openshift.io/catalog-springboot configured* at the end of the deployment output.
+You should see a *route.route.openshift.io/catalog-springboot created* at the end of the deployment output.
 
 Navigate to the `target/classes/META-INF/dekorate` directory that contains the generated OpenShift manifests.
 
