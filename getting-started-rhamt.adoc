@@ -91,6 +91,13 @@ Click on `MTA Explorer` icon on the left. Then, a new MTA configuration will be 
 
 image::mta_newconf.png[MTA Landing Page, 700]
 
+[NOTE]
+====
+In case you see this popup, select `Download` button to download the windup command line tool into your VS Code server.
+
+image::ds-windup-cli.png[ds, 800]
+====
+
 To input source files and directories, click on `Add` then select `Open File Explorer`:
 
 Note that you might need to remove an existing input directory.
