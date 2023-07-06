@@ -22,10 +22,6 @@ Let's take a look at the details about the migration issue. Right-click on `WebL
 
 image::mta-issue-detail.png[rhamt_project_issues, 900]
 
-MTA also provides helpful links to understand the issue deeper and offer guidance for the migration when you click on `Open Report`:
-
-image::mta-issue-open-report.png[rhamt_project_issues, 900]
-
 The WebLogic `ApplicationLifecycleListener` abstract class is used to perform functions or schedule jobs in Oracle WebLogic, like server start and stop. In this case we have code in the `postStart` and `preStop` methods which are executed after Weblogic starts up and before it shuts down, respectively.
 
 In Jakarta EE, there is no equivalent to intercept these events, but you can get equivalent
@@ -93,7 +89,7 @@ more losing code because you forgot to save. You can undo with kbd:[CTRL-Z] (or 
 
 === 4. Test the build
 
-Open a new Terminal window. 
+Open a Terminal window. 
 
 image::new-terminal.png[new-terminal, 700]
 
@@ -118,8 +114,8 @@ If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.174 s
-[INFO] Finished at: 2023-05-18T01:41:08Z
+[INFO] Total time:  7.333 s
+[INFO] Finished at: 2023-07-06T18:28:28Z
 [INFO] ------------------------------------------------------------------------
 ----
 
@@ -127,7 +123,7 @@ If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the
 
 You can review the changes you've made. On the left, click on the _Version Control_ icon, which shows a list of the changed files. Double-click on `StartupListener.java` to view the differences you've made:
 
-image::codeready-workspace-diffs.png[diffs, 700]
+image::codeready-workspace-diffs.png[diffs, 800]
 
 VS Code keeps track (using Git) of the changes you make, and you can use version control to check in, update, and compare files as you change them.
 
