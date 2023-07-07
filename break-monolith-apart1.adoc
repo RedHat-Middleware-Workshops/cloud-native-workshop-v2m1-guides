@@ -384,7 +384,10 @@ The output shows:
   "checks": [
     {
       "name": "Database connections health check",
-      "status": "UP"
+      "status": "UP",
+      "data": {
+        "<default>": "UP"
+      }
     }
   ]
 }
@@ -450,11 +453,14 @@ The result should be:
   "status": "UP",
   "checks": [
     {
-      "name": "Success of Inventory Health Check!!!",
-      "status": "UP"
+      "name": "Database connections health check",
+      "status": "UP",
+      "data": {
+        "<default>": "UP"
+      }
     },
     {
-      "name": "Database connections health check",
+      "name": "Success of Inventory Health Check!!!",
       "status": "UP"
     }
   ]
