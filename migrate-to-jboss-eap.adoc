@@ -83,8 +83,9 @@ public class StartupListener {
 
 [NOTE]
 ====
-Where is the Save button? VS Code will autosave your changes, that is why you can’t find a SAVE button - no
-more losing code because you forgot to save. You can undo with kbd:[CTRL-Z] (or kbd:[CMD-Z] on a Mac) or by using the `Edit -> Undo` menu option.
+Where is the Save button? VS Code will autosave your changes, that is why you can’t find a SAVE button - no more losing code because you forgot to save. You can undo with kbd:[CTRL-Z] (or kbd:[CMD-Z] on a Mac) or by using the `Edit -> Undo` menu option.
+
+In case you see the red lines in the source code, you can't ignore it because they are the migration issues rather than compliation errors.
 ====
 
 === 4. Test the build
