@@ -217,8 +217,6 @@ In Development, we will configure to use local in-memory H2 database for local t
 [source,properties,role="copypaste"]
 ----
 %dev.quarkus.datasource.db-kind=h2
-%dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:inventory
-%dev.quarkus.datasource.jdbc.driver=org.h2.Driver
 %dev.quarkus.datasource.username=inventory
 %dev.quarkus.datasource.password=mysecretpassword
 %dev.quarkus.hibernate-orm.database.generation=drop-and-create
@@ -253,7 +251,25 @@ Tests paused
 Press [r] to resume testing, [o] Toggle test output, [:] for the terminal, [h] for more options>
 ----
 
-You can see *Tests paused* by default when a Quarkus application gets started.
+You probably noticed that there was magic and we didn't specify the JDBC URL, this is because of https://quarkus.io/guides/databases-dev-services[Quarkus Dev Services^] and it works for all DBs, but here we can't have containers so we've done in-memory H2.
+
+When you take a look at the Quarkus Dev Mode terminal, you should see the following logs:
+
+[source,sh]
+----
+Dev Services for the default datasource (h2) started.
+----
+
+Then, press `c` to find more information about the H2 Dev Services.
+
+[source,sh]
+----
+== Dev Services
+
+  Injected Config:  quarkus.datasource.password=sa, quarkus.datasource.db-kind=h2, quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost:42165/mem:quarkus;DB_CLOSE_DELAY=-1, quarkus.datasource.username=sa
+----
+
+You can also see *Tests paused* by default when a Quarkus application gets started.
 
 VS Code will also detect that the Quarkus app opens port `5005` (for debugging) and `8080` (for web requests). *Close the popup not to add a port 5005*, but when prompted, *Open In New Tab* to open a port `8080`, which opens a new tab in your web browser:
 
