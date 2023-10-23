@@ -726,7 +726,7 @@ image::catalog-goal.png[Greeting, 700]
 Follow the steps below to create a *Cross-origin resource sharing (CORS)* based route. CORS is a mechanism that allows restricted
 resources on a web page to be requested from another domain outside the domain from which the first resource was served.
 
-Quarkus comes with a _CORS filter_ which implements the _javax.servlet.Filter_ interface and intercepts all incoming HTTP requests. It can be enabled in the Quarkus configuration file. Add the following line in the `inventory` project (our Quarkus app created earlier) in the `src/main/resources/application.properties` file:
+Quarkus comes with a _CORS filter_ which implements the _jakarta.servlet.Filter_ interface and intercepts all incoming HTTP requests. It can be enabled in the Quarkus configuration file. Add the following line in the `inventory` project (our Quarkus app created earlier) in the `src/main/resources/application.properties` file:
 
 [source, properties, role="copypaste"]
 ----
