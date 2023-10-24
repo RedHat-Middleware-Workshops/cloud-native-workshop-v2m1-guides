@@ -142,14 +142,13 @@ import jakarta.json.Json;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/services/inventory")
 @ApplicationScoped
@@ -201,14 +200,15 @@ the following SQL statements to *import.sql*:
 
 [source,sql, role="copypaste"]
 ----
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '329299', 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '329199', 'http://maps.google.com/?q=Boston', 'Boston', 512);
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165613', 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165614', 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '165954', 'http://maps.google.com/?q=London', 'London', 87);
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444434', 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444435', 'http://maps.google.com/?q=Paris', 'Paris', 600);
-INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (nextval('hibernate_sequence'), '444437', 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (1, '329299', 'http://maps.google.com/?q=Raleigh', 'Raleigh', 736);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (2, '329199', 'http://maps.google.com/?q=Boston', 'Boston', 512);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (3, '165613', 'http://maps.google.com/?q=Seoul', 'Seoul', 256);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (4, '165614', 'http://maps.google.com/?q=Singapore', 'Singapore', 54);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (5, '165954', 'http://maps.google.com/?q=London', 'London', 87);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (6, '444434', 'http://maps.google.com/?q=NewYork', 'NewYork', 443);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (7, '444435', 'http://maps.google.com/?q=Paris', 'Paris', 600);
+INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (8, '444437', 'http://maps.google.com/?q=Tokyo', 'Tokyo', 230);
+ALTER SEQUENCE inventory_seq RESTART WITH 9;
 ----
 
 In Development, we will configure to use local in-memory H2 database for local testing. Add these lines to
@@ -221,6 +221,7 @@ In Development, we will configure to use local in-memory H2 database for local t
 %dev.quarkus.datasource.password=mysecretpassword
 %dev.quarkus.hibernate-orm.database.generation=drop-and-create
 %dev.quarkus.hibernate-orm.log.sql=false
+%dev.quarkus.dev-ui.cors.enabled=false
 ----
 
 ==== 7. Run Quarkus Inventory application
@@ -236,19 +237,19 @@ You should see a bunch of log output that ends with:
 
 [source,console]
 ----
-Listening for transport dt_socket at address: 5005
+INFO  [io.qua.dat.dep.dev.DevServicesDatasourceProcessor] (build-26) Dev Services for the default datasource (h2) started
 __  ____  __  _____   ___  __ ____  ______ 
  --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
  -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
 --\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
-INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus 2.13.7.Final-redhat-00003) started in 4.496s. Listening on: http://0.0.0.0:8080
+INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus 3.2.6.Final-redhat-00002) started in 4.129s. Listening on: http://0.0.0.0:8080
 
 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jackson, smallrye-context-propagation, smallrye-health, vertx]
 
 --
 Tests paused
-Press [r] to resume testing, [o] Toggle test output, [:] for the terminal, [h] for more options>
+Press [e] to edit command line args (currently ''), [r] to resume testing, [o] Toggle test output, [:] for the terminal, [h] for more options>
 ----
 
 You probably noticed that there was magic and we didn't specify the JDBC URL, this is because of https://quarkus.io/guides/databases-dev-services[Quarkus Dev Services^] and it works for all DBs, but here we can't have containers so we've done in-memory H2.
@@ -266,7 +267,11 @@ Then, press `c` to find more information about the H2 Dev Services.
 ----
 == Dev Services
 
-  Injected Config:  quarkus.datasource.password=sa, quarkus.datasource.db-kind=h2, quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost:42165/mem:quarkus;DB_CLOSE_DELAY=-1, quarkus.datasource.username=sa
+h2
+  Injected config:  - quarkus.datasource.db-kind=h2
+                    - quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost:41511/mem:quarkus;DB_CLOSE_DELAY=-1
+                    - quarkus.datasource.password=mysecretpassword
+                    - quarkus.datasource.username=inventory
 ----
 
 You can also see *Tests paused* by default when a Quarkus application gets started.
@@ -545,7 +550,7 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 %prod.quarkus.kubernetes.deploy=true<2>
 %prod.quarkus.kubernetes.deployment-target=openshift<3>
 %prod.quarkus.openshift.build-strategy=docker<4>
-%prod.quarkus.openshift.expose=true<5>
+%prod.quarkus.openshift.route.expose=true<5>
 ----
 
 <1> We are using self-signed certs in this simple example, so this simply says to the extension to trust them.
