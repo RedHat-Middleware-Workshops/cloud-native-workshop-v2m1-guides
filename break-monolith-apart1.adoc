@@ -47,11 +47,11 @@ image::inventory-arch.png[Inventory RESTful Service, 700]
 
 ==== 3. Add Quarkus Extensions
 
-We will add Quarkus extensions to the Inventory application for using _Panache_ (a simplified way to access data via Hibernate ORM), a database with Postgres (in production) and _H2_ (in-memory database for testing). We'll also add the ability to add health probes (which we'll use later on) using the MicroProfile Health extension. Run the following commands to add the extensions using VS Code Terminal:
+We will add Quarkus extensions to the Inventory application for using _Panache_ (a simplified way to access data via Hibernate ORM), a database with PostgreSQL. We'll also add the ability to add health probes (which we'll use later on) using the MicroProfile Health extension. Run the following commands to add the extensions using VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-h2, smallrye-health" -f $PROJECT_SOURCE/inventory
+mvn quarkus:add-extension -Dextensions="hibernate-orm-panache, jdbc-postgresql, smallrye-health" -f $PROJECT_SOURCE/inventory
 ----
 
 you will see:
@@ -60,7 +60,7 @@ you will see:
 ----
 [INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-hibernate-orm-panache has been installed
 [INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-smallrye-health has been installed
-[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-jdbc-h2 has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-jdbc-postgresql has been installed
 ----
 
 This adds the extensions to `pom.xml`.
@@ -211,18 +211,20 @@ INSERT INTO INVENTORY (id, itemId, link, location, quantity) values (8, '444437'
 ALTER SEQUENCE inventory_seq RESTART WITH 9;
 ----
 
-In Development, we will configure to use local in-memory H2 database for local testing. Add these lines to
-`src/main/resources/application.properties`:
+When testing or running in dev mode Quarkus can provide you with a zero-config database out of the box, a feature we refer to as *Dev Services*. Depending on your database type you may need *Docker* or *Podman* installed in order to use this feature. Dev Services is supported for the *PostgreSQL* databases. With that, you don't need to add required configurations (e.g., username, password, JDBC URL) to set up the PostgreSQL in the _application.properties_ file.
 
-[source,properties,role="copypaste"]
+Red Hat Dev Spaces enables you to run the Quarkus Dev Services in the terminal using the _KUBEDOCK_ tool. Find more information about the Quarkus Dev Services https://quarkus.io/guides/databases-dev-services[here^].
+
+Let's check if you already have a running container (e.g. PostgreSQL) before you start the Quarkus Dev Mode later.
+
+[source,sh,role="copypaste"]
 ----
-%dev.quarkus.datasource.db-kind=h2
-%dev.quarkus.datasource.username=inventory
-%dev.quarkus.datasource.password=mysecretpassword
-%dev.quarkus.hibernate-orm.database.generation=drop-and-create
-%dev.quarkus.hibernate-orm.log.sql=false
-%dev.quarkus.dev-ui.cors.enabled=false
+podman ps
 ----
+
+The output should look something like this. There's no running container at this moment.
+
+image::podman-ps-empty.png[port, 700]
 
 ==== 7. Run Quarkus Inventory application
 
