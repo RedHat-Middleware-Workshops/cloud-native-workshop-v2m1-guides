@@ -213,7 +213,16 @@ ALTER SEQUENCE inventory_seq RESTART WITH 9;
 
 When testing or running in dev mode Quarkus can provide you with a zero-config database out of the box, a feature we refer to as *Dev Services*. Depending on your database type you may need *Docker* or *Podman* installed in order to use this feature. Dev Services is supported for the *PostgreSQL* databases. With that, you don't need to add required configurations (e.g., username, password, JDBC URL) to set up the PostgreSQL in the _application.properties_ file.
 
-Red Hat Dev Spaces enables you to run the Quarkus Dev Services in the terminal using the _KUBEDOCK_ tool. Find more information about the Quarkus Dev Services https://quarkus.io/guides/databases-dev-services[here^].
+Red Hat Dev Spaces enables you to run the Quarkus Dev Services in the terminal using the _KUBEDOCK_ tool. Unlikely local environment, you need to set the `quarkus.datasource.devservices.volumes` where the PostgreSQL's data is stored inside a container.
+
+Append the following variables in the _src/main/resources/application.properties_:
+
+[source,properties,role="copypaste"]
+----
+%dev.quarkus.datasource.devservices.volumes."/"=/var/lib/postgresql/
+----
+
+Find more information about the Quarkus Dev Services https://quarkus.io/guides/databases-dev-services[here^].
 
 Let's check if you already have a running container (e.g. PostgreSQL) before you start the Quarkus Dev Mode later.
 
@@ -239,15 +248,21 @@ You should see a bunch of log output that ends with:
 
 [source,console]
 ----
-INFO  [io.qua.dat.dep.dev.DevServicesDatasourceProcessor] (build-26) Dev Services for the default datasource (h2) started
+Listening for transport dt_socket at address: 5005
+INFO  [io.qua.dat.dep.dev.DevServicesDatasourceProcessor] (build-5) Dev Services for the default datasource (postgresql) started - container ID is 7a35fc3bd279
+INFO  [io.qua.hib.orm.dep.dev.HibernateOrmDevServicesProcessor] (build-15) Setting quarkus.hibernate-orm.database.generation=drop-and-create to initialize Dev Services managed database
 __  ____  __  _____   ___  __ ____  ______ 
  --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
  -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
 --\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
-INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus 3.2.6.Final-redhat-00002) started in 4.129s. Listening on: http://0.0.0.0:8080
+WARN  [org.hib.eng.jdb.spi.SqlExceptionHelper] (JPA Startup Thread) SQL Warning Code: 0, SQLState: 00000
 
+WARN  [org.hib.eng.jdb.spi.SqlExceptionHelper] (JPA Startup Thread) table "inventory" does not exist, skipping
+WARN  [org.hib.eng.jdb.spi.SqlExceptionHelper] (JPA Startup Thread) SQL Warning Code: 0, SQLState: 00000
+WARN  [org.hib.eng.jdb.spi.SqlExceptionHelper] (JPA Startup Thread) sequence "inventory_seq" does not exist, skipping
+INFO  [io.quarkus] (Quarkus Main Thread) inventory 1.0-SNAPSHOT on JVM (powered by Quarkus 3.2.6.Final-redhat-00002) started in 11.878s. Listening on: http://0.0.0.0:8080
 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
-INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-h2, narayana-jta, resteasy, resteasy-jackson, smallrye-context-propagation, smallrye-health, vertx]
+INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cdi, hibernate-orm, hibernate-orm-panache, jdbc-postgresql, narayana-jta, resteasy-reactive, resteasy-reactive-jackson, smallrye-context-propagation, smallrye-health, vertx]
 
 --
 Tests paused
@@ -260,20 +275,15 @@ When you take a look at the Quarkus Dev Mode terminal, you should see the follow
 
 [source,sh]
 ----
-Dev Services for the default datasource (h2) started.
+Dev Services for the default datasource (postgresql) started
 ----
 
-Then, press `c` to find more information about the H2 Dev Services.
+Then, execute `podman ps` again in another terminal. You will see that a *PostgreSQL* container is running automatically.
 
 [source,sh]
 ----
-== Dev Services
-
-h2
-  Injected config:  - quarkus.datasource.db-kind=h2
-                    - quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost:41511/mem:quarkus;DB_CLOSE_DELAY=-1
-                    - quarkus.datasource.password=mysecretpassword
-                    - quarkus.datasource.username=inventory
+CONTAINER ID  IMAGE                  COMMAND     CREATED        STATUS        PORTS       NAMES
+7a35fc3bd279  docker.io/postgres:14              2 minutes ago  Healthy (Up)              7a35fc3bd27961dc343093d5410e48c70ffc27d489bb205bdce62c5f3ba0714b
 ----
 
 You can also see *Tests paused* by default when a Quarkus application gets started.
