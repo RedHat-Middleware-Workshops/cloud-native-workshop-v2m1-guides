@@ -380,6 +380,13 @@ The output should look like this.
 
 Quarkus also provides a new experimental Dev UI, which is available in dev mode (when you start quarkus with mvn quarkus:dev) at `/q/dev` by default. It allows you to quickly visualize all the extensions currently loaded, see their status and go directly to their documentation.
 
+In case you're using a Cloud IDE (e.g., Red Hat Dev Spaces), you need to disable the *CORS* option which protect a security attack in the cloud because Dev UI aims to be used in developer's local environment. Append the following variables in the _src/main/resources/application.properties_:
+
+[source,properties,role="copypaste"]
+----
+%dev.quarkus.dev-ui.cors.enabled=false
+----
+
 To show up the public endpoints, select `Show plug-in endpoints`. Then, unfold the `ENDPOINTS > Public` and select the clipboard icon to copy the *Dev UI* URL.
 
 image::devui-endpoint.png[devui-endpoint, 700]
@@ -513,19 +520,15 @@ Stop the Quarkus app by typing kbd:[CTRL-C] in the CRW Terminal in which you ran
 
 ==== 10. Create OpenShift Project
 
-In this step, we will deploy our new Inventory microservice for our CoolStore application in a separate project to house
-it and keep it separate from our monolith and our other microservices we will create later on.
-
-Before going to OpenShift console, we will repackage the Quarkus application for adding a PostgreSQL extension because our
-Inventory service will connect to PostgeSQL database in production on OpenShift.
+In this step, we will deploy our new Inventory microservice for our CoolStore application in a separate project to house it and keep it separate from our monolith and our other microservices we will create later on.
 
 Quarkus also offers the ability to automatically generate OpenShift resources based on sane default and user supplied configuration. The OpenShift extension is actually a wrapper extension that brings together the https://quarkus.io/guides/deploying-to-kubernetes[kubernetes^] and https://quarkus.io/guides/container-image#s2i[container-image-s2i^] extensions with defaults so that it’s easier for the user to get started with Quarkus on OpenShift.
 
-Add _quarkus-jdbc-postgresql_ and _openshift_ extension via VS Code Terminal:
+Add _openshift_ extension via VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
-mvn quarkus:add-extension -Dextensions="jdbc-postgresql,openshift" -f $PROJECT_SOURCE/inventory
+mvn quarkus:add-extension -Dextensions="openshift" -f $PROJECT_SOURCE/inventory
 ----
 
 you will see:
@@ -533,7 +536,6 @@ you will see:
 [source,sh]
 ----
 [INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-openshift has been installed
-[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-jdbc-postgresql has been installed
 ----
 
 Quarkus supports the notion of _configuration profiles_. These allows you to have multiple configurations in the same file and
@@ -563,6 +565,9 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 %prod.quarkus.kubernetes.deployment-target=openshift<3>
 %prod.quarkus.openshift.build-strategy=docker<4>
 %prod.quarkus.openshift.route.expose=true<5>
+%prod.quarkus.openshift.deployment-kind=Deployment<6>
+%prod.quarkus.container-image.group={{ USER_ID }}-inventory<7>
+%prod.quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000<8>
 ----
 
 <1> We are using self-signed certs in this simple example, so this simply says to the extension to trust them.
@@ -570,6 +575,9 @@ Let’s `add` the following variables in _src/main/resources/application.propert
 <3> Instructs the extension to generate and create the OpenShift resources (like `DeploymentConfig` and `Service`) after building the container
 <4> Set the Docker build strategy
 <5> Instructs the extension to generate an OpenShift `Route`
+<6> Generate the Deployment resource
+<7> Specify a project where the application is deployed
+<8> Sepcify an internal container registry to push an application image
 
 *Docker build* strategy builds the artifacts (JAR files or a native executable) outside the OpenShift cluster, either locally or in a CI environment, and then provides them to the OpenShift build system together with a Dockerfile. The container is built inside the OpenShift cluster and provided as an image stream.
 
@@ -581,32 +589,12 @@ There’s nothing there yet, but that’s about to change.
 
 Let’s deploy our new inventory microservice to OpenShift!
 
-Our production inventory microservice will use an external database (PostgreSQL) to house inventory data. First, deploy a new
-instance of PostgreSQL. *Right-Click* on the _Topology_ view. Then, click on _Database_ in the *Add to Project* popup menu:
+Our production inventory microservice will use an external database (PostgreSQL) to house inventory data. First, deploy a new instance of PostgreSQL using the following `oc` command.
 
-image::db.png[db, 700]
-
-Type in `postgres` in the search box, and click on the *PostgreSQL (ephemeral)*:
-
-image::db-postgres.png[db, 700]
-
-Click on *Instantiate Template* and fill in the following fields, leaving the others as their default values:
-
-* **Namespace**: _choose `{{ USER_ID }}-inventory` for the first Namespace. Leave the second one as `openshift`_
-* **Database Service Name**: `inventory-database`
-* **PostgreSQL Connection Username**: `inventory`
-* **PostgreSQL Connection Password**: `mysecretpassword`
-* **PostgreSQL Database Name**: `inventory`
-
-image::db-postgres-inventory-values.png[db, 700]
-
-Click *Create*.
-
-This will deploy the database to our new project. Click on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View^] to see it:
-
-image::inventory-database-deployment.png[inventory_db_deployments, 700]
-
-==== 12. Deploy to OpenShift
+[source,shell,role="copypaste"]
+----
+oc new-app -n {{ USER_ID }}-inventory --name inventory-database -e POSTGRESQL_USER=inventory -e POSTGRESQL_PASSWORD=mysecretpassword -e POSTGRESQL_DATABASE=inventory registry.redhat.io/rhel9/postgresql-15
+----
 
 Now let's deploy the application itself. Run the following command which will build and deploy using the OpenShift extension:
 
@@ -631,12 +619,12 @@ And label the items with proper icons:
 
 [source,sh,role="copypaste"]
 ----
-oc label dc/inventory-database app.openshift.io/runtime=postgresql --overwrite && \
-oc label dc/inventory app.kubernetes.io/part-of=inventory --overwrite && \
-oc label dc/inventory-database app.kubernetes.io/part-of=inventory --overwrite && \
-oc annotate dc/inventory app.openshift.io/connects-to=inventory-database --overwrite && \
-oc annotate dc/inventory app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git --overwrite && \
-oc annotate dc/inventory app.openshift.io/vcs-ref=ocp-4.14 --overwrite
+oc label deployment/inventory-database app.openshift.io/runtime=postgresql --overwrite && \
+oc label deployment/inventory app.kubernetes.io/part-of=inventory --overwrite && \
+oc label deployment/inventory-database app.kubernetes.io/part-of=inventory --overwrite && \
+oc annotate deployment/inventory app.openshift.io/connects-to=inventory-database --overwrite && \
+oc annotate deployment/inventory app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs.git --overwrite && \
+oc annotate deployment/inventory app.openshift.io/vcs-ref=ocp-4.14 --overwrite
 ----
 
 Back on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-inventory[Topology View^], make sure it's done deploying (dark blue circle):
@@ -675,7 +663,7 @@ You should the same JSON response:
 }
 ----
 
-==== 13. Adjust probe timeout
+==== 12. Adjust probe timeout
 
 The various timeout values for the probes can be configured in many ways. Let’s tune the _readiness probe_ initial delay so that
 we have to wait 30 seconds for it to be activated. Use the _oc_ command to tune the probe to wait 30 seconds before starting to
@@ -703,7 +691,7 @@ The result:
 
 In the next step, we’ll exercise the probe and watch as it fails and OpenShift recovers the application.
 
-==== 14. Exercise Health Check
+==== 13. Exercise Health Check
 
 Open the http://inventory-{{ USER_ID }}-inventory.{{ ROUTE_SUBDOMAIN}}[Inventory UI^].
 
