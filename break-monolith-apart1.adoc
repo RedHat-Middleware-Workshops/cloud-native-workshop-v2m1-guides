@@ -269,7 +269,7 @@ Tests paused
 Press [e] to edit command line args (currently ''), [r] to resume testing, [o] Toggle test output, [:] for the terminal, [h] for more options>
 ----
 
-You probably noticed that there was magic and we didn't specify the JDBC URL, this is because of https://quarkus.io/guides/databases-dev-services[Quarkus Dev Services^] and it works for all DBs, but here we can't have containers so we've done in-memory H2.
+You probably noticed that there was magic and we didn't specify the JDBC URL, this is because of https://quarkus.io/guides/databases-dev-services[Quarkus Dev Services^] and it works for all DBs.
 
 When you take a look at the Quarkus Dev Mode terminal, you should see the following logs:
 
